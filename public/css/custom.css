@@ -1,0 +1,30 @@
+@keyframes loading {
+	0% {
+		transform: rotate(0);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.shadow {
+	box-shadow: 2px 2px 5px rgba(0,0,0,.2);
+}
+.th-num, .th-cab {
+	width: 35px;
+	min-width: 35px;
+	white-space: nowrap;
+}
+.th-name {
+	width: 260px;
+	min-width: 260px;
+}
+.loader {
+	border: 5px solid #aaa;
+	border-top-color: transparent;
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	margin: 50px auto;
+	animation: loading .8s linear infinite;
+}
