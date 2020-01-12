@@ -11,41 +11,41 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top">
-		<a class="navbar-brand" href="/">is.KIT</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+		<button class="navbar-toggler d-block" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-
-		<div class="collapse navbar-collapse" id="navbarColor01">
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item {{ $route == 'groups' ? 'active' : ''}}">
-					<a class="nav-link" href="/groups">Группы</a>
-				</li>
-				<li class="nav-item {{ $route == 'graphic' ? 'active' : ''}}">
-					<a class="nav-link" href="/graphic">График учебного процесса</a>
-				</li>
-				<li class="nav-item {{ $route == 'schedule' ? 'active' : ''}}">
-					<a class="nav-link" href="/schedule">Основное расписание</a>
-				</li>
-				<li class="nav-item {{ $route == 'changes' ? 'active' : ''}}">
-					<a class="nav-link" href="/changes">Изменения в расписании</a>
-				</li>
-				<li class="nav-item {{ $route == 'subjects' ? 'active' : ''}}">
-					<a class="nav-link" href="/subjects">Дисциплины</a>
-				</li>
-				<li class="nav-item {{ $route == 'teachers' ? 'active' : ''}}">
-					<a class="nav-link" href="/teachers">Преподаватели</a>
-				</li>
-				<li class="nav-item {{ $route == 'plans' ? 'active' : ''}}">
-					<a class="nav-link" href="/plans">Учебные планы</a>
-				</li>
-			</ul>
-		</div>
 	</nav>
+	<div class="collapse sidebar bg-dark" id="navbarColor01">
+		<ul class="navbar-nav">
+			<li class="{{ $route == 'groups' ? 'active' : ''}}">
+				<a href="/groups">Группы</a>
+			</li>
+			<li class="{{ $route == 'graphic' ? 'active' : ''}}">
+				<a href="/graphic">График учебного процесса</a>
+			</li>
+			<li class="{{ $route == 'schedule' ? 'active' : ''}}">
+				<a href="/schedule">Основное расписание</a>
+			</li>
+			<li class="{{ $route == 'changes' ? 'active' : ''}}">
+				<a href="/changes">Изменения в расписании</a>
+			</li>
+			<li class="{{ $route == 'subjects' ? 'active' : ''}}">
+				<a href="/subjects">Дисциплины</a>
+			</li>
+			<li class="{{ $route == 'teachers' ? 'active' : ''}}">
+				<a href="/teachers">Преподаватели</a>
+			</li>
+			<li class="{{ $route == 'plans' ? 'active' : ''}}">
+				<a href="/plans">Учебные планы</a>
+			</li>
+		</ul>
+	</div>
 	<div class="container mt-4">
+		<div class="clear-fix"></div>		
 		@yield('content')
 	</div>
 	<script type="text/javascript" src="/public/js/jquery.js"></script>
 	<script type="text/javascript" src="/public/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/public/js/search.js"></script>
 </body>
 </html>

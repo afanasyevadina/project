@@ -28,3 +28,38 @@
 	margin: 50px auto;
 	animation: loading .8s linear infinite;
 }
+*[data-toggle] {
+	cursor: pointer;
+}
+tr[data-toggle]:hover {
+	background-color: #f8f9fa;
+}
+.table-xs {
+	font-size: .7em;
+}
+.sidebar {
+	position: fixed;
+	top: 56px;
+	width: 200px;
+}
+.navbar-toggler {
+	outline: none;
+}
+.sidebar a {
+	color: rgba(255,255,255,.5);
+	display: block;
+	padding: 10px 20px;
+	text-decoration: none;
+}
+.sidebar a:hover {
+	color: rgba(255,255,255,.7);
+}
+.navbar {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+}
+.clear-fix {
+	height: 56px;
+}

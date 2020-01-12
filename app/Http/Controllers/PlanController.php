@@ -13,7 +13,8 @@ class PlanController extends Controller
 {
     public function index()
     {
-        $all = Plan::where('group_id', \Request::get('group'))->get();
+        $all = Plan::where('group_id', \Request::get('group'))
+        ->where('subgroup', '<>', 2)->get();
         $plans = [];
         foreach ($all as $key => $p) {
             if(!isset($plans[$p->cikl_id]))
@@ -76,19 +77,23 @@ class PlanController extends Controller
                     $semestr = $i - 9;
                     $total = $row[$i];
                     $plan = Plan::updateOrCreate([
-                            'group_id' => $request->group,
-                            'semestr' => $semestr,
-                            'cikl_id' => $cikl,
-                            'subject_id' => $subjects[trim($row[1])]
-                        ], 
-                        [
-                            'shifr' => $row[0],
-                            'total' => $total,
-                            'theory_main' => $row[7],
-                            'practice_main' => $row[8]
-                        ]
-                    );
-                    if($row[2] == $semestr) $plan->is_exam = 1;
+                        'group_id' => $request->group,
+                        'semestr' => $semestr,
+                        'cikl_id' => $cikl,
+                        'subject_id' => $subjects[trim($row[1])]
+                    ], 
+                    [
+                        'shifr' => $row[0],
+                        'total' => $total,
+                        'theory_main' => $row[7],
+                        'practice_main' => $row[8]
+                    ]
+                );
+                    if($row[2] == $semestr) {
+                        $plan->is_exam = 1;
+                        $plan->exam = 2;
+                        $plan->consul = 3;
+                    }
                     if($row[3] == $semestr) $plan->is_zachet = 1;
                     if($row[4] == $semestr) {
                         $plan->is_project = 1;
@@ -123,11 +128,23 @@ class PlanController extends Controller
 
     public function store(Request $request)
     {
-        foreach ($request->plan as $key => $p) {
-            $plan = Plan::find($key);
-            $plan->fill($p);
-            $plan->save();
-            $group = $plan->group_id;
+        foreach ($request->plan as $sbj) {
+            $theory = 0;
+            $practice = 0;
+            $plans = [];
+            foreach($sbj as $key => $p) {
+                $plan = Plan::find($key);
+                $plan->fill($p);
+                $theory += $plan->theory;
+                $practice += $plan->practice;
+                $group = $plan->group_id;
+                $plans[] = $plan;
+            }
+            foreach($plans as $plan) {
+                $plan->theory_main = $theory;
+                $plan->practice_main = $practice;
+                $plan->save();
+            }
         }
         return redirect()->route('plans', ['group' => $group]);
     }

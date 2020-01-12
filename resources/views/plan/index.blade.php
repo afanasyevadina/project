@@ -23,6 +23,7 @@
 	<div class="text-right">
 		<input type="submit" value="Сохранить" class="btn btn-sm btn-outline-info">
 		<button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#upload">Загрузить</button>
+		<a href="/rup/{{ $_GET['group'] }}" class="btn btn-sm btn-outline-secondary">РУП</a>
 	</div>
 	<hr>
 	<table class="table table-bordered table-sm">
@@ -67,6 +68,7 @@
 				<td colspan="10">{{ $cikl['cikl']->name }}</td>
 			</tr>
 			@foreach($cikl['subjects'] as $key => $p)
+			<?php @sort($p['zachet_sem']); ?>
 			<tr data-toggle="collapse" data-target=".col{{ $key }}">
 				<td>{{ $p['shifr'] }}</td>
 				<td>{{ $p['subject']->name }}</td>
@@ -75,8 +77,8 @@
 				<td>{{ @$p['project_sem'] }}</td>
 				<td>{{ $p['control'] ? $p['control'] : '' }}</td>
 				<td>{{ $p['theory'] + $p['practice'] + @$p['project'] }}</td>
-				<td>{{ $p['theory'] }}</td>
-				<td>{{ $p['practice'] }}</td>
+				<td>{{ $p['theory'] ? $p['theory'] : '' }}</td>
+				<td>{{ $p['practice'] ? $p['practice'] : '' }}</td>
 				<td>{{ @$p['project'] }}</td>
 				<td>{{ @$p['sem1'] }}</td>
 				<td>{{ @$p['sem2'] }}</td>
@@ -93,50 +95,59 @@
 					<h5 class="text-center my-3">{{ $d->semestr }} семестр</h5>
 					<div class="row mx-4 my-2">
 						<label class="col-sm-2">
-							<input type="checkbox" name="plan[{{$d->id}}][is_exam]" value="1" {{$d->is_exam ? 'checked' : ''}}>
+							<input type="hidden" name="plan[{{$d->subject_id}}][{{$d->id}}][is_exam]" value="">
+							<input type="checkbox" name="plan[{{$d->subject_id}}][{{$d->id}}][is_exam]" value="1" {{$d->is_exam ? 'checked' : ''}}>
 							Экзамен
 						</label>
 						<label class="col-sm-2">
-							<input type="checkbox" name="plan[{{$d->id}}][is_zachet]" value="1" {{$d->is_zachet ? 'checked' : ''}}>
+							<input type="hidden" name="plan[{{$d->subject_id}}][{{$d->id}}][is_zachet]" value="">
+							<input type="checkbox" name="plan[{{$d->subject_id}}][{{$d->id}}][is_zachet]" value="1" {{$d->is_zachet ? 'checked' : ''}}>
 							Зачет
 						</label>
 						<label class="col-sm-2">
-							<input type="checkbox" name="plan[{{$d->id}}][is_project]" value="1" {{$d->is_project ? 'checked' : ''}}>
+							<input type="hidden" name="plan[{{$d->subject_id}}][{{$d->id}}][is_project]" value="">
+							<input type="checkbox" name="plan[{{$d->subject_id}}][{{$d->id}}][is_project]" value="1" {{$d->is_project ? 'checked' : ''}}>
 							Курсовая
 						</label>
 					</div>
 					<div class="row mx-4 my-2">
 						<div class="col-sm-3">
 							<label>Всего</label>
-							<input type="number" name="plan[{{$d->id}}][total]" value="{{ $d->total }}" class="form-control form-control-sm">
+							<input type="number" name="plan[{{$d->subject_id}}][{{$d->id}}][total]" value="{{ $d->total }}" class="form-control form-control-sm">
 						</div>
 						<div class="col-sm-3">
 							<label>Теоретических</label>
-							<input type="number" name="plan[{{$d->id}}][theory]" value="{{ $d->theory }}" class="form-control form-control-sm">
+							<input type="number" name="plan[{{$d->subject_id}}][{{$d->id}}][theory]" value="{{ $d->theory }}" class="form-control form-control-sm">
 						</div>
 						<div class="col-sm-3">
 							<label>Практических</label>
-							<input type="number" name="plan[{{$d->id}}][practice]" value="{{ $d->practice }}" class="form-control form-control-sm">
+							<input type="number" name="plan[{{$d->subject_id}}][{{$d->id}}][practice]" value="{{ $d->practice }}" class="form-control form-control-sm">
 						</div>
 						<div class="col-sm-3">
 							<label>Лабораторных</label>
-							<input type="number" name="plan[{{$d->id}}][lab]" value="{{ $d->lab }}" class="form-control form-control-sm">
+							<input type="number" name="plan[{{$d->subject_id}}][{{$d->id}}][lab]" value="{{ $d->lab }}" class="form-control form-control-sm">
 						</div>
 						<div class="col-sm-3">
 							<label>Кол-во контрольных</label>
-							<input type="number" name="plan[{{$d->id}}][controls]" value="{{ $d->controls }}" class="form-control form-control-sm">
+							<input type="number" name="plan[{{$d->subject_id}}][{{$d->id}}][controls]" value="{{ $d->controls }}" class="form-control form-control-sm">
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-3 consul" {{$d->is_exam ? '' : 'hidden'}}>
 							<label>Консультация</label>
-							<input type="number" name="plan[{{$d->id}}][consul]" value="{{ $d->consul }}" class="form-control form-control-sm">
+							<input type="number" class="form-control form-control-sm" 
+							name="plan[{{$d->subject_id}}][{{$d->id}}][consul]" 
+							value="{{ $d->consul }}">
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-3 exam" {{$d->is_exam ? '' : 'hidden'}}>
 							<label>Экзамен</label>
-							<input type="number" name="plan[{{$d->id}}][exam]" value="{{ $d->exam }}" class="form-control form-control-sm">
+							<input type="number" class="form-control form-control-sm" 
+							name="plan[{{$d->subject_id}}][{{$d->id}}][exam]" 
+							value="{{ $d->exam }}">
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-3 project" {{$d->is_project ? '' : 'hidden'}}>
 							<label>Курсовая</label>
-							<input type="number" name="plan[{{$d->id}}][project]" value="{{ $d->project }}" class="form-control form-control-sm">
+							<input type="number" class="form-control form-control-sm" 
+							name="plan[{{$d->subject_id}}][{{$d->id}}][project]" 
+							value="{{ $d->project }}">
 						</div>
 					</div>
 				</td>

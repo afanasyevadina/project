@@ -22,6 +22,6 @@ class Plan extends Model
 
     public function teacher()
     {
-    	return $this->belongsTo('App\Teacher');
+    	return $this->belongsTo('App\Teacher')->withDefault();
     }
 }

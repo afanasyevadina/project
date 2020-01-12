@@ -22,9 +22,9 @@ class Group extends Model
     	return $this->belongsTo('App\Lang');
     }
 
-    public function graphic()
+    public function students()
     {
-        return $this->hasOne('App\GroupGraphic')->withDefault();
+        return $this->hasMany('App\Student');
     }
 
     public function getKursAttribute()

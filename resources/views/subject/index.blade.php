@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+<?php
+$divide = ['-', 'Всегда', 'На практики'];
+?>
 <div class="text-right">
 	<button class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#upload">Загрузить</button>
 </div>
@@ -64,11 +67,15 @@
 		</div>
 	</div>
 </div>
+<div class="form-group">
+	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск..." autofocus>
+</div>
 <table class="table table-hover">
 	<thead>
 		<tr>
 			<th>Название на рус.яз.</th>
 			<th>Название на каз.яз.</th>
+			<th>Деление на подгруппы</th>
 			<th class="text-right">
 				<button data-toggle="modal" data-target="#new" class="btn btn-sm btn-outline-success">Добавить новую</button>
 			</th>
@@ -79,6 +86,7 @@
 		<tr>
 			<td>{{ $s->name }}</td>
 			<td>{{ $s->name_kz }}</td>
+			<td>{{ $divide[$s->divide] }}</td>
 			<td class="text-right">
 				<button data-toggle="modal" data-target="#{{ $s->id }}" class="btn btn-sm btn-outline-success">Редактировать</button>
 			</td>

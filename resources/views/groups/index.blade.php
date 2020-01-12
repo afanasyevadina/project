@@ -64,7 +64,8 @@
 			<td>{{ $group->department->name }}</td>
 			<td>{{ $group->lang->name }}</td>
 			<td class="text-right">
-				<button data-toggle="modal" data-target="#{{ $group->id }}" class="btn btn-sm btn-outline-success">Редактировать</button>
+				<button data-toggle="modal" data-target="#{{ $group->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
+				<a href="/students/{{ $group->id}}" class="btn btn-sm btn-outline-secondary">Студенты</a>
 			</td>
 		</tr>
 		<div class="modal fade" id="{{ $group->id }}">
