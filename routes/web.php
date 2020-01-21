@@ -22,7 +22,7 @@ Route::get('/subjects', 'SubjectController@index')->name('subjects');
 Route::get('/teachers', 'TeacherController@index')->name('teachers');
 Route::get('/students/{id}', 'StudentController@index')->name('students');
 Route::get('/plans', 'PlanController@index')->name('plans');
-Route::get('/rup/{id}', 'RupController@index')->name('rup');
+Route::get('/rup', 'RupController@index')->name('rup');
 
 Route::get('/schedule/upload', function() {
 	return view('schedule.upload');
@@ -43,6 +43,7 @@ Route::post('/graphic', 'GraphicController@store');
 Route::post('/subjects', 'SubjectController@store');
 Route::post('/teachers', 'TeacherController@store');
 Route::post('/plans', 'PlanController@store');
+Route::post('/rup/{group}/{kurs}', 'RupController@store');
 Route::post('/students', 'StudentController@store');
 
 Route::post('/graphic/{id}', 'GraphicController@update');
@@ -57,6 +58,8 @@ Route::get('/graphic/{id}/delete', 'GraphicController@destroy');
 Route::get('/subjects/{id}/delete', 'SubjectController@destroy');
 Route::get('/teachers/{id}/delete', 'TeacherController@destroy');
 Route::get('/students/{id}/delete', 'StudentController@destroy');
+Route::get('/students/{group}/divide', 'StudentController@divide');
+Route::get('/plans/{group}/reset', 'PlanController@reset');
 
 Route::get('/rup/{id}/refresh/{kurs}', 'RupController@refresh');
 

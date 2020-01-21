@@ -11,8 +11,12 @@ class StudentController extends Controller
 {
     public function index($id)
     {
+        $subgroup = \Request::get('subgroup');
+        $students = Student::where('group_id', $id);
+        if($subgroup) $students->where('subgroup', $subgroup);
         return view('student.index', [
-            'students' => Student::orderBy('surname', 'asc')
+            'students' => $students
+            ->orderBy('surname', 'asc')
             ->orderBy('name', 'asc')
             ->orderBy('patronymic', 'asc')->get(),
             'group' => Group::find($id),
@@ -41,6 +45,9 @@ class StudentController extends Controller
         $student = Student::find($id);
         $group = $student->group_id;
         $student->delete();
+        if(Student::where('group_id', $group)->count() < 25) {
+            Student::where('group_id', $group)->update(['subgroup' => null]);
+        }
         return redirect()->route('students', ['id' => $group]);
     }
 
@@ -62,5 +69,19 @@ class StudentController extends Controller
             $student->save();
         }
         return redirect()->route('students', ['id' => $request->group]);
+    }
+
+    public function divide($group)
+    {
+        $students = Student::where('group_id', $group)
+        ->orderBy('surname', 'asc')
+        ->orderBy('name', 'asc')
+        ->orderBy('patronymic', 'asc')->get();
+        $half = count($students) / 2;
+        foreach($students as $key => $student) {
+            $student->subgroup = $key < $half ? 1 : 2;
+            $student->save();
+        }
+        return redirect()->back();
     }
 }

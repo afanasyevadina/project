@@ -5,15 +5,17 @@ use App\Plan;
 use App\Subject;
 use App\Group;
 use App\Cikl;
+use App\Teacher;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class RupController extends Controller
 {
-    public function index($id)
+    public function index()
     {
         $kurs = \Request::get('kurs') ?? 1;
+        $id = \Request::get('group');
         $group = Group::find($id);
         $all = Plan::where('group_id', $id)
         ->whereIn('semestr', [$kurs * 2 - 1, $kurs * 2])
@@ -22,33 +24,51 @@ class RupController extends Controller
         $plans = [];
         foreach ($all as $key => $p) {
             $sem = $p->semestr % 2 ? 1 : 2;
-            $plans[$p->subject_id]['teacher'] = $p->teacher;
-            $plans[$p->subject_id]['subject'] = $p->subject;
-            @$plans[$p->subject_id]['control'] += $p->controls;
-            $plans[$p->subject_id]['theory_main'] = $p->theory_main;
-            $plans[$p->subject_id]['practice_main'] = $p->practice_main;
-            @$plans[$p->subject_id]['theory'] += $p->theory;
-            @$plans[$p->subject_id]['practice'] += $p->practice;
-            @$plans[$p->subject_id]['practice'] += $p->lab;
-            @$plans[$p->subject_id]['consul'] += $p->consul;
-            @$plans[$p->subject_id]['exam'] += $p->exam;
-            $plans[$p->subject_id]['sem'.$sem] = $p->total;
-            $plans[$p->subject_id]['weeks'.$sem] = $p->weeks;
+            $index = $p->subject_id.$p->subgroup;
+            $plans[$index]['teacher'] = $p->teacher;
+            $plans[$index]['subject'] = $p->subject;
+            @$plans[$index]['control'] += $p->controls;
+            $plans[$index]['theory_main'] = $p->theory_main;
+            $plans[$index]['practice_main'] = $p->practice_main;
+            @$plans[$index]['theory'] += $p->theory;
+            @$plans[$index]['practice'] += $p->practice;
+            @$plans[$index]['practice'] += $p->lab;
+            @$plans[$index]['consul'] += $p->consul;
+            @$plans[$index]['exam'] += $p->exam;
+            $plans[$index]['sem'.$sem] = $p->total;
+            $plans[$index]['weeks'.$sem] = $p->weeks;
             if($p->is_project) {
-                $plans[$p->subject_id]['project'] = $p->project;
-                $plans[$p->subject_id]['project_sem'] = $p->semestr;
+                $plans[$index]['project'] = $p->project;
+                $plans[$index]['project_sem'] = $p->semestr;
             }
             if($p->is_exam)
-                $plans[$p->subject_id]['exam_sem'] = $p->semestr;
+                $plans[$index]['exam_sem'] = $p->semestr;
             if($p->is_zachet)
-                $plans[$p->subject_id]['zachet_sem'][] = $p->semestr;
+                $plans[$index]['zachet_sem'][] = $p->semestr;
         }
         
         return view('rup.index', [
             'plans' => $plans,
             'group' => $group,
             'kurs' => $kurs,
+            'teachers' => Teacher::all(),
+            'groups' => Group::all(),
         ]);
+    }
+
+    public function store(Request $request, $group, $kurs)
+    {
+        foreach ($request->all()['plan'] as $key => $p) {
+            $plans = Plan::where('group_id', $group)
+            ->whereIn('semestr', [($kurs * 2 - 1), $kurs * 2])
+            ->where('subject_id', $p['subject'])
+            ->get();
+            foreach($plans as $plan) {
+                $plan->teacher_id = $p['teacher_id'];
+                $plan->save();
+            }
+        }
+        return redirect()->back();
     }
 
     public function refresh($id, $kurs)
@@ -92,6 +112,6 @@ class RupController extends Controller
                 $plan->save();
             }
         }
-        return redirect()->route('rup', ['kurs' => $kurs]);
+        return redirect()->back();
     }
 }

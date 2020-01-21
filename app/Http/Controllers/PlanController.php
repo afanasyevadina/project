@@ -8,6 +8,7 @@ use App\Cikl;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
 
 class PlanController extends Controller
 {
@@ -47,7 +48,7 @@ class PlanController extends Controller
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('public/storage/'.$fileName);
         $sheet = $spreadsheet->getActiveSheet();
         $list = $sheet->toArray();
-        $list = array_slice($list, 6);
+        //$list = array_slice($list, 8);
         $groups = $cikls = $subjects = [];
         foreach (Group::all() as $g) 
             $groups[trim($g->name)] = $g->id;
@@ -56,19 +57,23 @@ class PlanController extends Controller
         foreach (Subject::all() as $s) 
             $subjects[trim($s->name)] = $s->id;
 
-        $cikl = '';
+        $cikl = 1;
+        $shifr = '';
+        $unexpected = [];
 
         foreach ($list as $key => $row) {
             if(trim(mb_strtolower($row[1])) == 'итого')
                 continue;
-            if(isset($cikls[trim($row[1])])) {
-                $cikl = $cikls[$row[1]];
+            $txtCikl = trim(mb_strtolower(trim($row[1])), ':');
+            if(isset($cikls[$txtCikl])) {
+                $cikl = $cikls[$txtCikl];
                 continue;
             }
             if(!isset($subjects[trim($row[1])])) {
-                echo "Unexpected ".$row[1];
-                return;
+                $unexpected[] = $row[1];
+                continue;
             }
+            if($row[0]) $shifr = $row[0];
             $control = $row[5];
             $theory = $row[7];
             $practice = $row[8];
@@ -91,8 +96,8 @@ class PlanController extends Controller
                 );
                     if($row[2] == $semestr) {
                         $plan->is_exam = 1;
-                        $plan->exam = 2;
-                        $plan->consul = 3;
+                        $plan->exam = 3;
+                        $plan->consul = 2;
                     }
                     if($row[3] == $semestr) $plan->is_zachet = 1;
                     if($row[4] == $semestr) {
@@ -119,10 +124,13 @@ class PlanController extends Controller
                         }
                     }
                     if($control--) $plan->controls = 1;
+                    $plan->shifr = $shifr;
+                    $plan->shifr_kz = $shifr;
                     $plan->save();
                 }
             }
         }
+        if(count($unexpected)) Session::flash('errors', $unexpected);
         return redirect()->route('plans', ['group' => $request->group]);
     }
 
@@ -147,5 +155,11 @@ class PlanController extends Controller
             }
         }
         return redirect()->route('plans', ['group' => $group]);
+    }
+
+    public function reset($group)
+    {
+        Plan::where('group_id', $group)->delete();
+        return redirect()->route('plans');
     }
 }

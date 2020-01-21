@@ -2,18 +2,24 @@
 @section('content')
 <h3>Учебный план</h3>
 <hr>
+@if(Session::has('errors'))
+<div class="alert alert-warning">
+	<p>Пропущены следующие строки:</p>
+	@foreach(array_filter(session('errors')) as $error)
+	<i>{{$error}}</i><br>
+	@endforeach
+</div>
+@endif
+<?php session()->forget('errors'); ?>
 <form>
 	<div class="row">
 		<div class="col-sm-6">
-			<select name="group" class="form-control" required>
+			<select name="group" class="form-control" required onchange="this.form.submit()">
 				<option value="">Выберите группу</option>
 				@foreach($groups as $g)
 				<option value="{{ $g->id }}" {{ $g->id == @$_GET['group'] ? 'selected' : ''}}>{{ $g->name }}</option>
 				@endforeach
 			</select>
-		</div>
-		<div class="col-sm-6">
-			<input type="submit" value="Показать" class="btn btn-outline-primary">
 		</div>
 	</div>
 </form>
@@ -23,7 +29,8 @@
 	<div class="text-right">
 		<input type="submit" value="Сохранить" class="btn btn-sm btn-outline-info">
 		<button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#upload">Загрузить</button>
-		<a href="/rup/{{ $_GET['group'] }}" class="btn btn-sm btn-outline-secondary">РУП</a>
+		<a href="/rup?group={{ $_GET['group'] }}" class="btn btn-sm btn-outline-secondary">РУП</a>
+		<button type="button" data-toggle="modal" data-target="#reset" class="btn btn-sm btn-outline-danger">Удалить</button>
 	</div>
 	<hr>
 	<table class="table table-bordered table-sm">
@@ -70,7 +77,7 @@
 			@foreach($cikl['subjects'] as $key => $p)
 			<?php @sort($p['zachet_sem']); ?>
 			<tr data-toggle="collapse" data-target=".col{{ $key }}">
-				<td>{{ $p['shifr'] }}</td>
+				<td class="text-nowrap">{{ $p['shifr'] }}</td>
 				<td>{{ $p['subject']->name }}</td>
 				<td>{{ @$p['exam_sem'] }}</td>
 				<td>{{ @implode(', ', $p['zachet_sem']) }}</td>
@@ -177,6 +184,26 @@
 					</div>
 				</div>
 				<div class="modal-footer"><input type="submit" class="btn btn-success" value="Загрузить"></div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="reset">
+	<div class="modal-dialog">
+		<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Подтверждение</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Учебный план на данную группу будет полностью удален. Продолжить?
+				</div>
+				<div class="modal-footer">
+					<a href="/plans/{{@$_GET['group']}}/reset" class="btn btn-primary">Да</a>
+					<button data-dismiss="modal" class="btn btn-light">Нет</button>
+				</div>
 			</form>
 		</div>
 	</div>

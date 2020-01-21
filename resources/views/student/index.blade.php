@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('content')
 <div class="text-right">
+	@if(count($group->students) >= 25)
+	<a href="/students/{{$group->id}}/divide" class="btn btn-sm btn-outline-primary">Сформировать подгруппы</a>
+	@endif
 	<button class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#upload">Загрузить</button>
 </div>
 <div class="modal fade" id="upload">
@@ -59,23 +62,42 @@
 		</div>
 	</div>
 </div>
+@if(count($group->students) >= 25)
+<form>
+	<div class="form-group col-sm-6">
+		<select name="subgroup" class="form-control" onchange="this.form.submit()">
+			<option value="">Все студенты</option>
+			<option value="1" {{@$_GET['subgroup'] == 1 ? 'selected' : ''}}>1 подгруппа</option>
+			<option value="2" {{@$_GET['subgroup'] == 2 ? 'selected' : ''}}>2 подгруппа</option>
+		</select>
+	</div>
+</form>
+@endif
 <table class="table table-hover">
 	<thead>
 		<tr>
+			<th>№</th>
 			<th>Фамилия</th>
 			<th>Имя</th>
 			<th>Отчество</th>
+			@if(count($group->students) >= 25)
+			<th>Подгруппа</th>
+			@endif
 			<th class="text-right">
 				<button data-toggle="modal" data-target="#new" class="btn btn-sm btn-outline-success">Добавить</button>
 			</th>
 		</tr>
 	</thead>
 	<tbody>
-		@foreach($students as $s)
+		@foreach($students as $key => $s)
 		<tr>
+			<td>{{ $key + 1 }}</td>
 			<td>{{ $s->surname }}</td>
 			<td>{{ $s->name }}</td>
 			<td>{{ $s->patronymic }}</td>
+			@if(count($group->students) >= 25)
+			<td>{{ $s->subgroup }}</td>
+			@endif
 			<td class="text-right">
 				<button data-toggle="modal" data-target="#{{ $s->id }}" class="btn btn-sm btn-outline-success">Редактировать</button>
 			</td>

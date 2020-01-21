@@ -39,6 +39,7 @@ tr[data-toggle]:hover {
 }
 .sidebar {
 	position: fixed;
+	z-index: 999;
 	top: 56px;
 	width: 200px;
 }
@@ -56,10 +57,14 @@ tr[data-toggle]:hover {
 }
 .navbar {
 	position: fixed;
+	z-index: 999;
 	top: 0;
 	right: 0;
 	left: 0;
 }
 .clear-fix {
 	height: 56px;
+}
+td select.form-control {
+	width: auto;
 }
