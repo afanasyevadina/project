@@ -10,12 +10,12 @@ use App\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class RupController extends Controller
+class LoadController extends Controller
 {
     public function index()
     {
-        $kurs = \Request::get('kurs') ?? 1;
-        $id = \Request::get('group');
+        $year = \Request::get('year') ?? date('Y');
+        $id = \Request::get('teacher');
         $group = Group::find($id);
         $all = Plan::where('group_id', $id)
         ->whereIn('semestr', [$kurs * 2 - 1, $kurs * 2])

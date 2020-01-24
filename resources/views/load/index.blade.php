@@ -5,40 +5,34 @@
 <form>
 	<div class="row">
 		<div class="form-group col-sm-6">
-			<label>Группа</label>
-			<select name="group" class="form-control form-control-sm" onchange="this.form.submit()">
-				<option value="">Группа</option>
-				@foreach($groups as $g)
-				<option value="{{ $g->id }}" {{ $g->id == @$_GET['group'] ? 'selected' : '' }}>{{ $g->name }}</option>
+			<label>Преподаватель</label>
+			<select name="teacher" class="form-control form-control-sm" onchange="this.form.submit()">
+				<option value="">Преподаватель</option>
+				@foreach($teachers as $t)
+				<option value="{{ $t->id }}" {{ $g->id == @$_GET['teacher'] ? 'selected' : '' }}>{{ $t->fullName }}</option>
 				@endforeach
 			</select>
 		</div>
 		<div class="form-group col-sm-6">
-			<label>Курс</label>
-			<select name="kurs" class="form-control form-control-sm" onchange="this.form.submit()">
-				@for($i = 1; $i <= 4; $i++)
-				<option value="{{ $i }}" {{ $i == $kurs ? 'selected' : '' }}>{{ $i }}</option>
+			<label>Учебный год</label>
+			<select name="year" class="form-control form-control-sm" onchange="this.form.submit()">
+				@for($i = date('Y') - 1; $i <= date('Y') + 1; $i++)
+				<option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>{{ $i }}</option>
 				@endfor
 			</select>
 		</div>
 	</div>
 </form>
-@if($group)
-<form action="/rup/{{ $group->id }}/{{ $kurs }}" method="POST">
-	@csrf
 	<div class="py-2 d-flex justify-content-between">
-		<p>Количество студентов: {{ count($group->students) }}</p>
 		<div>
-			<input type="submit" value="Сохранить" class="btn btn-sm btn-outline-success"> | 
-			<a href="/rup/{{ $group->id }}/export/{{ $kurs }}" class="btn btn-sm btn-outline-info">Экспорт в Excel</a> | 
-			<a href="/rup/{{ $group->id }}/refresh/{{ $kurs }}" class="btn btn-sm btn-outline-secondary">Обновить подгруппы</a>
+			<a href="/load/{{ $teacher->id }}/export/{{ $kurs }}" class="btn btn-sm btn-outline-info">Экспорт в Excel</a>
 		</div>
 	</div>
 	<div class="table-responsive">
 		<table class="table table-sm table-xs table-bordered">
 			<thead>
 				<tr>
-					<th rowspan="2">Преподаватели</th>
+					<th rowspan="2">Группа</th>
 					<th rowspan="2">Наименование предмета</th>
 					<th colspan="3">Распределение по семестрам</th>
 					<th rowspan="2">К/р</th>
@@ -72,16 +66,7 @@
 				@foreach($plans as $key => $p)
 				<?php @sort($p['zachet_sem']); ?>
 				<tr>
-					<td>
-						<input type="hidden" name="plan[{{$key}}][subject]" value="{{$p['subject']->id}}">
-						<input type="hidden" name="plan[{{$key}}][subgroup]" value="{{$p['subgroup']}}">
-						<select name="plan[{{$key}}][teacher_id]" class="form-control form-control-sm">
-							<option value="">ФИО</option>
-							@foreach($teachers as $t)
-							<option value="{{$t->id}}" {{$t->id == $p['teacher']->id ? 'selected' : ''}}>{{$t->shortName}}</option>
-							@endforeach
-						</select>
-					</td>
+					<td>{{ $p['group']->name }}</td>
 					<td>{{ $p['subject']->name }}</td>
 					<td>{{ @$p['exam_sem'] }}</td>
 					<td>{{ @implode(', ', $p['zachet_sem']) }}</td>
@@ -108,6 +93,4 @@
 			</tbody>
 		</table>
 	</div>
-</form>
-@endif
 @endsection

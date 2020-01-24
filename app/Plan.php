@@ -8,7 +8,7 @@ class Plan extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['group_id', 'semestr', 'cikl_id', 'subject_id', 'theory', 'practice', 'lab', 'project', 'is_exam', 'is_project', 'is_zachet', 'control', 'theory_main', 'practice_main', 'total'];
+    protected $fillable = ['group_id', 'semestr', 'cikl_id', 'subject_id', 'theory', 'practice', 'lab', 'project', 'is_exam', 'is_project', 'is_zachet', 'controls', 'theory_main', 'practice_main', 'total', 'weeks', 'subgroup', 'shifr', 'shifr_kz'];
 
     public function subject()
     {

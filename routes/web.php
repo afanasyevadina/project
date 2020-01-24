@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return redirect()->route('groups');
+    return redirect()->route('plans');
 });
 Route::get('/groups', 'GroupController@index')->name('groups');
 Route::get('/schedule', 'ScheduleController@index')->name('schedule');
@@ -23,6 +23,7 @@ Route::get('/teachers', 'TeacherController@index')->name('teachers');
 Route::get('/students/{id}', 'StudentController@index')->name('students');
 Route::get('/plans', 'PlanController@index')->name('plans');
 Route::get('/rup', 'RupController@index')->name('rup');
+Route::get('/load', 'LoadController@index')->name('load');
 
 Route::get('/schedule/upload', function() {
 	return view('schedule.upload');
@@ -62,5 +63,6 @@ Route::get('/students/{group}/divide', 'StudentController@divide');
 Route::get('/plans/{group}/reset', 'PlanController@reset');
 
 Route::get('/rup/{id}/refresh/{kurs}', 'RupController@refresh');
+Route::get('/rup/{id}/export/{kurs}', 'RupController@export');
 
 
