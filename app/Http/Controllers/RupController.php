@@ -16,21 +16,24 @@ class RupController extends Controller
     {
         $kurs = \Request::get('kurs') ?? 1;
         $id = \Request::get('group');
-        $group = Group::find($id);
+        $group = Group::findOrFail($id);
         $all = Plan::where('group_id', $id)
         ->whereIn('semestr', [$kurs * 2 - 1, $kurs * 2])
         ->orderBy('cikl_id', 'asc')
-        ->orderBy('subject_id', 'asc')->get();
+        ->orderBy('subject_id', 'asc')
+        ->orderBy('subgroup', 'asc')
+        ->get();
         $plans = [];
         foreach ($all as $key => $p) {
             $sem = $p->semestr % 2 ? 1 : 2;
-            $index = $p->subject_id.$p->subgroup;
+            $index = $p->subject_id.$p->cikl_id.$p->subgroup;
             $plans[$index]['subgroup'] = $p->subgroup;
+            $plans[$index]['cikl_id'] = $p->cikl_id;
             $plans[$index]['teacher'] = $p->teacher;
             $plans[$index]['subject'] = $p->subject;
             @$plans[$index]['control'] += $p->controls;
-            $plans[$index]['theory_main'] = $p->theory_main;
-            $plans[$index]['practice_main'] = $p->practice_main;
+            $plans[$index]['theory_main'] = $p->theoryMain;
+            $plans[$index]['practice_main'] = $p->practiceMain + $p->projectMain;
             @$plans[$index]['theory'] += $p->theory;
             @$plans[$index]['practice'] += $p->practice;
             @$plans[$index]['practice'] += $p->lab;
@@ -53,7 +56,7 @@ class RupController extends Controller
             'group' => $group,
             'kurs' => $kurs,
             'teachers' => Teacher::all(),
-            'groups' => Group::all(),
+            'groups' => Group::orderBy('name', 'asc')->get(),
         ]);
     }
 
@@ -63,6 +66,7 @@ class RupController extends Controller
             $plans = Plan::where('group_id', $group)
             ->whereIn('semestr', [($kurs * 2 - 1), $kurs * 2])
             ->where('subject_id', $p['subject'])
+            ->where('cikl_id', $p['cikl_id'])
             ->where('subgroup', $p['subgroup'])
             ->get();
             foreach($plans as $plan) {
@@ -75,41 +79,46 @@ class RupController extends Controller
 
     public function refresh($id, $kurs)
     {
-        $group = Group::find($id);
+        $group = Group::findOrFail($id);
         $query = Plan::where('group_id', $id)
         ->whereIn('semestr', [$kurs * 2 - 1, $kurs * 2]);
         $plans = $query->get();
         if(count($group->students) < 25) {
-            $query->where('subgroup', 2)->delete();
-            $query->where('subgroup', 1)->update(['subgroup' => 0]);
+            foreach($plans as $plan) {
+                if($plan->subgroup == 2) {
+                    $plan->lessons()->delete();
+                    $plan->delete();
+                } else {
+                    $plan->subgroup = 0;
+                    $plan->save();
+                }
+            }
         } else {
             foreach ($plans as $key => $plan) {
                 if($plan->subject->divide && $plan->subgroup != 2) {
                     $attr = [
                         'group_id' => $plan->group_id,
                         'semestr' => $plan->semestr,
+                        'year' => $plan->year,
                         'subject_id' => $plan->subject_id,
                         'cikl_id' => $plan->cikl_id,
                         'shifr' => $plan->shifr,
                         'shifr_kz' => $plan->shifr_kz,
-                        'is_exam' => $plan->is_exam,
-                        'is_zachet' => $plan->is_zachet,
-                        'is_project' => $plan->is_project,
-                        'controls' => $plan->controls,
-                        'practice' => $plan->practice,
-                        'practice_main' => $plan->practice_main,
-                        'project' => $plan->project,
-                        'lab' => $plan->lab,
-                        'weeks' => $plan->weeks,
                         'subgroup' => 2
                     ];
+                    $newPlan = Plan::updateOrCreate($attr);
+                    $newPlan->is_exam = $plan->is_exam;
+                    $newPlan->is_zachet = $plan->is_zachet;
+                    $newPlan->is_project = $plan->is_project;
+                    $newPlan->practice = $plan->practice;
+                    $newPlan->lab = $plan->lab;
+                    $newPlan->project = $plan->project;
+                    $newPlan->weeks = $plan->weeks;
                     if($plan->subject->divide == 1) {
                         $attr['theory'] = $plan->theory;
-                        $attr['theory_main'] = $plan->theory_main;
                         $attr['controls'] = $plan->controls;
                     }
-                    $newPlan = Plan::updateOrCreate($attr);
-                    $newPlan->total = $newPlan->theory + $newPlan->practice + $newPlan->project;
+                    $newPlan->total = $newPlan['theory'] + $newPlan['practice'] + $newPlan['lab'] + $newPlan['project'];
                     $newPlan->save();
                     $plan->subgroup = 1;
                     $plan->save();
@@ -121,7 +130,7 @@ class RupController extends Controller
 
     public function export($id, $kurs)
     {
-        $group = Group::find($id);
+        $group = Group::findOrFail($id);
         $all = Plan::where('group_id', $id)
         ->whereIn('semestr', [$kurs * 2 - 1, $kurs * 2])
         ->orderBy('cikl_id', 'asc')
@@ -133,8 +142,8 @@ class RupController extends Controller
             $plans[$index]['teacher'] = $p->teacher;
             $plans[$index]['subject'] = $p->subject;
             @$plans[$index]['control'] += $p->controls;
-            $plans[$index]['theory_main'] = $p->theory_main;
-            $plans[$index]['practice_main'] = $p->practice_main;
+            $plans[$index]['theory_main'] = $p->theoryMain;
+            $plans[$index]['practice_main'] = $p->practiceMain + $p->projectMain;
             @$plans[$index]['theory'] += $p->theory;
             @$plans[$index]['practice'] += $p->practice;
             @$plans[$index]['practice'] += $p->lab;

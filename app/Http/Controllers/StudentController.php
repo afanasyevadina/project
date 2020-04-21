@@ -3,24 +3,41 @@
 namespace App\Http\Controllers;
 use App\Student;
 use App\Group;
+use App\Pay;
+use App\Specialization;
+use App\Lang;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
-    public function index($id)
+    public function index()
     {
-        $subgroup = \Request::get('subgroup');
-        $students = Student::where('group_id', $id);
-        if($subgroup) $students->where('subgroup', $subgroup);
+        $students = Student::orderBy('surname', 'asc')
+        ->orderBy('name', 'asc')
+        ->orderBy('patronymic', 'asc')->get();
         return view('student.index', [
-            'students' => $students
-            ->orderBy('surname', 'asc')
-            ->orderBy('name', 'asc')
-            ->orderBy('patronymic', 'asc')->get(),
-            'group' => Group::find($id),
-            'groups' => Group::all()
+            'students' => $students,
+            'students' => $students,
+        ]);
+    }
+
+    public function create()
+    {
+        return view('student.create', [
+            'groups' => Group::orderBy('name', 'asc')->get(),
+            'pays' => Pay::orderBy('name', 'asc')->get(),
+        ]);
+    }
+
+    public function edit($id)
+    {
+        $student = Student::findOrFail($id);
+        return view('student.edit', [
+            'student' => $student,
+            'groups' => Group::orderBy('name', 'asc')->get(),
+            'pays' => Pay::orderBy('name', 'asc')->get(),
         ]);
     }
 
@@ -28,21 +45,24 @@ class StudentController extends Controller
     {
         $student = Student::create($request->all());
         $student->save();
-        return redirect()->route('students', ['id' => $student->group_id]);
+        return redirect()->route('students/edit', ['id' => $student->id]);
     }
 
     public function update(Request $request, $id)
     {
-        $student = Student::find($id);
-        $group = $student->group_id;
+        $student = Student::findOrFail($id);
         $student->fill($request->all());
+        if($request->file('photo')) {
+            $fileName = Storage::disk('public')->putFileAs('students', $request->file('photo'), $id);
+            $student->photo = '/public/storage/'.$fileName;
+        }
         $student->save();
-        return redirect()->route('students', ['id' => $group]);
+        return redirect()->back();
     }
 
     public function destroy($id)
     {
-        $student = Student::find($id);
+        $student = Student::findOrFail($id);
         $group = $student->group_id;
         $student->delete();
         if(Student::where('group_id', $group)->count() < 25) {
@@ -82,6 +102,5 @@ class StudentController extends Controller
             $student->subgroup = $key < $half ? 1 : 2;
             $student->save();
         }
-        return redirect()->back();
     }
 }

@@ -1,31 +1,36 @@
 @extends('layouts.app')
+@section('title', 'Нагрузка преподавателя')
 @section('content')
-<h3>Рабочий учебный план</h3>
+<h3>Нагрузка преподавателя</h3>
 <hr>
 <form>
 	<div class="row">
+		@if(\Auth::user()->role != 'teacher')
 		<div class="form-group col-sm-6">
 			<label>Преподаватель</label>
-			<select name="teacher" class="form-control form-control-sm" onchange="this.form.submit()">
+			<select name="teacher" class="form-control form-control-sm">
 				<option value="">Преподаватель</option>
 				@foreach($teachers as $t)
-				<option value="{{ $t->id }}" {{ $g->id == @$_GET['teacher'] ? 'selected' : '' }}>{{ $t->fullName }}</option>
+				<option value="{{ $t->id }}" {{ $t->id == @$_GET['teacher'] ? 'selected' : '' }}>{{ $t->fullName }}</option>
 				@endforeach
 			</select>
 		</div>
+		@endif
 		<div class="form-group col-sm-6">
 			<label>Учебный год</label>
-			<select name="year" class="form-control form-control-sm" onchange="this.form.submit()">
-				@for($i = date('Y') - 1; $i <= date('Y') + 1; $i++)
-				<option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>{{ $i }}</option>
+			<select name="year" class="form-control form-control-sm">
+				@for($i = date('Y') - 5; $i <= date('Y') + 1; $i++)
+				<option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>{{ $i }}-{{ $i +  1 }}</option>
 				@endfor
 			</select>
 		</div>
+		<div class="col-sm-12"><input type="submit" class="btn btn-sm btn-outline-primary" value="Показать"></div>
 	</div>
 </form>
+@if($teacher)
 	<div class="py-2 d-flex justify-content-between">
 		<div>
-			<a href="/load/{{ $teacher->id }}/export/{{ $kurs }}" class="btn btn-sm btn-outline-info">Экспорт в Excel</a>
+			<a href="/load/{{ $teacher->id }}/export/{{ $year }}" class="btn btn-sm btn-outline-info">Экспорт в Excel</a>
 		</div>
 	</div>
 	<div class="table-responsive">
@@ -73,8 +78,8 @@
 					<td>{{ @$p['project_sem'] }}</td>
 					<td>{{ $p['control'] ? $p['control'] : '' }}</td>
 					<td>{{ $p['theory_main'] + $p['practice_main'] }}</td>
-					<td>{{ $p['theory_main'] }}</td>
-					<td>{{ $p['practice_main'] }}</td>
+					<td>{{ $p['theory_main'] ? $p['theory_main'] : '' }}</td>
+					<td>{{ $p['practice_main'] ? $p['practice_main'] : '' }}</td>
 					<td>{{ $p['theory'] + $p['practice'] + @$p['project'] }}</td>
 					<td>{{ @$p['theory'] ? $p['theory'] : '' }}</td>
 					<td>{{ @$p['practice'] ? $p['practice'] : '' }}</td>
@@ -93,4 +98,5 @@
 			</tbody>
 		</table>
 	</div>
+@endif
 @endsection

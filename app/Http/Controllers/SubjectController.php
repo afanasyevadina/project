@@ -19,22 +19,19 @@ class SubjectController extends Controller
     {
         $subject = Subject::create($request->all());
         $subject->save();
-        return redirect()->route('subjects');
     }
 
     public function update(Request $request, $id)
     {
-        $subject = Subject::find($id);
+        $subject = Subject::findOrFail($id);
         $subject->fill($request->all());
         $subject->save();
-        return redirect()->route('subjects');
     }
 
     public function destroy($id)
     {
-        $subject = Subject::find($id);
+        $subject = Subject::findOrFail($id);
         $subject->delete();
-        return redirect()->route('subjects');
     }
 
     public function upload(Request $request)

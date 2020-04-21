@@ -1,10 +1,19 @@
 @extends('layouts.app')
+@section('title', 'Просмотр расписания')
 @section('content')
 <?php
 $year = @$_GET['year'] ? $_GET['year'] : date('Y');
 ?>
-<div class="text-right">
-    <a href="schedule/upload" class="btn btn-sm btn-outline-success">Загрузить</a>
+<div class="d-flex justify-content-between">
+    <h3>Просмотр расписания</h3>
+    <div>
+        <a href="schedule/group" class="btn btn-sm btn-outline-secondary">Расписание группы &raquo;</a>
+        <a href="schedule/teacher" class="btn btn-sm btn-outline-secondary">Расписание преподавателя &raquo;</a>
+        <a href="schedule/cab" class="btn btn-sm btn-outline-secondary">Расписание аудиторий &raquo;</a>
+        @if(!empty($_GET))
+        <a href="schedule/export?<?=$_SERVER['QUERY_STRING']?>" class="btn btn-sm btn-outline-success">Экспорт в Excel</a>
+        @endif
+    </div>
 </div>
 <hr>
 <form>
@@ -84,21 +93,81 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="num in 6">
-                        <td>{{ num }}</td>
-                        <template v-for="group in day">
-                            <td>{{ !!group.lessons[num] ? group.lessons[num].subject : '' }}</td>
-                            <td>{{ !!group.lessons[num] ? group.lessons[num].cab : '' }}</td>
-                        </template>
-                    </tr>
+                    <template v-for="num in 6">
+                        <tr>
+                            <td rowspan="2">{{ num }}</td>
+                            <template v-for="group in day">
+                                <template v-if="!!group.lessons[num]">
+                                    <template v-if="!!group.lessons[num][1] || !!group.lessons[num][2]">
+                                        <td>
+                                            <template v-for="subject in unique(group.lessons[num][1], 'subject')">
+                                                <span class="d-block">{{ subject }}</span>
+                                            </template>
+                                            <i class="d-block text-right">
+                                                {{ unique(group.lessons[num][1], 'teacher').join(' / ') }}
+                                            </i>
+                                        </td>
+                                        <td>
+                                            <template v-for="cab in unique(group.lessons[num][1], 'cab')">
+                                                <span class="d-block text-center">{{ cab }}</span>
+                                            </template>
+                                        </td>
+                                    </template>
+                                    <template v-else>
+                                        <td>
+                                            <template v-for="subject in unique(group.lessons[num][0], 'subject')">
+                                                <span class="d-block">{{ subject }}</span>
+                                            </template>
+                                        </td>
+                                        <td rowspan="2">
+                                            <template v-for="cab in unique(group.lessons[num][0], 'cab')">
+                                                <span class="d-block text-center">{{ cab }}</span>
+                                            </template>
+                                        </td>
+                                    </template>
+                                </template>
+                                <template v-else>
+                                    <td></td><td rowspan="2"></td>
+                                </template>
+                            </template>
+                        </tr>
+                        <tr>
+                            <template v-for="group in day">
+                                <template v-if="!!group.lessons[num]">
+                                    <template v-if="!!group.lessons[num][1] || !!group.lessons[num][2]">
+                                        <td>
+                                            <template v-for="subject in unique(group.lessons[num][2], 'subject')">
+                                                <span class="d-block">{{ subject }}</span>
+                                            </template>
+                                            <i class="d-block text-right">
+                                                {{ unique(group.lessons[num][2], 'teacher').join(' / ') }}
+                                            </i>
+                                        </td>
+                                        <td>
+                                            <template v-for="cab in unique(group.lessons[num][2], 'cab')">
+                                                <span class="d-block text-center">{{ cab }}</span>
+                                            </template>
+                                        </td>
+                                    </template>
+                                    <template v-else>
+                                        <td>
+                                            <i class="d-block text-right">
+                                                {{ unique(group.lessons[num][0], 'teacher').join(' / ') }}
+                                            </i>
+                                        </td>
+                                    </template>
+                                </template>
+                            </template>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
         </div>
-        <hr>
     </div>
 </div>
 @endverbatim
-<script type="text/javascript" src="/public/js/app.js"></script>
+@endsection
+@section('scripts')
 <script>
     const app = new Vue({
         el: '#app',
@@ -112,6 +181,11 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
             },
             schedule: [],
             loading: false
+        },
+        methods: {
+            unique(arr, field) {
+                return !!arr ? arr.map(v => v[field]).filter((v, i, a) => a.indexOf(v) === i) : []
+            }
         },
         created() {
             if(location.search) {

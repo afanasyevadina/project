@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 use App\Teacher;
+use App\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
 {
@@ -17,6 +19,19 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return view('teacher.create');
+    }
+
+    public function edit($id)
+    {
+        $teacher = Teacher::findOrFail($id);
+        return view('teacher.edit', [
+            'teacher' => $teacher,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $teacher = Teacher::create($request->all());
@@ -26,7 +41,7 @@ class TeacherController extends Controller
 
     public function update(Request $request, $id)
     {
-        $teacher = Teacher::find($id);
+        $teacher = Teacher::findOrFail($id);
         $teacher->fill($request->all());
         $teacher->save();
         return redirect()->route('teachers');
@@ -34,7 +49,7 @@ class TeacherController extends Controller
 
     public function destroy($id)
     {
-        $teacher = Teacher::find($id);
+        $teacher = Teacher::findOrFail($id);
         $teacher->delete();
         return redirect()->route('teachers');
     }

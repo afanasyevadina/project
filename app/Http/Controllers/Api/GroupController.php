@@ -15,10 +15,10 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return Group::with('department')
+        return Group::with('specialization')
         ->with('lang')
-        ->orderBy('department_id', 'asc')
-        ->orderBy('kurs', 'asc')
+        ->orderBy('specialization_id', 'asc')
+        ->orderBy('year_create', 'asc')
         ->orderBy('lang_id', 'asc')
         ->get();
     }

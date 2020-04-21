@@ -16,21 +16,21 @@ class LoadController extends Controller
     {
         $year = \Request::get('year') ?? date('Y');
         $id = \Request::get('teacher');
-        $group = Group::find($id);
-        $all = Plan::where('group_id', $id)
-        ->whereIn('semestr', [$kurs * 2 - 1, $kurs * 2])
+        if(\Auth::user()->role == 'teacher') $id = \Auth::user()->person_id;
+        $teacher = Teacher::findOrFail($id);
+        $all = Plan::where('teacher_id', $id)
+        ->where('year', $year)
         ->orderBy('cikl_id', 'asc')
         ->orderBy('subject_id', 'asc')->get();
         $plans = [];
         foreach ($all as $key => $p) {
             $sem = $p->semestr % 2 ? 1 : 2;
-            $index = $p->subject_id.$p->subgroup;
-            $plans[$index]['subgroup'] = $p->subgroup;
-            $plans[$index]['teacher'] = $p->teacher;
+            $index = $p->group_id.$p->subgroup;
+            $plans[$index]['group'] = $p->group;
             $plans[$index]['subject'] = $p->subject;
             @$plans[$index]['control'] += $p->controls;
-            $plans[$index]['theory_main'] = $p->theory_main;
-            $plans[$index]['practice_main'] = $p->practice_main;
+            $plans[$index]['theory_main'] = $p->theoryMain;
+            $plans[$index]['practice_main'] = $p->practiceMain + $p->projectMain;
             @$plans[$index]['theory'] += $p->theory;
             @$plans[$index]['practice'] += $p->practice;
             @$plans[$index]['practice'] += $p->lab;
@@ -48,93 +48,30 @@ class LoadController extends Controller
                 $plans[$index]['zachet_sem'][$p->semestr] = $p->semestr;
         }
         
-        return view('rup.index', [
+        return view('load.index', [
             'plans' => $plans,
-            'group' => $group,
-            'kurs' => $kurs,
-            'teachers' => Teacher::all(),
-            'groups' => Group::all(),
+            'teacher' => $teacher,
+            'year' => $year,
+            'teachers' => Teacher::all()
         ]);
     }
 
-    public function store(Request $request, $group, $kurs)
+    public function export($id, $year)
     {
-        foreach ($request->all()['plan'] as $key => $p) {
-            $plans = Plan::where('group_id', $group)
-            ->whereIn('semestr', [($kurs * 2 - 1), $kurs * 2])
-            ->where('subject_id', $p['subject'])
-            ->where('subgroup', $p['subgroup'])
-            ->get();
-            foreach($plans as $plan) {
-                $plan->teacher_id = $p['teacher_id'];
-                $plan->save();
-            }
-        }
-        return redirect()->back();
-    }
-
-    public function refresh($id, $kurs)
-    {
-        $group = Group::find($id);
-        $query = Plan::where('group_id', $id)
-        ->whereIn('semestr', [$kurs * 2 - 1, $kurs * 2]);
-        $plans = $query->get();
-        if(count($group->students) < 25) {
-            $query->where('subgroup', 2)->delete();
-            $query->where('subgroup', 1)->update(['subgroup' => 0]);
-        } else {
-            foreach ($plans as $key => $plan) {
-                if($plan->subject->divide && $plan->subgroup != 2) {
-                    $attr = [
-                        'group_id' => $plan->group_id,
-                        'semestr' => $plan->semestr,
-                        'subject_id' => $plan->subject_id,
-                        'cikl_id' => $plan->cikl_id,
-                        'shifr' => $plan->shifr,
-                        'shifr_kz' => $plan->shifr_kz,
-                        'is_exam' => $plan->is_exam,
-                        'is_zachet' => $plan->is_zachet,
-                        'is_project' => $plan->is_project,
-                        'controls' => $plan->controls,
-                        'practice' => $plan->practice,
-                        'practice_main' => $plan->practice_main,
-                        'project' => $plan->project,
-                        'lab' => $plan->lab,
-                        'weeks' => $plan->weeks,
-                        'subgroup' => 2
-                    ];
-                    if($plan->subject->divide == 1) {
-                        $attr['theory'] = $plan->theory;
-                        $attr['theory_main'] = $plan->theory_main;
-                        $attr['controls'] = $plan->controls;
-                    }
-                    $newPlan = Plan::updateOrCreate($attr);
-                    $newPlan->total = $newPlan->theory + $newPlan->practice + $newPlan->project;
-                    $newPlan->save();
-                    $plan->subgroup = 1;
-                    $plan->save();
-                }
-            }
-        }
-        return redirect()->back();
-    }
-
-    public function export($id, $kurs)
-    {
-        $group = Group::find($id);
-        $all = Plan::where('group_id', $id)
-        ->whereIn('semestr', [$kurs * 2 - 1, $kurs * 2])
+        $teacher = Teacher::findOrFail($id);
+        $all = Plan::where('teacher_id', $id)
+        ->where('year', $year)
         ->orderBy('cikl_id', 'asc')
         ->orderBy('subject_id', 'asc')->get();
         $plans = [];
         foreach ($all as $key => $p) {
             $sem = $p->semestr % 2 ? 1 : 2;
             $index = $p->subject_id.$p->subgroup;
-            $plans[$index]['teacher'] = $p->teacher;
+            $plans[$index]['group'] = $p->group;
             $plans[$index]['subject'] = $p->subject;
             @$plans[$index]['control'] += $p->controls;
-            $plans[$index]['theory_main'] = $p->theory_main;
-            $plans[$index]['practice_main'] = $p->practice_main;
+            $plans[$index]['theory_main'] = $p->theoryMain;
+            $plans[$index]['practice_main'] = $p->practiceMain + $p->projectMain;
             @$plans[$index]['theory'] += $p->theory;
             @$plans[$index]['practice'] += $p->practice;
             @$plans[$index]['practice'] += $p->lab;
@@ -214,8 +151,8 @@ class LoadController extends Controller
         $rowCount = 2; 
         foreach($plans as $p) {
             $rowCount++;
-            $sheet->SetCellValue('A'.$rowCount, $group->name);
-            $sheet->SetCellValue('B'.$rowCount, $p['teacher']->shortName);
+            $sheet->SetCellValue('A'.$rowCount, $p['group']->name);
+            $sheet->SetCellValue('B'.$rowCount, $teacher->shortName);
             $sheet->SetCellValue('C'.$rowCount, $p['subject']->name);
             $sheet->SetCellValue('D'.$rowCount, @$p['exam_sem']);
             $sheet->SetCellValue('E'.$rowCount, @implode(', ', $p['zachet_sem']));
@@ -240,7 +177,6 @@ class LoadController extends Controller
             $sheet->SetCellValue('AA'.$rowCount, '=X'.$rowCount.'-Z'.$rowCount);
         }
         $rowCount++;
-        $sheet->SetCellValue('A'.$rowCount, $group->name);
         $sheet->SetCellValue('C'.$rowCount, 'Итого');
         $sheet->SetCellValue('H'.$rowCount, "=SUM(H3:H".($rowCount-1).")");
         $sheet->SetCellValue('I'.$rowCount, "=SUM(I3:I".($rowCount-1).")");

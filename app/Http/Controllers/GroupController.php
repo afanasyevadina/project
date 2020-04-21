@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Group;
+use App\Student;
 use App\GroupGraphic;
 use App\Department;
+use App\Specialization;
 use App\Lang;
+use App\Teacher;
 
 use Illuminate\Http\Request;
 
@@ -17,14 +20,15 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return view('groups.index', [
-            'groups' => Group::orderBy('department_id', 'asc')
-            ->orderBy('year_create', 'desc')
-            ->orderBy('lang_id', 'asc')
-            ->orderBy('name', 'asc')
-            ->get(),
-            'departments' => Department::all(),
+        $query = Group::query();
+        if(\Request::get('spec')) $query->where('specialization_id', \Request::get('spec'));
+        if(\Request::get('kurs')) $query->where('kurs', \Request::get('kurs'));
+        $groups =$query->orderBy('name', 'asc')->get();
+        return view('group.index', [
+            'groups' => $groups,
+            'specializations' => Specialization::all(),
             'langs' => Lang::all(),
+            'teachers' => Teacher::all(),
         ]);
     }
 
@@ -38,7 +42,6 @@ class GroupController extends Controller
     {
         $group = Group::create($request->all());
         $group->save();
-        return redirect()->route('groups');
     }
 
     /**
@@ -50,10 +53,9 @@ class GroupController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $group = Group::find($id);
+        $group = Group::findOrFail($id);
         $group->fill($request->all());
         $group->save();
-        return redirect()->route('groups');
     }
 
     /**
@@ -64,9 +66,8 @@ class GroupController extends Controller
      */
     public function destroy($id)
     {
-        $group = Group::find($id);
+        $group = Group::findOrFail($id);
         $group->delete();
-        return redirect()->route('groups');
     }
 
     public function graphic(Request $request, $id)
@@ -74,5 +75,19 @@ class GroupController extends Controller
         $graphic = GroupGraphic::updateOrCreate(['group_id' => $id], $request->all());
         $graphic->save();
         return back();
+    }
+
+    public function students($id)
+    {
+        $subgroup = \Request::get('subgroup');
+        $students = Student::where('group_id', $id);
+        if($subgroup) $students->where('subgroup', $subgroup);
+        return view('group.students', [
+            'students' => $students
+            ->orderBy('surname', 'asc')
+            ->orderBy('name', 'asc')
+            ->orderBy('patronymic', 'asc')->get(),
+            'group' => Group::findOrFail($id),
+        ]);
     }
 }

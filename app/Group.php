@@ -8,13 +8,13 @@ class Group extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['name', 'department_id', 'lang_id', 'year_create'];
+    protected $fillable = ['name', 'specialization_id', 'lang_id', 'year_create', 'teacher_id', 'kurs'];
 
-    protected $hidden = ['lang_id', 'department_id'];
+    protected $hidden = ['lang_id', 'specialization_id'];
 
-    public function department()
+    public function specialization()
     {
-    	return $this->belongsTo('App\Department');
+    	return $this->belongsTo('App\Specialization');
     }
 
     public function lang()
@@ -24,11 +24,33 @@ class Group extends Model
 
     public function students()
     {
-        return $this->hasMany('App\Student');
+        return $this->hasMany('App\Student')->orderBy('surname', 'asc')
+        ->orderBy('name', 'asc');
     }
 
-    public function getKursAttribute()
+    public function graphics()
     {
-        return date('Y') - $this->year_create + (date('n') > 8 ? 1 : 0);
+        return $this->belongsToMany('App\CollegeGraphic', 'group_graphics', 'group_id', 'graphic_id');
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo('App\Teacher')->withDefault();
+    }
+
+    public function getCodesAttribute()
+    {
+        $codes = [];
+        $name = $this->name;
+        for($kurs = 1; $kurs <= 4; $kurs++) {
+            for($key = 0; $key < mb_strlen($name); $key++) {
+                if(is_numeric($name[$key])) {
+                    $name[$key] = $kurs;
+                    break;
+                }
+            }
+            $codes[$kurs] = $name;
+        }
+        return $codes;
     }
 }
