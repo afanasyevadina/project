@@ -20,7 +20,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
         <div class="form-group col-sm-3">
             <label>Учебный год</label>
             <select name="year" class="form-control form-control-sm" required>
-                @for($i = date('Y') - 3; $i <= date('Y'); $i ++)
+                @for($i = date('Y') - 4; $i <= date('Y'); $i ++)
                 <option value="{{ $i }}" {{ $i == $year ? 'selected' : ''}}>{{ $i }}-{{ $i + 1 }}</option>
                 @endfor
             </select>
@@ -136,9 +136,11 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
                     </button>
                 </div>
                 <div class="modal-body">
-                    <ul class="list-group" data-dismiss="modal">
-                        <li class="list-group-item text-muted" @click="setCab({})">*не выбрано*</li>
-                        <li v-for="cab in allowCabs" class="list-group-item" @click="setCab(cab)">{{cab.num}} ({{cab.name}})</li>
+                    <ul class="list-group cabs" data-dismiss="modal">
+                        <li class="list-group-item text-muted p-2" @click="setCab({})">*не выбрано*</li>
+                        <li v-for="cab in allowCabs" class="list-group-item p-2" @click="setCab(cab)">
+                            {{cab.num}} <small> ({{cab.name}})</small>
+                        </li>
                     </ul>
                 </div>
                 <div class="modal-footer"></div>
@@ -147,6 +149,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
     </div>
 </div>
 @endverbatim
+@endif
 <div class="modal fade" id="reset">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -325,5 +328,4 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
         }
     })
 </script>
-@endif
 @endsection

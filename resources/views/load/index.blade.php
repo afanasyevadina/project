@@ -71,7 +71,7 @@
 				@foreach($plans as $key => $p)
 				<?php @sort($p['zachet_sem']); ?>
 				<tr>
-					<td>{{ $p['group']->name }}</td>
+					<td>{{ $p['group'] }}</td>
 					<td>{{ $p['subject']->name }}</td>
 					<td>{{ @$p['exam_sem'] }}</td>
 					<td>{{ @implode(', ', $p['zachet_sem']) }}</td>

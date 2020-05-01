@@ -33,7 +33,7 @@
 			@foreach($students as $key => $s)
 			<tr>
 				<td>{{ $key + 1 }}</td>
-				<td>{{ $s->shortName }}</td>
+				<td class="text-nowrap">{{ $s->shortName }}</td>
 				@foreach($plan->lessons as $l)
 				<td {{ isset($l->list[$s->id]) ? 'data-id='.$l->list[$s->id]->id : '' }} 
 					{{ isset($l->list[$s->id]) && $l->date ? 'contenteditable=true' : '' }}
@@ -49,6 +49,42 @@
 @endsection
 @section('scripts')
 <script type="text/javascript">
+	document.querySelectorAll('[contenteditable]').forEach(el => el.onkeydown = function(event) {
+		if([37,38,39,40].includes(event.keyCode)) {
+			event.preventDefault()
+			var tr, td
+			switch(event.keyCode) {
+				case 40:
+				tr = event.path[1].nextElementSibling
+				if(tr) {
+					td = tr.cells[event.path[0].cellIndex]
+					if(td) td.focus()
+				}
+				break;
+				case 38:
+				tr = event.path[1].previousElementSibling
+				if(tr) {
+					td = tr.cells[event.path[0].cellIndex]
+					if(td) td.focus()
+				}
+				break;
+				case 39:
+				tr = event.path[1]
+				if(tr) {
+					td = tr.cells[event.path[0].cellIndex + 1]
+					if(td) td.focus()
+				}
+				break;
+				case 37:
+				tr = event.path[1]
+				if(tr) {
+					td = tr.cells[event.path[0].cellIndex - 1]
+					if(td) td.focus()
+				}
+				break;
+			}
+		}
+	})
 	document.getElementById('save').onclick = function() {
 		var table = document.querySelectorAll('td[data-id]')
 		var data = []

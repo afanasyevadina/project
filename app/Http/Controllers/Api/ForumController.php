@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Message;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 
 class ForumController extends Controller
@@ -27,6 +28,14 @@ class ForumController extends Controller
         $message = new Message();
         $message->fill($request->all());
         $message->user_id = $request->user()->id;
+        if($request->file('file')) {
+            $fileName = Storage::disk('public')
+            ->putFileAs(
+                'forum/'.$message->topic_id, $request->file('file'), 
+                date('YmdHis').$request->file('file')->getClientOriginalName()
+            );
+            $message->file = '/public/storage/'.$fileName;
+        }
         $message->save();
         $reply = $message->reply;
         $user = $message->user;

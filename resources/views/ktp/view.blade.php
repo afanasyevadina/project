@@ -101,8 +101,9 @@ $num = $theory = $practice = 0;
 		<tr>
 			<td></td>
 			<td>Итого:</td>
-			<td>{{ $theory }}</td>
-			<td>{{ $practice }}</td>
+			<td class="text-center">{{ $theory }}</td>
+			<td class="text-center">{{ $practice }}</td>
+			<td></td>
 			<td></td>
 		</tr>
 	</tbody>

@@ -37,19 +37,29 @@
 <ul class="list-group">
 	@forelse($topics as $topic)
 	<li class="list-group-item">
-		<h4>
-			<a class="text-decoration-none" href="/forum/{{$topic->id}}">{{ $topic->name }}</a>
-		</h4>
+		<div class="d-flex justify-content-between align-items-start">
+			<h4>
+				<a class="text-decoration-none" href="/forum/{{$topic->id}}">{{ $topic->name }}</a>
+			</h4>
+			@if($topic->user_id == \Auth::user()->id)
+			<a class="btn btn-sm btn-outline-primary" href="/forum/{{$topic->id}}/edit">Редактировать</a>
+			@endif
+		</div>
 		<p>{{ $topic->description }}</p>
 		<hr>
 		<div class="row text-muted">
-			<small class="col-sm-4">
-				Создано пользователем {{ $topic->user->name }} {{ $topic->date }}
+			<small class="col-sm-4 d-flex align-items-center">
+				<img src="/public/img/icons/user.svg" height="15" class="muted-img mr-1">
+				Создал {{ $topic->user->name }} {{ $topic->date }}
 			</small>
-			<small class="col-sm-4">{{ $topic->messages()->count() }} сообщений</small>
+			<small class="col-sm-4 d-flex align-items-center justify-content-center">
+				<img src="/public/img/icons/message.svg" height="15" class="muted-img mr-1">
+				{{ $topic->messages()->count() }}
+			</small>
 			@if(count($topic->messages))
-			<small class="col-sm-4">
-				Последнее сообщение от {{$topic->lastMessage->user->name}} 
+			<small class="col-sm-4 d-flex align-items-center justify-content-end">
+				<img src="/public/img/icons/time.svg" height="15" class="muted-img mr-1">
+				{{$topic->lastMessage->user->name}} 
 				{{ $topic->lastMessage->created_at->format('d.m.Y H:i') }}
 			</small>
 			@endif

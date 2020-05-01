@@ -47,15 +47,15 @@
 				<tr>
 					<th rowspan="2">Преподаватели</th>
 					<th rowspan="2">Наименование предмета</th>
-					<th colspan="3">Распределение по семестрам</th>
+					<th class="text-center" colspan="3">Распределение по семестрам</th>
 					<th rowspan="2">К/р</th>
-					<th colspan="3">По РУП</th>
+					<th class="text-center" colspan="3">По РУП</th>
 					<th class="vertical" rowspan="2"><p>Всего часов на учебный год</p></th>
 					<th class="vertical" rowspan="2"><p>Из них теор.</p></th>
 					<th class="vertical" rowspan="2"><p>Из них ЛПР</p></th>
 					<th class="vertical" rowspan="2"><p>Из них курс. раб.</p></th>
-					<th colspan="3">1 семестр</th>
-					<th colspan="3">2 семестр</th>
+					<th class="text-center" colspan="3">1 семестр</th>
+					<th class="text-center" colspan="3">2 семестр</th>
 					<th rowspan="2">Конс.</th>
 					<th rowspan="2">Экз.</th>
 					<th rowspan="2">Всего за год</th>

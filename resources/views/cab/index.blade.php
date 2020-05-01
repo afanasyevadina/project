@@ -41,7 +41,7 @@
 	</div>
 </div>
 <div class="form-group">
-	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск..." autofocus>
+	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск...">
 </div>
 <table class="table table-hover">
 	<thead>

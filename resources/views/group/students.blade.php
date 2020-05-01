@@ -10,7 +10,6 @@
 		</button>
 		<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
 			<a class="dropdown-item" href="/students/create?group={{$group->id}}">Добавить</a>
-			<button class="dropdown-item" data-toggle="modal" data-target="#upload">Загрузить</button>
 			@if(count($group->students) >= 25)
 			<a href="/students/{{$group->id}}/divide" class="dropdown-item self-reload">Сформировать подгруппы</a>
 			@endif
@@ -79,29 +78,6 @@
 		</tbody>
 	</table>
 </form>
-<div class="modal fade" id="upload">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<form action="/students/upload" method="post" enctype="multipart/form-data">
-				@csrf
-				<div class="modal-header">
-					<h5 class="modal-title">Загрузить из файла</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<input type="hidden" name="group" value="{{ $group->id }}">
-					<div class="form-group">
-						<label>Файл для импорта</label>
-						<input type="file" name="file" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
-					</div>
-				</div>
-				<div class="modal-footer"><input type="submit" class="btn btn-success" value="Загрузить"></div>
-			</form>
-		</div>
-	</div>
-</div>
 @endsection
 @section('scripts')
 <script type="text/javascript" src="/public/js/select.js"></script>

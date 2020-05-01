@@ -7,8 +7,9 @@
 </div>
 <hr>
 <form class="row">
-	<div class="col-sm-6">
-		<select name="spec" class="form-control">
+	<div class="col-sm-4 form-group">
+		<label class="label-sm">Специальность</label>
+		<select name="spec" class="form-control form-control-sm">
 			<option value="">Все специальности</option>
 			@foreach($specializations as $spec)
 			<option value="{{ $spec->id }}" {{$spec->id == @$_GET['spec'] ? 'selected' : ''}}>
@@ -17,19 +18,37 @@
 			@endforeach
 		</select>
 	</div>
-	<div class="col-sm-3">
-		<select name="kurs" class="form-control">
+	<div class="col-sm-2 form-group">
+		<label class="label-sm">Курс</label>
+		<select name="kurs" class="form-control form-control-sm">
 			<option value="">Все курсы</option>
 			@for($kurs = 1; $kurs <= 4; $kurs++)
 			<option value="{{ $kurs }}" {{$kurs == @$_GET['kurs'] ? 'selected' : ''}}>{{ $kurs }} курс</option>
 			@endfor
 		</select>
 	</div>
-	<div class="col-sm-3">
-		<input type="submit" value="Поиск" class="btn btn-info">
+	<div class="col-sm-2 form-group">
+		<label class="label-sm">База</label>
+		<select name="base" class="form-control form-control-sm">
+			<option value="">Все</option>
+			<option value="9" {{@$_GET['base'] == 9 ? 'selected' : ''}}>9 классов</option>
+			<option value="11" {{@$_GET['base'] == 11 ? 'selected' : ''}}>11 классов</option>
+		</select>
+	</div>
+	<div class="col-sm-2 form-group">
+		<label class="label-sm">Язык обучения</label>
+		<select name="lang" class="form-control form-control-sm">
+			<option value="">Все</option>
+			@foreach($langs as $lang)
+			<option value="{{ $lang->id }}" {{$lang->id == @$_GET['lang'] ? 'selected' : ''}}>{{ $lang->name }}</option>
+			@endforeach
+		</select>
+	</div>
+	<div class="col-sm-2 form-group">
+		<label class="label-sm">&nbsp;</label>
+		<input type="submit" value="Поиск" class="btn d-block btn-sm btn-info">
 	</div>
 </form>
-<hr>
 <div class="modal fade" id="new">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -43,15 +62,26 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="form-group col-sm-12">
+						<div class="form-group col-sm-6">
 							<label class="label-sm">Название</label>
 							<input type="text" name="name" autocomplete="off" class="form-control form-control-sm">
 						</div>
 						<div class="form-group col-sm-6">
+							<label class="label-sm">База</label>
+							<select name="base" class="form-control form-control-sm">
+								<option value="9">9 классов</option>
+								<option value="11">11 классов</option>
+							</select>
+						</div>
+						<div class="form-group col-sm-4">
 							<label class="label-sm">Год поступления</label>
 							<input type="number" name="year_create" class="form-control form-control-sm">
 						</div>
-						<div class="form-group col-sm-6">
+						<div class="form-group col-sm-4">
+							<label class="label-sm">Год выпуска</label>
+							<input type="number" name="year_leave" class="form-control form-control-sm">
+						</div>
+						<div class="form-group col-sm-4">
 							<label class="label-sm">Курс</label>
 							<input type="number" name="kurs" class="form-control form-control-sm">
 						</div>
@@ -92,7 +122,7 @@
 		<tr>
 			<th>№</th>
 			<th>Группа</th>
-			<th>Курс</th>
+			<th>Год поступления</th>
 			<th>Специальность</th>
 			<th>Язык обучения</th>
 			<th>Куратор</th>
@@ -105,7 +135,7 @@
 		<tr>
 			<td>{{ $key + 1 }}</td>
 			<td>{{ $group->name }}</td>
-			<td class="text-center">{{ $group->kurs }}</td>
+			<td class="text-center">{{ $group->year_create }}</td>
 			<td>{{ $group->specialization->code }} &laquo;{{ $group->specialization->name }}&raquo;</td>
 			<td>{{ $group->lang->name }}</td>
 			<td  class="text-nowrap">{{ $group->teacher->shortName }}</td>
@@ -132,15 +162,26 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="form-group col-sm-12">
+						<div class="form-group col-sm-6">
 							<label class="label-sm">Название</label>
 							<input type="text" name="name" autocomplete="off" class="form-control form-control-sm" value="{{ $group->name }}">
 						</div>
 						<div class="form-group col-sm-6">
+							<label class="label-sm">База</label>
+							<select name="base" class="form-control form-control-sm">
+								<option {{ $group->base == 9 ? 'selected' : ''}} value="9">9 классов</option>
+								<option {{ $group->base == 11 ? 'selected' : ''}} value="11">11 классов</option>
+							</select>
+						</div>
+						<div class="form-group col-sm-4">
 							<label class="label-sm">Год поступления</label>
 							<input type="number" name="year_create" class="form-control form-control-sm" value="{{ $group->year_create }}">
 						</div>
-						<div class="form-group col-sm-6">
+						<div class="form-group col-sm-4">
+							<label class="label-sm">Год выпуска</label>
+							<input type="number" name="year_leave" class="form-control form-control-sm" value="{{ $group->year_leave }}">
+						</div>
+						<div class="form-group col-sm-4">
 							<label class="label-sm">Курс</label>
 							<input type="number" name="kurs" class="form-control form-control-sm" value="{{ $group->kurs }}">
 						</div>

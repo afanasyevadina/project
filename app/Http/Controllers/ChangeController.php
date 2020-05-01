@@ -52,7 +52,7 @@ class ChangeController extends Controller
 		$week = @$convert['week'];	
 		$list = $schedule = [];
 		if($group && $date) {
-			$grp = Group::findOrFail($group);
+			$grp = Group::find($group);
 			$data = Plan::where('group_id', $group)
 			->with('subject')
 			->with('teacher')
@@ -62,12 +62,12 @@ class ChangeController extends Controller
 			->orderBy('subject_id', 'asc')
 			->orderBy('subgroup', 'asc')
 			->get();
-			$list = $data->filter(function($val) {return $val->checkNext();})
+			$list = $data->filter(function($val) use($date) {return $val->checkNext($date);})
 			->map(function($val) use($date) {
 				$lesson = $val->lessons()->whereNull('date')->orderBy('order', 'asc')->first();
 				$lesson['teacher'] = $val->teacher;
 				$lesson['subject'] = $val->subject;
-				$lesson['given'] = $val->lessons()->where('date', '<', $date)->count();
+				$lesson['given'] = $val->lessons()->whereNotNull('date')->count();
 				$lesson['hours'] = $val->total / 2;
 				return $lesson;
 			})->toArray();	
@@ -87,8 +87,8 @@ class ChangeController extends Controller
 				->where('day', $day)
 				->whereIn('week', [0, $week])
 				->get();
-				$schedule = $schedule->map(function($val) {
-					if(!$val->plan->checkNext()) return false;
+				$schedule = $schedule->map(function($val) use($date) {
+					if(!$val->plan->checkNext($date)) return false;
 					$next = $val->plan->lessons()->whereNull('date')->orderBy('order', 'asc')->first();
 					$val['teacher'] = $val->plan->teacher;
 					$val['subject'] = $val->plan->subject;

@@ -6,6 +6,11 @@ use App\Subject;
 use App\Group;
 use App\Cikl;
 use App\Teacher;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +22,7 @@ class LoadController extends Controller
         $year = \Request::get('year') ?? date('Y');
         $id = \Request::get('teacher');
         if(\Auth::user()->role == 'teacher') $id = \Auth::user()->person_id;
-        $teacher = Teacher::findOrFail($id);
+        $teacher = Teacher::find($id);
         $all = Plan::where('teacher_id', $id)
         ->where('year', $year)
         ->orderBy('cikl_id', 'asc')
@@ -26,7 +31,7 @@ class LoadController extends Controller
         foreach ($all as $key => $p) {
             $sem = $p->semestr % 2 ? 1 : 2;
             $index = $p->group_id.$p->subgroup;
-            $plans[$index]['group'] = $p->group;
+            $plans[$index]['group'] = $p->group->codes[$p->kurs];
             $plans[$index]['subject'] = $p->subject;
             @$plans[$index]['control'] += $p->controls;
             $plans[$index]['theory_main'] = $p->theoryMain;
@@ -52,7 +57,7 @@ class LoadController extends Controller
             'plans' => $plans,
             'teacher' => $teacher,
             'year' => $year,
-            'teachers' => Teacher::all()
+            'teachers' => Teacher::all()->sortBy('fullName')
         ]);
     }
 
@@ -67,7 +72,7 @@ class LoadController extends Controller
         foreach ($all as $key => $p) {
             $sem = $p->semestr % 2 ? 1 : 2;
             $index = $p->subject_id.$p->subgroup;
-            $plans[$index]['group'] = $p->group;
+            $plans[$index]['group'] = $p->group->codes[$p->kurs];
             $plans[$index]['subject'] = $p->subject;
             @$plans[$index]['control'] += $p->controls;
             $plans[$index]['theory_main'] = $p->theoryMain;
@@ -88,7 +93,7 @@ class LoadController extends Controller
             if($p->is_zachet)
                 $plans[$index]['zachet_sem'][$p->semestr] = $p->semestr;
         }
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->SetCellValue('A1', 'группа');
         $sheet->SetCellValue('B1', 'преподаватели');
@@ -151,7 +156,7 @@ class LoadController extends Controller
         $rowCount = 2; 
         foreach($plans as $p) {
             $rowCount++;
-            $sheet->SetCellValue('A'.$rowCount, $p['group']->name);
+            $sheet->SetCellValue('A'.$rowCount, $p['group']);
             $sheet->SetCellValue('B'.$rowCount, $teacher->shortName);
             $sheet->SetCellValue('C'.$rowCount, $p['subject']->name);
             $sheet->SetCellValue('D'.$rowCount, @$p['exam_sem']);
@@ -198,11 +203,11 @@ class LoadController extends Controller
         $sheet->SetCellValue('AA'.$rowCount, "=SUM(AA3:AA".($rowCount-1).")");
         $styleArray = array(
          'alignment' => [
-            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+            'horizontal' => Alignment::HORIZONTAL_LEFT,
         ],
         'borders' => [
             'allBorders' => [
-                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                'borderStyle' => Border::BORDER_THIN,
             ],
         ],
         'font'  => array(
@@ -213,14 +218,16 @@ class LoadController extends Controller
         $sheet->getStyle('A1:AA'.$rowCount)->applyFromArray($styleArray);
         $sheet->getStyle('A1:AA2')->getFont()->setBold(true);
         $sheet->getStyle('A'.$rowCount.':AA'.$rowCount)->getFont()->setBold(true);
-        $sheet->getStyle('A1:AA2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:AA2')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A1:AA2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:AA2')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setWidth(40);
         $sheet->getStyle('C1:C'.$sheet->getHighestRow())
         ->getAlignment()->setWrapText(true);
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $writer->save('file.xlsx');
-        return response()->file('file.xlsx');
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Disposition: attachment; filename="'.$teacher->shortName.' '.$year.'-'.($year+1).'.xlsx"');
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        $writer->save('php://output');
+        return;
     }
 }

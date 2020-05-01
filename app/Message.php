@@ -8,7 +8,7 @@ class Message extends Model
 {
     protected $fillable = ['topic_id', 'user_id', 'text', 'reply_id'];
 
-    protected $appends = ['time', 'date'];
+    protected $appends = ['time', 'date', 'hasImage'];
 
     public function getTimeAttribute()
     {
@@ -18,6 +18,11 @@ class Message extends Model
     public function getDateAttribute()
     {
     	return $this->created_at->format('d.m.Y');
+    }
+
+    public function getHasImageAttribute()
+    {
+        return file_exists(trim($this->file, '/')) && exif_imagetype(trim($this->file, '/'));
     }
 
     public function topic()

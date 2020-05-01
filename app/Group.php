@@ -8,9 +8,11 @@ class Group extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['name', 'specialization_id', 'lang_id', 'year_create', 'teacher_id', 'kurs'];
+    protected $fillable = ['name', 'specialization_id', 'lang_id', 'year_create', 'year_leave', 'teacher_id', 'kurs', 'base'];
 
     protected $hidden = ['lang_id', 'specialization_id'];
+
+    protected $appends = ['codes'];
 
     public function specialization()
     {
@@ -43,6 +45,7 @@ class Group extends Model
         $codes = [];
         $name = $this->name;
         for($kurs = 1; $kurs <= 4; $kurs++) {
+            if($this->base == 11) $kurs++;
             for($key = 0; $key < mb_strlen($name); $key++) {
                 if(is_numeric($name[$key])) {
                     $name[$key] = $kurs;

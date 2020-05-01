@@ -25,6 +25,11 @@ class Topic extends Model
     	return $this->hasMany('App\Message');
     }
 
+    public function permissions()
+    {
+        return $this->hasMany('App\TopicPermission');
+    }
+
     public function lastMessage()
     {
     	return $this->hasOne('App\Message')->latest();
@@ -33,5 +38,12 @@ class Topic extends Model
     public function user()
     {
     	return $this->belongsTo('App\User')->withDefault();
+    }
+
+    public function allow()
+    {
+        $user = \Auth::user();
+        if($user->role == 'admin') return true;;
+        return $this->permissions()->where('role', $user->role)->whereIn('user_id', [0, $user->id])->exists();
     }
 }

@@ -19,7 +19,9 @@
 			<button class="dropdown-item" data-toggle="modal" data-target="#upload">Загрузить</button>
 			<button class="dropdown-item" data-toggle="modal" data-target="#copy">Скопировать</button>
 			<a href="/rup?group={{ $_GET['group'] }}" class="dropdown-item">РУП</a>
-			<button class="dropdown-item" data-toggle="modal" data-target="#reset">Удалить</button>
+			@if($plans)
+			<button class="dropdown-item" data-toggle="modal" data-target="#reset">Очистить</button>
+			@endif
 		</div>
 	</div>
 	@endif

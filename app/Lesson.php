@@ -29,7 +29,7 @@ class Lesson extends Model
 
     public function part()
     {
-    	return $this->belongsTo('App\Part');
+    	return $this->belongsTo('App\Part')->withDefault();
     }
 
     public function plan()

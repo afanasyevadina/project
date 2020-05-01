@@ -29,7 +29,7 @@
 	</div>
 </form>
 @if($dis)
-{{ $dis->render() }}
+{{ $dis->appends(Request::except('page'))->links() }}
 <table class="table table-hover">
 	<thead>
 		<th>Группа</th>
@@ -56,5 +56,6 @@
 		@endforeach
 	</tbody>
 </table>
+{{ $dis->appends(Request::except('page'))->links() }}
 @endif
 @endsection

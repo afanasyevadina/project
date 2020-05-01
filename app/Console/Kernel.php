@@ -13,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \App\Console\Commands\ScheduleCommand::class,
+        \App\Console\Commands\FillCommand::class,
+        \App\Console\Commands\ResetCommand::class
     ];
 
     /**
@@ -24,8 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('schedule:changes')->everyMinute();
+        //->dailyAt('00:01');
     }
 
     /**

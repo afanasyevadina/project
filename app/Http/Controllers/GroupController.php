@@ -20,10 +20,24 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $query = Group::query();
-        if(\Request::get('spec')) $query->where('specialization_id', \Request::get('spec'));
-        if(\Request::get('kurs')) $query->where('kurs', \Request::get('kurs'));
-        $groups =$query->orderBy('name', 'asc')->get();
+        $spec = \Request::get('spec');
+        $kurs = \Request::get('kurs');
+        $kurs = \Request::get('kurs');
+        $lang = \Request::get('lang');
+        $base = \Request::get('base');
+        $groups = Group::when($spec, function($query, $spec) {
+            $query->where('specialization_id', $spec);
+        })
+        ->when($kurs, function($query, $kurs) {
+            $query->where('kurs', $kurs);
+        })
+        ->when($lang, function($query, $lang) {
+            $query->where('lang_id', $lang);
+        })
+        ->when($base, function($query, $base) {
+            $query->where('base', $base);
+        })
+        ->orderBy('name', 'asc')->get();
         return view('group.index', [
             'groups' => $groups,
             'specializations' => Specialization::all(),

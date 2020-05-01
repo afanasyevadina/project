@@ -165,12 +165,13 @@ class Plan extends Model
         }
     }
 
-    public function checkNext()
+    public function checkNext($date)
     {
         if($this->subgroup == 2 && $this->subject->divide == 2 && !empty($this->main)) {
             $nextMain = $this->main->lessons()
-            ->whereNull('date')->orderBy('order', 'asc')->first();
-            return $nextMain->practice > 0;
+            ->whereNull('date')->orWhere('date', $date)->orderBy('order', 'asc')->first();
+            $next = $this->lessons()->whereNull('date')->orWhere('date', $date)->orderBy('order', 'asc')->first();
+            return $next && $nextMain && $nextMain->practice > 0;
         }
         return true;
     }

@@ -14,12 +14,36 @@ class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::orderBy('surname', 'asc')
+        $spec = \Request::get('spec');
+        $kurs = \Request::get('kurs');
+        $lang = \Request::get('lang');
+        $pay = \Request::get('pay');
+        $students = Student::when($spec, function($query, $spec) {
+            $query->whereHas('group', function($q) use($spec) {
+                $q->where('specialization_id', $spec);
+            });
+        })
+        ->when($kurs, function($query, $kurs) {
+            $query->whereHas('group', function($q) use($kurs) {
+                $q->where('kurs', $kurs);
+            });
+        })
+        ->when($lang, function($query, $lang) {
+            $query->whereHas('group', function($q) use($lang) {
+                $q->where('lang_id', $lang);
+            });
+        })
+        ->when($pay, function($query, $pay) {
+            $query->where('pay_id', $pay);
+        })
         ->orderBy('name', 'asc')
-        ->orderBy('patronymic', 'asc')->get();
+        ->orderBy('surname', 'asc')
+        ->orderBy('patronymic', 'asc')->paginate(100);
         return view('student.index', [
             'students' => $students,
-            'students' => $students,
+            'specializations' => Specialization::all(),
+            'langs' => Lang::all(),
+            'pays' => Pay::all(),
         ]);
     }
 
@@ -68,7 +92,7 @@ class StudentController extends Controller
         if(Student::where('group_id', $group)->count() < 25) {
             Student::where('group_id', $group)->update(['subgroup' => null]);
         }
-        return redirect()->route('students', ['id' => $group]);
+        return redirect()->route('students');
     }
 
     public function upload(Request $request)
@@ -84,11 +108,11 @@ class StudentController extends Controller
                 'surname' => $row[0], 
                 'name' => $row[1],
                 'patronymic' => @$row[2],
-                'group_id' => $request->group,
             ]);
             $student->save();
         }
-        return redirect()->route('students', ['id' => $request->group]);
+        unlink('storage/app/public/'.$fileName);
+        return redirect()->route('students');
     }
 
     public function divide($group)

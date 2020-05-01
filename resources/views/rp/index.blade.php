@@ -19,7 +19,7 @@
 			<select name="subject" class="form-control form-control-sm">
 				<option value="">Дисциплина</option>
 				@foreach($subjects as $s)
-				<option value="{{ $s->subject_id }}" {{ $s->subject_id == @$_GET['subject'] ? 'selected' : '' }}>{{ $s->subject->name }}</option>
+				<option value="{{ $s->id }}" {{ $s->id == @$_GET['subject'] ? 'selected' : '' }}>{{ $s->name }}</option>
 				@endforeach
 			</select>
 		</div>
@@ -30,7 +30,7 @@
 </form>
 @if($programs)
 <hr>
-{{ $programs->render() }}
+{{ $programs->appends(Request::except('page'))->links() }}
 <table class="table table-hover">
 	<thead>
 		<th>Группа</th>
@@ -43,7 +43,7 @@
 			<td>{{$p->group->name}}</td>
 			<td>{{$p->subject->name}}</td>
 			<td class="text-right">
-				<a href="/rp/{{$p->group_id}}/{{$p->subject_id}}" class="btn btn-sm btn-outline-info">
+				<a href="/rp/{{$p->group_id}}/{{$p->subject_id}}?cikl={{$p->cikl_id}}" class="btn btn-sm btn-outline-info">
 				Перейти
 				</a>
 			</td>
@@ -51,5 +51,6 @@
 		@endforeach
 	</tbody>
 </table>
+{{ $programs->appends(Request::except('page'))->links() }}
 @endif
 @endsection

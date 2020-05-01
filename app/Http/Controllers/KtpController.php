@@ -17,7 +17,7 @@ class KtpController extends Controller
     {
         $group = \Request::get('group');
         $kurs = \Request::get('kurs');
-        $query = Plan::select('group_id', 'subject_id', 'year', 'teacher_id'); 
+        $query = Plan::select('group_id', 'subject_id', 'year', 'subgroup', 'cikl_id', 'teacher_id'); 
         if($group) {
             $query->where('group_id', $group);
         }
@@ -27,48 +27,35 @@ class KtpController extends Controller
         if(\Auth::user()->role == 'teacher') {
             $query->where('teacher_id', \Auth::user()->person_id);
         }
-        $programs = $query->groupBy('group_id', 'subject_id', 'year', 'teacher_id')
+        $programs = $query->groupBy('group_id', 'subject_id', 'year', 'subgroup', 'cikl_id', 'teacher_id')
         ->orderBy('semestr', 'asc')
         ->orderBy('subject_id', 'asc')
         ->orderBy('subgroup', 'asc')->paginate(30);
-        $subjects = Plan::select('subject_id', 'teacher_id')
-        ->where('group_id', $group)
-        ->whereIn('semestr', [$kurs * 2, ($kurs * 2 - 1)])
-        ->groupBy('subject_id', 'teacher_id')->get();
         return view('ktp.index', [
             'programs' => $programs,
             'groups' => Group::orderBy('name', 'asc')->get(),
-            'subjects' => $subjects,
+            'subjects' => Subject::orderBy('name')->get(),
         ]);
     }
 
     public function view($groupId, $subjectId, $kurs)
     {
-        $teacherId = \Request::get('teacher');
         $group = Group::findOrFail($groupId);
         $subject = Subject::findOrFail($subjectId);
-        $teacher = Teacher::find($teacherId) ?? new Teacher();
-        $query = Plan::where('group_id', $groupId)
+        $teacher = Teacher::find(\Request::get('teacher')) ?? new Teacher();
+        $data = Plan::where('group_id', $groupId)
         ->where('subject_id', $subjectId)
-        ->where('teacher_id', $teacherId)
-        ->whereIn('semestr', [$kurs * 2, ($kurs * 2 - 1)]);
-        if(Plan::where('group_id', $groupId)
-        ->where('subject_id', $subjectId)
-        ->where('teacher_id', $teacherId)
+        ->where('subgroup', \Request::get('subgroup'))
+        ->where('cikl_id', \Request::get('cikl'))
         ->whereIn('semestr', [$kurs * 2, ($kurs * 2 - 1)])
-        ->where('subgroup', '<>', 2)->exists()) {
-            $query->where('subgroup', '<>', 2);
-        }
-        $data = $query->orderBy('semestr', 'asc')->get();
+        ->orderBy('semestr', 'asc')->get();
         $plans = [];
         $parts = [];
         foreach($data as $p) {
             $plans[$p->semestr % 2 ? 1 :2] = $p;
             foreach($p->lessons as $l) {
-                if($l->part_id) {
-                    $parts[$l->part_id]['part'] = $l->part;
-                    $parts[$l->part_id]['lessons'][] = $l;
-                }
+                $parts[$l->part_id]['part'] = $l->part;
+                $parts[$l->part_id]['lessons'][] = $l;
             }
         }
         return view('ktp.view', [

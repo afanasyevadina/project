@@ -70,6 +70,7 @@ class TeacherController extends Controller
             ]);
             $teacher->save();
         }
+        unlink('storage/app/public/'.$fileName);
         return redirect()->route('teachers');
     }
 }

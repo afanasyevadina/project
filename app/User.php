@@ -36,4 +36,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function person()
+    {
+        if($this->role == 'teacher') return $this->belongsTo('App\Teacher', 'person_id')->withDefault();
+        if($this->role == 'student') return $this->belongsTo('App\Student', 'person_id')->withDefault();
+    }
 }

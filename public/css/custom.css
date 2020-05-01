@@ -95,7 +95,7 @@ td select.form-control {
 .td-input input[type=number], .td-input textarea {
 	width: 100%;
 	border: none;
-	resize: vertical;
+	resize: none;
 	background: transparent;
 }
 .td-input input[type=number] {
@@ -207,4 +207,26 @@ td select.form-control {
 .chat .d-flex:hover .reply-link {
 	display: block;
 	cursor: pointer;
+}
+*[hidden] {
+	display: none !important;
+}
+.message a {
+	color: inherit;
+	font-size: 0.9em;
+}
+.message img {
+	max-width: 100%;
+}
+.white-img {
+	filter: invert();
+}
+.muted-img {
+	opacity: 0.7;
+}
+.text-muted img {
+	opacity: 0.4;
+}
+.hover-none:hover {
+	text-decoration: none !important;
 }

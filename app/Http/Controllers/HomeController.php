@@ -38,20 +38,14 @@ class HomeController extends Controller
             ]);
             break;
             case 'student':
-            $student = Student::findOrFail(\Auth::user()->person_id);           
-            $convert = DateConvert::convert(date('Y-m-d'), $student->group_id);
-            $semestr = ($convert['year'] - $student->group->year_create) * 2 + $convert['semestr'];
-            $allResults = $student->results()->whereHas('plan', function($query) use($semestr) {
-                $query->where('semestr', $semestr);
-            })->get();
+            $student = Student::findOrFail(\Auth::user()->person_id);
             $results = [];
-            foreach($allResults as $res) {
-                $results[$res->plan->subject_id] = $res->itog;
+            foreach($student->results as $res) {
+                $results[$res->plan->semestr][$res->plan->subject_id] = $res->itog;
             }
             return view('home.student', [
                 'student' => $student,
                 'results' => $results,
-                'subjects' => $student->subjects($semestr),
             ]);
             break;
 

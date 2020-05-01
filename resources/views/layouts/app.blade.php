@@ -19,7 +19,10 @@ use App\Menu;
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<a href="/" class="navbar-brand ml-2">Информационная система КИТ</a>
-		<span class="navbar-text mr-2 ml-auto">{{ \Auth::user()->name }} |</span>
+		<span class="navbar-text mr-2 ml-auto d-flex align-items-center">
+			<img src="/public/img/icons/user.svg" height="15" class="white-img muted-img mr-1">
+			{{ \Auth::user()->name }} |
+		</span>
 		<form action="/logout" method="post">@csrf
 			<input type="submit" value="Выход" class="logout-button navbar-text">
 		</form>

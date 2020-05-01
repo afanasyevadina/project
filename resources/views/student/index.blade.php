@@ -17,9 +17,54 @@
 	</div>
 </div>
 <hr>
+<form class="row">
+	<div class="col-sm-4 form-group">
+		<label class="label-sm">Специальность</label>
+		<select name="spec" class="form-control form-control-sm">
+			<option value="">Все специальности</option>
+			@foreach($specializations as $spec)
+			<option value="{{ $spec->id }}" {{$spec->id == @$_GET['spec'] ? 'selected' : ''}}>
+				{{ $spec->code }} &laquo;{{ $spec->name }}&raquo;
+			</option>
+			@endforeach
+		</select>
+	</div>
+	<div class="col-sm-2 form-group">
+		<label class="label-sm">Курс</label>
+		<select name="kurs" class="form-control form-control-sm">
+			<option value="">Все курсы</option>
+			@for($kurs = 1; $kurs <= 4; $kurs++)
+			<option value="{{ $kurs }}" {{$kurs == @$_GET['kurs'] ? 'selected' : ''}}>{{ $kurs }} курс</option>
+			@endfor
+		</select>
+	</div>
+	<div class="col-sm-2 form-group">
+		<label class="label-sm">Язык обучения</label>
+		<select name="lang" class="form-control form-control-sm">
+			<option value="">Все</option>
+			@foreach($langs as $lang)
+			<option value="{{ $lang->id }}" {{$lang->id == @$_GET['lang'] ? 'selected' : ''}}>{{ $lang->name }}</option>
+			@endforeach
+		</select>
+	</div>
+	<div class="col-sm-2 form-group">
+		<label class="label-sm">Форма оплаты</label>
+		<select name="pay" class="form-control form-control-sm">
+			<option value="">Все</option>
+			@foreach($pays as $pay)
+			<option value="{{ $pay->id }}" {{$pay->id == @$_GET['pay'] ? 'selected' : ''}}>{{ $pay->name }}</option>
+			@endforeach
+		</select>
+	</div>
+	<div class="col-sm-2 form-group">
+		<label class="label-sm">&nbsp;</label>
+		<input type="submit" value="Поиск" class="btn d-block btn-sm btn-info">
+	</div>
+</form>
 <form action="/admin/users/register" method="post">
 	@csrf
 	<input type="hidden" name="role" value="student">
+	{{ $students->appends(Request::except('page'))->links() }}
 	<table class="table table-hover">
 		<thead>
 			<tr>
@@ -58,6 +103,7 @@
 			@endforeach            
 		</tbody>
 	</table>
+	{{ $students->appends(Request::except('page'))->links() }}
 </form>
 <div class="modal fade" id="upload">
 	<div class="modal-dialog">

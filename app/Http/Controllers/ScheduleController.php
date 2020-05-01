@@ -65,7 +65,7 @@ class ScheduleController extends Controller
 			return $val;
 		});
 		$list = [];
-		$grp = Group::findOrFail($group);
+		$grp = Group::find($group);
 		if($semestr) {
 			$list = Plan::where('group_id', $group)
 			->with('subject')

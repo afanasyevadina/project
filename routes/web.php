@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth', 'can:manager']], function () {
 	Route::get('/cabs', 'CabController@index')->name('cabs');
 	Route::get('/plans', 'PlanController@index')->name('plans');
 	Route::get('/rup', 'RupController@index')->name('rup');
+	
 	Route::post('/subjects/upload', 'SubjectController@upload');
 	Route::post('/teachers/upload', 'TeacherController@upload');
 	Route::post('/plans/upload', 'PlanController@upload');
@@ -85,6 +86,8 @@ Route::group(['middleware' => ['auth', 'can:dispatcher']], function () {
 	Route::get('/schedule/allowcab/{day}/{num}/{week}', 'ScheduleController@allowcab');
 	Route::get('/changes/allowcab/{num}', 'ChangeController@allowcab');
 	Route::get('/changes/allowteacher/{num}', 'ChangeController@allowteacher');
+	Route::get('/doc/form3', 'DocController@form3')->name('form3');
+	Route::get('/doc/form2', 'DocController@form2')->name('form2');
 
 	Route::post('/exams', 'ExamController@store');
 	Route::post('/schedule', 'ScheduleController@store');
@@ -100,26 +103,35 @@ Route::group(['middleware' => ['auth', 'can:teacher']], function () {
 	Route::get('/ktp', 'KtpController@index')->name('ktp');
 	Route::get('/journal', 'JournalController@index')->name('journal');
 	Route::get('/results', 'ResultController@index')->name('results');
-	Route::get('/groups/{id}/students', 'GroupController@students')->name('group/students');
+	Route::get('/groups/{id}/students', 'GroupController@students')->name('groups');
 	Route::get('/results/{id}/edit', 'ResultController@edit')->name('results');
-	Route::get('/rp/{groupId}/{subjectId}', 'RpController@view');
+	Route::get('/rp/{groupId}/{subjectId}', 'RpController@view')->name('rp');
 	Route::get('/ktp/{groupId}/{subjectId}/{kurs}/', 'KtpController@view')->name('ktp');
 	Route::get('/journal/{id}', 'JournalController@view');
 	Route::get('/journal/report', 'JournalController@report')->name('journal/report');
 	Route::get('/rp/{groupId}/{subjectId}/export', 'RpController@export');
+	Route::get('/rp/{groupId}/{subjectId}/reset', 'RpController@reset');
 	Route::get('/ktp/{groupId}/{subjectId}/{kurs}/export', 'KtpController@export');
 
 	Route::post('/rp/{groupId}/{subjectId}', 'RpController@store');
+	Route::post('/rp/{groupId}/{subjectId}/copy', 'RpController@copy');
 	Route::post('/journal', 'JournalController@store');
 	Route::post('/results', 'ResultController@store');
 
-	Route::get('/journal/{id}/refresh', 'JournalController@refresh');
+	Route::post('/journal/{id}/refresh', 'JournalController@refresh');
 	Route::get('/load/{id}/export/{year}', 'LoadController@export');
 });
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'can:forum']], function () {
 	Route::get('/forum', 'ForumController@index')->name('forum');
 	Route::get('/forum/{id}', 'ForumController@view')->name('forum');
+	Route::get('/forum/{id}/edit', 'ForumController@edit')->name('forum');
+
+	Route::post('/forum', 'ForumController@store');
+	Route::post('/forum/{id}', 'ForumController@update');
+});
+
+Route::group(['middleware' => ['auth']], function () {
 	Route::get('/exams', 'ExamController@index')->name('exams');
 	Route::get('/schedule', 'ScheduleController@index')->name('schedule');
 	Route::get('/schedule/group', 'ScheduleController@group')->name('schedule');
@@ -132,6 +144,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/results/{id}', 'ResultController@view')->name('zachetka');
 
 	Route::post('/forum', 'ForumController@store');
+	Route::post('/forum/{id}', 'ForumController@update');
 });
 
 Auth::routes();

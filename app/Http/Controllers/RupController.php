@@ -6,6 +6,11 @@ use App\Subject;
 use App\Group;
 use App\Cikl;
 use App\Teacher;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +21,7 @@ class RupController extends Controller
     {
         $kurs = \Request::get('kurs') ?? 1;
         $id = \Request::get('group');
-        $group = Group::findOrFail($id);
+        $group = Group::find($id);
         $all = Plan::where('group_id', $id)
         ->whereIn('semestr', [$kurs * 2 - 1, $kurs * 2])
         ->orderBy('cikl_id', 'asc')
@@ -55,7 +60,7 @@ class RupController extends Controller
             'plans' => $plans,
             'group' => $group,
             'kurs' => $kurs,
-            'teachers' => Teacher::all(),
+            'teachers' => Teacher::all()->sortBy('fullName'),
             'groups' => Group::orderBy('name', 'asc')->get(),
         ]);
     }
@@ -160,7 +165,7 @@ class RupController extends Controller
             if($p->is_zachet)
                 $plans[$index]['zachet_sem'][$p->semestr] = $p->semestr;
         }
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->SetCellValue('A1', 'группа');
         $sheet->SetCellValue('B1', 'преподаватели');
@@ -271,11 +276,11 @@ class RupController extends Controller
         $sheet->SetCellValue('AA'.$rowCount, "=SUM(AA3:AA".($rowCount-1).")");
         $styleArray = array(
          'alignment' => [
-            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+            'horizontal' => Alignment::HORIZONTAL_LEFT,
         ],
         'borders' => [
             'allBorders' => [
-                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                'borderStyle' => Border::BORDER_THIN,
             ],
         ],
         'font'  => array(
@@ -286,14 +291,16 @@ class RupController extends Controller
         $sheet->getStyle('A1:AA'.$rowCount)->applyFromArray($styleArray);
         $sheet->getStyle('A1:AA2')->getFont()->setBold(true);
         $sheet->getStyle('A'.$rowCount.':AA'.$rowCount)->getFont()->setBold(true);
-        $sheet->getStyle('A1:AA2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:AA2')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A1:AA2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:AA2')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setWidth(40);
         $sheet->getStyle('C1:C'.$sheet->getHighestRow())
         ->getAlignment()->setWrapText(true);
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $writer->save('file.xlsx');
-        return response()->file('file.xlsx');
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Disposition: attachment; filename="РУП '.$group->codes[$kurs].'.xlsx"');
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        $writer->save('php://output');
+        return;
     }
 }

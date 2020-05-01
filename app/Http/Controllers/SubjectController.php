@@ -45,6 +45,7 @@ class SubjectController extends Controller
             $subject = Subject::updateOrCreate(['name' => $row[0], 'name_kz' => @$row[1]]);
             $subject->save();
         }
+        unlink('storage/app/public/'.$fileName);
         return redirect()->route('subjects');
     }
 }

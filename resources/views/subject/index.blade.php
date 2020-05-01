@@ -55,6 +55,14 @@ $divide = ['-', 'Всегда', 'На практики'];
 						<input type="text" name="name_kz" autocomplete="off" class="form-control">
 					</div>
 					<div class="form-group">
+						<label>Сокращение на рус.яз.</label>
+						<input type="text" name="short_name" autocomplete="off" class="form-control">
+					</div>
+					<div class="form-group">
+						<label>Сокращение на каз.яз.</label>
+						<input type="text" name="short_name_kz" autocomplete="off" class="form-control">
+					</div>
+					<div class="form-group">
 						<label>
 							<input type="radio" name="divide" value="0" checked> 
 						Не формировать подгруппы</label>
@@ -72,14 +80,16 @@ $divide = ['-', 'Всегда', 'На практики'];
 	</div>
 </div>
 <div class="form-group">
-	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск..." autofocus>
+	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск...">
 </div>
-<table class="table table-hover">
+<table class="table table-bordered table-hover">
 	<thead>
 		<tr>
 			<th>№</th>
 			<th>Название на рус.яз.</th>
 			<th>Название на каз.яз.</th>
+			<th>Сокращение на рус.яз.</th>
+			<th>Сокращение на каз.яз.</th>
 			<th>Деление на подгруппы</th>
 			<th></th>
 		</tr>
@@ -90,6 +100,8 @@ $divide = ['-', 'Всегда', 'На практики'];
 			<td>{{ $key + 1 }}</td>
 			<td>{{ $s->name }}</td>
 			<td>{{ $s->name_kz }}</td>
+			<td>{{ $s->short_name }}</td>
+			<td>{{ $s->short_name_kz }}</td>
 			<td>{{ $divide[$s->divide] }}</td>
 			<td class="text-right">
 				<button data-toggle="modal" data-target="#{{ $s->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
@@ -119,6 +131,14 @@ $divide = ['-', 'Всегда', 'На практики'];
 					<div class="form-group">
 						<label>Название на каз.яз.</label>
 						<input type="text" name="name_kz" autocomplete="off" class="form-control" value="{{ $s->name_kz }}">
+					</div>
+					<div class="form-group">
+						<label>Сокращение на рус.яз.</label>
+						<input type="text" name="short_name" autocomplete="off" class="form-control" value="{{ $s->short_name }}">
+					</div>
+					<div class="form-group">
+						<label>Сокращение на каз.яз.</label>
+						<input type="text" name="short_name_kz" autocomplete="off" class="form-control" value="{{ $s->short_name_kz }}">
 					</div>
 					<div class="form-group">
 						<label><input type="radio" name="divide" value="0" 

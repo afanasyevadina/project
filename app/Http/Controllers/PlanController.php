@@ -138,6 +138,7 @@ class PlanController extends Controller
             }
         }
         if(count($unexpected)) Session::flash('errors', $unexpected);
+        unlink('storage/app/public/'.$fileName);
         return redirect()->route('plans', ['group' => $request->group]);
     }
 

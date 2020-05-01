@@ -30,7 +30,7 @@
 </form>
 @if($journals)
 <hr>
-{{ $journals->render() }}
+{{ $journals->appends(Request::except('page'))->links() }}
 <table class="table table-hover">
 	<thead>
 		<tr>
@@ -59,5 +59,6 @@
 		@endforeach
 	</tbody>
 </table>
+{{ $journals->appends(Request::except('page'))->links() }}
 @endif
 @endsection
