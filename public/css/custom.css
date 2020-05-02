@@ -224,9 +224,27 @@ td select.form-control {
 .muted-img {
 	opacity: 0.7;
 }
-.text-muted img {
+.text-muted img, .img-muted {
 	opacity: 0.4;
 }
 .hover-none:hover {
 	text-decoration: none !important;
+}
+.ready {
+	display: block;
+	width: 15px;
+	height: 10px;
+	border-bottom: 3px solid blue;
+	border-left: 3px solid blue;
+	transform: rotate(-45deg);
+}
+.session-progress text {
+	fill: #008000;
+	font-size: 40px;
+}
+.session-progress circle {
+	transition: stroke-dasharray 1s;
+}
+.table-success td {
+	background-color: #e4ffe8;
 }

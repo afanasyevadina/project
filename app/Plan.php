@@ -110,6 +110,11 @@ class Plan extends Model
         ->first();
     }
 
+    public function results() 
+    {
+        return $this->hasMany('App\Result');
+    }
+
     public function generateLessons()
     {
         $left = $this->total;
@@ -162,6 +167,18 @@ class Plan extends Model
                     ])->delete();
                 }
             }
+        }
+    }
+
+    public function generateResults()
+    {
+        if(in_array($this->cikl_id, [7,8,9])) return;
+        foreach ($this->group->students as $key => $student) {
+            $result = Result::updateOrCreate([
+                'plan_id' => $this->id,
+                'student_id' => $student->id
+            ]);
+            $result->save();
         }
     }
 

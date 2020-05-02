@@ -17,17 +17,18 @@ class KtpController extends Controller
     {
         $group = \Request::get('group');
         $kurs = \Request::get('kurs');
-        $query = Plan::select('group_id', 'subject_id', 'year', 'subgroup', 'cikl_id', 'teacher_id'); 
-        if($group) {
+        $user = \Auth::user();
+        $programs = Plan::select('group_id', 'subject_id', 'year', 'subgroup', 'cikl_id', 'teacher_id')
+        ->when($group, function($query, $group) {
             $query->where('group_id', $group);
-        }
-        if($kurs) {
+        })
+        ->when($kurs, function($query, $kurs) {
             $query->whereIn('semestr', [$kurs * 2, ($kurs * 2 - 1)]);
-        }
-        if(\Auth::user()->role == 'teacher') {
-            $query->where('teacher_id', \Auth::user()->person_id);
-        }
-        $programs = $query->groupBy('group_id', 'subject_id', 'year', 'subgroup', 'cikl_id', 'teacher_id')
+        })
+        ->when($user->role == 'teacher', function($query) use($user) {
+            $query->where('teacher_id', $user->person_id);
+        })
+        ->groupBy('group_id', 'subject_id', 'year', 'subgroup', 'cikl_id', 'teacher_id')
         ->orderBy('semestr', 'asc')
         ->orderBy('subject_id', 'asc')
         ->orderBy('subgroup', 'asc')->paginate(30);

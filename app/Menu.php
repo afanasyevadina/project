@@ -141,6 +141,13 @@ class Menu
                         'class' => '',
                         'roles' => ['admin', 'manager', 'dispatcher'],
                     ],
+                    [
+                        'label' => 'Праздничные дни',
+                        'path' => 'holidays',
+                        'name' => 'holidays',
+                        'class' => '',
+                        'roles' => ['admin', 'manager', 'dispatcher'],
+                    ],
                 ],
             ],
             [
@@ -252,11 +259,26 @@ class Menu
                 'class' => '',
                 'roles' => ['*'],
             ],
+            [
+                'label' => 'Топ - 100',
+                'path' => 'statistic/top',
+                'name' => 'statistic/top',
+                'class' => '',
+                'roles' => ['*'],
+            ],
+            [
+                'label' => 'Моя динамика',
+                'path' => 'statistic/dynamic',
+                'name' => 'statistic/dynamic',
+                'class' => '',
+                'roles' => ['student'],
+            ],
         ];
         $menu = [];
-        $role = \Auth::user()->role;
+        $user = \Auth::user();
+        $role = $user->role;
         if($role == 'teacher') {
-            foreach(Group::where('teacher_id', \Auth::user()->person_id)->get() as $group) {
+            foreach(Group::where('teacher_id', $user->person_id)->get() as $group) {
                 $list[] = [
                     'label' => 'Студенты '.$group->name,
                     'path' => 'groups/'.$group->id.'/students',
@@ -265,6 +287,22 @@ class Menu
                     'roles' => ['teacher'],
                 ];
             }
+            $list[] = [
+                'label' => 'Расписание на сегодня',
+                'path' => 'changes/teacher?date='.date('Y-m-d').'&teacher='.$user->person_id,
+                'name' => 'changes/today',
+                'class' => '',
+                'roles' => ['teacher'],
+            ];
+        }
+        if($role == 'student') {
+            $list[] = [
+                'label' => 'Расписание на сегодня',
+                'path' => 'changes/group?date='.date('Y-m-d').'&group='.$user->person->group_id,
+                'name' => 'changes/today',
+                'class' => '',
+                'roles' => ['student'],
+            ];
         }
         foreach ($list as $key => $item) {
             if(isset($item['children'])) {
@@ -296,5 +334,26 @@ class Menu
         $m = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
         $d = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье'];
         return date('d').' '.$m[date('n') - 1].' '.date('Y').' г., '.date('H:i');
+    }
+
+    public static function greeting($name, $role = 'student')
+    {
+        $greetings = [
+            'student' => [
+                'Привет, {name}, как настроение?',
+                '{name}! Вот уж не ждали сегодня!',
+                '{name}, я, конечно, не эксперт, но учеба очень важна.',
+                'Знаешь, {name}, иногда лучше просто смириться.',
+                '{name}, ты справишься! Вот я точно знаю.',
+            ],
+            'teacher' => [
+                'Здравствуйте, {name}, как настроение?',
+                '{name}! Рад вас видеть!',
+                '{name}, мы очень ценим Ваше мнение, но свое тоже.',
+                'Знаете, {name}, иногда лучше просто смириться.',
+                '{name}, Вы справитесь! Вот я точно знаю.',
+            ]
+        ];
+        return @str_replace('{name}', $name, $greetings[$role][random_int(0, count($greetings[$role]) - 1)]);
     }
 }

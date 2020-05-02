@@ -13,9 +13,11 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\ScheduleCommand::class,
+        \App\Console\Commands\ChangesCommand::class,
         \App\Console\Commands\FillCommand::class,
-        \App\Console\Commands\ResetCommand::class
+        \App\Console\Commands\ResetCommand::class,
+        \App\Console\Commands\RatingCommand::class,
+        \App\Console\Commands\AttestCommand::class
     ];
 
     /**

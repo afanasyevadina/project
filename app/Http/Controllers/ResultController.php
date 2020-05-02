@@ -15,22 +15,24 @@ class ResultController extends Controller
     {
         $group = \Request::get('group');
         $sem = \Request::get('sem');
-        $query = Plan::where(function($q) {
+        $user = \Auth::user();
+        $dis = Plan::where(function($q) {
         	$q->whereHas('subject', function($sq) {
         		$sq->where('divide', '<>', 2);
         	})
         	->orWhere('subgroup', '<>', 2);
-        }); 
-        if($group) {
+        })
+        ->whereNotIn('cikl_id', [7,8,9])
+        ->when($group, function($query, $group) {
             $query->where('group_id', $group);
-        }
-        if($sem) {
+        })
+        ->when($sem, function($query, $sem) {
             $query->where('semestr', $sem);
-        }
-        if(\Auth::user()->role == 'teacher') {
-            $query->where('teacher_id', \Auth::user()->person_id);
-        }
-        $dis = $query->orderBy('year', 'asc')
+        })
+        ->when($user->role == 'teacher', function($query) use($user) {
+            $query->where('teacher_id', $user->person_id);
+        })
+        ->orderBy('year', 'asc')
         ->orderBy('semestr', 'asc')
         ->orderBy('subject_id', 'asc')
         ->orderBy('subgroup', 'asc')
@@ -50,13 +52,7 @@ class ResultController extends Controller
         }        
         $students = $query->orderBy('surname', 'asc')
         ->orderBy('name', 'asc')->get();
-    	foreach ($students as $key => $student) {
-    		$result = Result::updateOrCreate([
-    			'plan_id' => $id,
-    			'student_id' => $student->id
-    		]);
-    		$result->save();
-    	}
+    	$plan->generateResults();
     	$results = Result::where('plan_id', $id)->get();
     	return view('result.edit', [
             'plan' => $plan,
@@ -78,18 +74,17 @@ class ResultController extends Controller
         $student = Student::findOrFail($id);
         $plans = Plan::where('group_id', $student->group_id)
         ->whereIn('subgroup', [0, $student->subgroup])
+        ->whereNotIn('cikl_id', [7,8,9])
+        ->where('semestr', '<=', $student->group->kurs * 2)
         ->orderBy('semestr', 'asc')->get(); 
+        $zachetka = [];
         foreach ($plans as $key => $plan) {
             $result = Result::updateOrCreate([
                 'plan_id' => $plan->id,
                 'student_id' => $id
             ]);
             $result->save();
-        }
-        $results = Result::where('student_id', $id)->get();
-        $zachetka = [];
-        foreach ($results as $key => $result) {
-            $zachetka[$result->plan->semestr][] = $result;
+            $zachetka[$plan->semestr][] = $result;
         }
         ksort($zachetka);
         return view('result.view', [

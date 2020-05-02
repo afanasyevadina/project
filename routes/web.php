@@ -80,6 +80,7 @@ Route::group(['middleware' => ['auth', 'can:manager']], function () {
 });
 
 Route::group(['middleware' => ['auth', 'can:dispatcher']], function () {
+	Route::get('/holidays', 'HolidayController@index')->name('holidays');
 	Route::get('/exams/edit', 'ExamController@edit')->name('exams/edit');
 	Route::get('/schedule/edit', 'ScheduleController@edit')->name('schedule/edit');
 	Route::get('/changes/edit', 'ChangeController@edit')->name('changes/edit');
@@ -89,6 +90,9 @@ Route::group(['middleware' => ['auth', 'can:dispatcher']], function () {
 	Route::get('/doc/form3', 'DocController@form3')->name('form3');
 	Route::get('/doc/form2', 'DocController@form2')->name('form2');
 
+	Route::get('/holidays{id}/delete', 'HolidayController@destroy');
+
+	Route::post('/holidays', 'HolidayController@store');
 	Route::post('/exams', 'ExamController@store');
 	Route::post('/schedule', 'ScheduleController@store');
 	Route::post('/changes', 'ChangeController@store');
@@ -133,6 +137,7 @@ Route::group(['middleware' => ['auth', 'can:forum']], function () {
 
 Route::group(['middleware' => ['auth']], function () {
 	Route::get('/exams', 'ExamController@index')->name('exams');
+	Route::get('statistic/top', 'StatisticController@top')->name('statistic/top');
 	Route::get('/schedule', 'ScheduleController@index')->name('schedule');
 	Route::get('/schedule/group', 'ScheduleController@group')->name('schedule');
 	Route::get('/schedule/teacher', 'ScheduleController@teacher')->name('schedule');
@@ -145,6 +150,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::post('/forum', 'ForumController@store');
 	Route::post('/forum/{id}', 'ForumController@update');
+});
+
+Route::group(['middleware' => ['auth', 'can:student']], function () {
+	Route::get('statistic/dynamic', 'StatisticController@dynamic')->name('statistic/dynamic');
 });
 
 Auth::routes();

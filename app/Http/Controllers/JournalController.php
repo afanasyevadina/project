@@ -18,17 +18,17 @@ class JournalController extends Controller
     {
         $group = \Request::get('group');
         $sem = \Request::get('sem');
-        $query = Plan::query(); 
-        if($group) {
+        $user = \Auth::user();
+        $journals = Plan::when($group, function($query, $group) {
             $query->where('group_id', $group);
-        }
-        if($sem) {
+        })
+        ->when($sem, function($query, $sem) {
             $query->where('semestr', $sem);
-        }
-        if(\Auth::user()->role == 'teacher') {
-            $query->where('teacher_id', \Auth::user()->person_id);
-        }
-        $journals = $query->orderBy('year', 'asc')
+        })
+        ->when($user->role == 'teacher', function($query) use($user) {
+            $query->where('teacher_id', $user->person_id);
+        })
+        ->orderBy('year', 'asc')
         ->orderBy('semestr', 'asc')
         ->orderBy('subject_id', 'asc')
         ->orderBy('subgroup', 'asc')
@@ -70,7 +70,10 @@ class JournalController extends Controller
     public function store(Request $request)
     {
         foreach($request->all() as $item) {
-            Rating::where('id', $item['id'])->update(['value' => $item['value']]);
+            $rating = Rating::find($item['id']);
+            $rating->value = is_numeric($item['value']) ? $item['value'] : null;
+            $rating->miss = mb_strtolower($item['value']) == 'н';
+            $rating->save();
         }
     }
 

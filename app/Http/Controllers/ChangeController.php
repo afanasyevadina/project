@@ -12,6 +12,7 @@ use App\Lang;
 use App\Group;
 use App\Cab;
 use App\Teacher;
+use App\Holiday;
 use App\DateConvert;
 use Illuminate\Support\Facades\Storage;
 
@@ -71,31 +72,33 @@ class ChangeController extends Controller
 				$lesson['hours'] = $val->total / 2;
 				return $lesson;
 			})->toArray();	
-			$schedule = Lesson::with('cab')->with('teacher')
-			->where('group_id', $group)
-			->where('date', $date)->get()->map(function($val) {
-				$val['teacher'] = $val->teacher;
-				$val['subject'] = $val->plan->subject;
-				$val['lesson_id'] = $val->id;
-				return $val;
-			});
-			if(!count($schedule)) {
-				$schedule = Schedule::with('cab')
+			if(!Holiday::where('date', $date)->exists()) {
+				$schedule = Lesson::with('cab')->with('teacher')
 				->where('group_id', $group)
-				->where('year', $year)
-				->where('semestr', $semestr)
-				->where('day', $day)
-				->whereIn('week', [0, $week])
-				->get();
-				$schedule = $schedule->map(function($val) use($date) {
-					if(!$val->plan->checkNext($date)) return false;
-					$next = $val->plan->lessons()->whereNull('date')->orderBy('order', 'asc')->first();
-					$val['teacher'] = $val->plan->teacher;
+				->where('date', $date)->get()->map(function($val) {
+					$val['teacher'] = $val->teacher;
 					$val['subject'] = $val->plan->subject;
-					$val['subgroup'] = $next->subgroup;
-					$val['lesson_id'] = @$next->id;
+					$val['lesson_id'] = $val->id;
 					return $val;
-				})->toArray();
+				});
+				if(!count($schedule)) {
+					$schedule = Schedule::with('cab')
+					->where('group_id', $group)
+					->where('year', $year)
+					->where('semestr', $semestr)
+					->where('day', $day)
+					->whereIn('week', [0, $week])
+					->get();
+					$schedule = $schedule->map(function($val) use($date) {
+						if(!$val->plan->checkNext($date)) return false;
+						$next = $val->plan->lessons()->whereNull('date')->orderBy('order', 'asc')->first();
+						$val['teacher'] = $val->plan->teacher;
+						$val['subject'] = $val->plan->subject;
+						$val['subgroup'] = $next->subgroup;
+						$val['lesson_id'] = @$next->id;
+						return $val;
+					})->toArray();
+				}
 			}
 		}
 		return view('changes.edit', [

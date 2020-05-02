@@ -30,7 +30,8 @@
 							{{ message.text }}
 							<img v-if="message.hasImage" :src="message.file" class="d-block mt-2" width="500">
 							<a v-else-if="message.file" :href="message.file" class="d-block mt-2">
-								<img src="/public/img/icons/document.svg" height="20" class="white-img mr-1">
+								<img src="/public/img/icons/document.svg" height="20" class="mr-1" 
+								:class="{'white-img': message.user_id==user.id}">
 								{{message.file.split('/').pop()}}
 							</a>
 							<div v-if="message.reply" class="pl-2 border-left mt-2">
@@ -42,7 +43,8 @@
 								<small>{{ message.reply.text }}</small>
 								<img v-if="message.reply.hasImage" :src="message.reply.file" class="d-block mt-2" width="450">
 								<a v-else-if="message.reply.file" :href="message.reply.file">
-									<img src="/public/img/icons/document.svg" height="18" class="white-img mr-1">
+									<img src="/public/img/icons/document.svg" height="18" class="mr-1" 
+									:class="{'white-img': message.user_id==user.id}">
 									{{message.reply.file.split('/').pop()}}
 								</a>
 							</div>

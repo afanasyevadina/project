@@ -18,17 +18,18 @@ class RpController extends Controller
     {
         $group = \Request::get('group');
         $subject = \Request::get('subject');
-        $query = Plan::select('group_id', 'subject_id', 'cikl_id');        
-        if($subject) {
-            $query->where('subject_id', $subject);
-        }
-        if($group) {
+        $user = \Auth::user();
+        $programs = Plan::select('group_id', 'subject_id', 'cikl_id')     
+        ->when($group, function($query, $group) {
             $query->where('group_id', $group);
-        }
-        if(\Auth::user()->role == 'teacher') {
-            $query->where('teacher_id', \Auth::user()->person_id);
-        }
-        $programs = $query->groupBy('group_id', 'subject_id', 'cikl_id')->paginate(30);
+        })
+        ->when($subject, function($query, $subject) {
+            $query->where('subject_id', $subject);
+        })
+        ->when($user->role == 'teacher', function($query) use($user) {
+            $query->where('teacher_id', $user->person_id);
+        })
+        ->groupBy('group_id', 'subject_id', 'cikl_id')->paginate(30);
         return view('rp.index', [
             'programs' => $programs,
             'groups' => Group::orderBy('name')->get(),

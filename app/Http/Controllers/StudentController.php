@@ -36,8 +36,8 @@ class StudentController extends Controller
         ->when($pay, function($query, $pay) {
             $query->where('pay_id', $pay);
         })
-        ->orderBy('name', 'asc')
         ->orderBy('surname', 'asc')
+        ->orderBy('name', 'asc')
         ->orderBy('patronymic', 'asc')->paginate(100);
         return view('student.index', [
             'students' => $students,

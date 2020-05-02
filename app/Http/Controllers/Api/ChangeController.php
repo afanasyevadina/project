@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Schedule;
 use App\Lesson;
 use App\Group;
+use App\Holiday;
 use App\DateConvert;
 
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ class ChangeController extends Controller
 	public function index()
 	{
 		$date = \Request::get('date') ?? date('Y-m-d');
+		if (Holiday::where('date', $date)->exists()) return [];
 		$department = \Request::get('department');
 		$lang = \Request::get('lang');
 
@@ -72,6 +74,7 @@ class ChangeController extends Controller
 	public function group()
 	{
 		$date = \Request::get('date') ?? date('Y-m-d');
+		if (Holiday::where('date', $date)->exists()) return [];
 		$group = \Request::get('group');
 
 		$dataChange = Lesson::where('date', $date)
@@ -114,6 +117,7 @@ class ChangeController extends Controller
 	public function teacher()
 	{
 		$date = \Request::get('date') ?? date('Y-m-d');
+		if (Holiday::where('date', $date)->exists()) return [];
 		$department = \Request::get('department');
 		$teacher = \Request::get('teacher');
 

@@ -9,21 +9,21 @@ use App\Plan;
 use App\DateConvert;
 use Illuminate\Console\Command;
 
-class FillCommand extends Command
+class ChangesCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'fill:group {group}';
+    protected $signature = 'changes:fill';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Fill lessons';
+    protected $description = 'Auto changes';
 
     /**
      * Create a new command instance.
@@ -42,13 +42,9 @@ class FillCommand extends Command
      */
     public function handle()
     {
-        $group = Group::find($this->argument('group'));
-        $time = strtotime($group->year_create.'-09-01');
-        $end = strtotime($group->year_leave.'-07-01');
-        while($time < $end) {
-            $date = date('Y-m-d', $time);
+        $date = date('Y-m-d');
+        foreach (Group::all() as $key => $group) {
             $this->call('schedule:changes', ['group' => $group->id, 'date' => $date]);
-            $time += 3600*24;
         }
     }
 }

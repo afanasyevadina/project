@@ -12,8 +12,8 @@ class ForumController extends Controller
     public function index()
     {
         $user = \Auth::user();
-        $topics = Topic::when($user->role != 'admin', function($q, $user) {
-            return $q->whereHas('permissions', function($query) use($user) {
+        $topics = Topic::when($user->role != 'admin', function($q) use($user) {
+            $q->whereHas('permissions', function($query) use($user) {
                 $query->where('role', $user->role)->whereIn('user_id', [0, $user->id]);
             });
         })

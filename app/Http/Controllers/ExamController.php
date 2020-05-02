@@ -20,7 +20,7 @@ class ExamController extends Controller
         return view('exam.index', [
             'groups' => Group::orderBy('name', 'asc')->get(),
             'exams' => $exams,
-            'group' => Group::findOrFail($group),
+            'group' => Group::find($group),
         ]);
     }
 
@@ -34,7 +34,7 @@ class ExamController extends Controller
         return view('exam.edit', [
             'groups' => Group::orderBy('name', 'asc')->get(),
             'exams' => $exams,
-            'group' => Group::findOrFail($group),
+            'group' => Group::find($group),
             'cabs' => Cab::orderBy('num', 'asc')->get(),
         ]);
     }

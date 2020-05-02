@@ -14,7 +14,15 @@
 
 <div class="tab-content">
 	@foreach($zachetka as $sem => $page)
+	<?php 
+	$avgResult = round(collect($page)->avg('itog'), 2);
+	$minResult = collect($page)->min('itog');
+	?>
 	<div id="sem{{$sem}}" class="tab-pane fade {{$sem == @array_keys($zachetka)[0] ? 'in active show' : ''}}">
+		<div class="alert alert-{{$minResult == 5 ? 'success' : ($minResult == 4 ? 'info' : 'warning')}}">
+			Средний балл: 
+			{{$avgResult}}
+		</div>
 		<table class="table table-bordered table-sm">
 			<thead>
 				<tr>

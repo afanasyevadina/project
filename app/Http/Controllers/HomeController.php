@@ -33,19 +33,33 @@ class HomeController extends Controller
         switch (\Auth::user()->role) {
             case 'teacher':
             $teacher = Teacher::findOrFail(\Auth::user()->person_id);
+            $subjects = Plan::where('teacher_id', $teacher->id)
+            ->when(date('n') < 9, function($query) {
+                $query->where('year', date('Y') - 1)->whereIn('semestr', [2,4,6,8]);
+            })
+            ->when(date('n') >= 9, function($query) {
+                $query->where('year', date('Y'))->whereIn('semestr', [1,3,5,7]);
+            })->get();
+            $progress = $subjects->filter(function($val) {
+                return $val->results()->where('itog', '>', 2)->count() == $val->results()->count();
+            })->count();
             return view('home.teacher', [
                 'teacher' => $teacher,
+                'subjects' => $subjects,
+                'progress' => $progress,
             ]);
             break;
             case 'student':
             $student = Student::findOrFail(\Auth::user()->person_id);
-            $results = [];
-            foreach($student->results as $res) {
-                $results[$res->plan->semestr][$res->plan->subject_id] = $res->itog;
-            }
+            $subjects = $student->results()->whereHas('plan', function($query) {
+                if(date('n') < 9) $query->where('year', date('Y') - 1)->whereIn('semestr', [2,4,6,8]);
+                else $query->where('year', date('Y'))->whereIn('semestr', [1,3,5,7]);
+            })->get();
+            $progress = $subjects->where('itog', '>', 2)->count();
             return view('home.student', [
                 'student' => $student,
-                'results' => $results,
+                'subjects' => $subjects,
+                'progress' => $progress,
             ]);
             break;
 

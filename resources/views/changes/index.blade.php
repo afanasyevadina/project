@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-sm-3 form-group">
             <label>Дата</label>
-            <input type="date" name="date" class="form-control form-control-sm" value="{{ @$_GET['date'] }}">
+            <input type="date" name="date" class="form-control form-control-sm" value="{{ @$_GET['date'] ?? date('Y-m-d') }}" required>
         </div>
         <div class="col-sm-4 form-group">
             <label>Отделение</label>

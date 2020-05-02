@@ -6,11 +6,11 @@
     <div class="row">
         <div class="col-sm-6 form-group">
             <label>Дата</label>
-            <input type="date" name="date" class="form-control form-control-sm" value="{{ @$_GET['date'] }}">
+            <input type="date" name="date" class="form-control form-control-sm" value="{{ @$_GET['date'] ?? date('Y-m-d') }}" required>
         </div>
         <div class="col-sm-4 form-group">
             <label>Группа</label>
-            <select name="group" class="form-control form-control-sm">
+            <select name="group" class="form-control form-control-sm" required>
                 <option value="">Группа</option>
                 @foreach($groups as $group)
                 <option value="{{ $group->id }}" {{ $group->id == @$_GET['group'] ? 'selected' : ''}}>{{ $group->name }}</option>
@@ -31,9 +31,9 @@
     <table v-else-if="ready" class="table table-bordered table-sm">
         <thead>
             <tr>
-                <th class="text-center">№</th>
+                <th class="text-center th-num">№</th>
                 <th class="text-center">{{ day }}</th>
-                <th class="text-center">Каб.</th>
+                <th class="text-center th-cab">Каб.</th>
             </tr>
         </thead>
         <tbody>

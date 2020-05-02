@@ -38,7 +38,7 @@
 				<td {{ isset($l->list[$s->id]) ? 'data-id='.$l->list[$s->id]->id : '' }} 
 					{{ isset($l->list[$s->id]) && $l->date ? 'contenteditable=true' : '' }}
 					class="text-center {{ isset($l->list[$s->id]) ? '' : 'table-active' }}">
-					{{ @$l->list[$s->id]->value }}
+					{{ @$l->list[$s->id]->value }}{{ @$l->list[$s->id]->miss ? 'н' : '' }}
 				</td>
 				@endforeach
 			</tr>
