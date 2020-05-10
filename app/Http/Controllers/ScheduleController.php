@@ -46,7 +46,7 @@ class ScheduleController extends Controller
 	public function cab()
 	{
 		return view('schedule.cab', [
-			'cabs' => Cab::orderBy('num', 'asc')->get(),
+			'cabs' => Cab::with('corpus')->orderBy('num', 'asc')->get(),
 		]);
 	}
 
@@ -80,10 +80,10 @@ class ScheduleController extends Controller
 			->map(function($val) {
 				$val['given'] = 0;
 				if($val->subgroup == 2) {
-					$val['hours'] = ceil($val->main->total / $val->main->weeks) / 2;
+					$val['hours'] = $val->main->weeks ? round($val->main->total / $val->main->weeks) / 2 : 0;
 				}
 				else {
-					$val['hours'] = ceil($val->total / $val->weeks) / 2;
+					$val['hours'] = $val->weeks ? round($val->total / $val->weeks) / 2 : 0;
 				}
 				return $val;
 			});
@@ -109,7 +109,7 @@ class ScheduleController extends Controller
 		->where('week', $week)
 		->where('group_id', '<>', $group)
 		->distinct()->get()->pluck('cab_id')->toArray();
-		$list = Cab::whereNotIn('id', array_filter($schedule))->get();
+		$list = Cab::with('corpus')->whereNotIn('id', array_filter($schedule))->get();
 		return $list;
 	}
 

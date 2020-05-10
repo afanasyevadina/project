@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Teacher;
 use App\User;
+use App\ExcelHelper;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -36,22 +37,26 @@ class TeacherController extends Controller
     {
         $teacher = Teacher::create($request->all());
         $teacher->save();
-        return redirect()->route('teachers');
+        return redirect()->action('TeacherController@edit', ['id' => $teacher->id]);
     }
 
     public function update(Request $request, $id)
     {
         $teacher = Teacher::findOrFail($id);
         $teacher->fill($request->all());
+        if($request->file('photo')) {
+            $fileName = Storage::disk('public')->putFileAs('teachers', $request->file('photo'), $id);
+            $teacher->photo = '/public/storage/'.$fileName;
+        }
         $teacher->save();
-        return redirect()->route('teachers');
+        return redirect()->back();
     }
 
     public function destroy($id)
     {
         $teacher = Teacher::findOrFail($id);
         $teacher->delete();
-        return redirect()->route('teachers');
+        return redirect()->action('TeacherController@index');
     }
 
     public function upload(Request $request)
@@ -62,15 +67,17 @@ class TeacherController extends Controller
         $list = $sheet->toArray();
 
         foreach (array_filter($list) as $key => $row) {
-            $row = explode(' ', $row[0]);
-            $teacher = Teacher::updateOrCreate([
-                'surname' => $row[0], 
-                'name' => $row[1],
-                'patronymic' => @$row[2]
-            ]);
-            $teacher->save();
+            if(@$row[0] && @$row[1]) {
+                $teacher = Teacher::updateOrCreate([
+                    'surname' => ExcelHelper::normalize($row[0]),
+                    'name' => ExcelHelper::normalize($row[1]),
+                    'patronymic' => @ExcelHelper::normalize($row[2]),
+                    'born' => @date('Y-m-d', strtotime($row[3])),
+                ]);
+                $teacher->save();
+            }
         }
         unlink('storage/app/public/'.$fileName);
-        return redirect()->route('teachers');
+        return redirect()->back();
     }
 }

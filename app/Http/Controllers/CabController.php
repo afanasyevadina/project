@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Cab;
+use App\Corpus;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +12,8 @@ class CabController extends Controller
     public function index()
     {
         return view('cab.index', [
-            'cabs' => Cab::orderBy('num', 'asc')->get()
+            'cabs' => Cab::orderBy('num', 'asc')->get(),
+            'corps' => Corpus::all(),
         ]);
     }
 

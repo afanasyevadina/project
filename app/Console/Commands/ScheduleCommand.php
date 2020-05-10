@@ -48,6 +48,7 @@ class ScheduleCommand extends Command
         $group = $this->argument('group');
         if(Lesson::where('group_id', $group)->where('date', $date)->exists()) return;
         $convert = DateConvert::convert($date, $group);
+        if(!@$convert['teor']) return;
         $year = @$convert['year'];
         $semestr = @$convert['semestr'];        
         $day = @$convert['day'];        

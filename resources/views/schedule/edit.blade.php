@@ -139,7 +139,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
                     <ul class="list-group cabs" data-dismiss="modal">
                         <li class="list-group-item text-muted p-2" @click="setCab({})">*не выбрано*</li>
                         <li v-for="cab in allowCabs" class="list-group-item p-2" @click="setCab(cab)">
-                            {{cab.num}} <small> ({{cab.name}})</small>
+                            {{cab.num}} <small> ({{cab.name}}, {{cab.corpus.name}})</small>
                         </li>
                     </ul>
                 </div>
@@ -193,7 +193,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
         },
         methods: {
             dragstart: function(dis) {
-                this.active = dis
+                this.active = JSON.parse(JSON.stringify(dis))
                 this.active.cab = {}
                 this.active.plan_id = dis.id
             },

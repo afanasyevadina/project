@@ -56,7 +56,8 @@
 			</div>
 			<div class="col-sm-4">
 				<label class="label-sm">Группа</label>
-				<select name="group_id" class="form-control form-control-sm" required>
+				<select name="group_id" class="form-control form-control-sm">
+					<option value="">Не выбрано</option>
 					@foreach($groups as $g)
 					<option value="{{ $g->id }}" {{$g->id == @$_GET['group'] ? 'selected' : ''}}>{{ $g->name }}</option>
 					@endforeach

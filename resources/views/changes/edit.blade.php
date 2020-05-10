@@ -43,10 +43,14 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
     <div class="row">
         <div class="col-sm-6 overflow-auto">
             <ul class="list-group">
-                <li :class="{'text-muted': dis.denied, 'bg-light': active.id == dis.id}" class="list-group-item drag" v-for="dis in list" :key="dis.id" @mousedown="dragstart(dis)">
+                <li :class="{'text-muted': dis.denied, 'bg-light': active.id == dis.id}" 
+                class="list-group-item drag" v-for="dis in list" 
+                :key="dis.id" 
+                @mousedown="dragstart(dis)" 
+                :hidden="dis.given+dis.taken==dis.hours">
                     {{ dis.subject.name }} {{dis.subgroup ? dis.subgroup + ' подгруппа' : ''}}
                     <br><i>{{ dis.teacher.shortName }}</i>
-                    <span class="span-badge text-muted">{{ dis.given }} / {{ dis.hours }}</span>
+                    <span class="span-badge text-muted">{{ dis.given+dis.taken }} / {{ dis.hours }}</span>
                 </li>
             </ul>
         </div>
@@ -94,7 +98,9 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
                 <div class="modal-body">
                     <ul class="list-group" data-dismiss="modal">
                         <li class="list-group-item text-muted" @click="setCab({})">*не выбрано*</li>
-                        <li v-for="cab in allowCabs" class="list-group-item" @click="setCab(cab)">{{cab.num}} ({{cab.name}})</li>
+                        <li v-for="cab in allowCabs" class="list-group-item p-2" @click="setCab(cab)">
+                            {{cab.num}}<small> ({{cab.name}}, {{cab.corpus.name}})</small>
+                        </li>
                     </ul>
                 </div>
                 <div class="modal-footer"></div>
@@ -129,7 +135,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
     const app = new Vue({
         el: '#app',
         data: {
-            days: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница'],
+            days: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
             schedule: [],
             list: [],
             active: {},
@@ -157,7 +163,8 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
                             this.warning = response.data
                         } else {
                             this.schedule[num].push(active)
-                            this.$forceUpdate()                            
+                            this.$forceUpdate() 
+                            this.setGiven()                           
                         }
                     })                    
                 }
@@ -217,6 +224,13 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
                 this.schedule[this.waitTeacher.n][this.waitTeacher.i].teacher = teacher
                 this.waitTeacher = {}
                 this.$forceUpdate()
+            },
+            setGiven: function() {
+                this.list.forEach(dis => dis.taken = 0)
+                this.schedule.forEach((num, n) => num.forEach(l => {
+                    var src = this.list.find(val => val.plan_id == l.plan_id)
+                    if(!!src) src.taken ++
+                }))
             }
         },
         created() {
@@ -231,6 +245,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
             }) 
             document.addEventListener('mouseup', () => {
                 this.active = {}
+                this.setGiven()
             })
             document.addEventListener('mousemove', (e) => {
                 if(this.active.id) {
@@ -238,6 +253,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
                     this.$refs.helper.style.left = e.clientX + 5 + 'px'
                 }
             })
+            this.setGiven()
         }
     })
 </script>

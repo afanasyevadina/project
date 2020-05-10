@@ -16,7 +16,7 @@
 </div>
 <hr>
 <div class="form-group">
-	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск..." autofocus>
+	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск...">
 </div>
 <form action="/admin/users/register" method="post">
 	@csrf

@@ -27,6 +27,14 @@
 						<input type="text" name="name" autocomplete="off" class="form-control">
 					</div>
 					<div class="form-group">
+						<label>Корпус</label>
+						<select name="corpus_id" class="form-control">
+							@foreach($corps as $c)
+							<option value="{{$c->id}}">{{$c->name}}</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="form-group">
 						<label>Вместимость</label>
 						<input type="number" name="capacity" autocomplete="off" class="form-control">
 					</div>
@@ -48,8 +56,8 @@
 		<tr>
 			<th>Номер</th>
 			<th>Название</th>
+			<th>Корпус</th>
 			<th>Вместимость</th>
-			<th>Описание</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -58,8 +66,8 @@
 		<tr>
 			<td>{{ $cab->num }}</td>
 			<td>{{ $cab->name }}</td>
+			<td>{{ $cab->corpus->name }}</td>
 			<td>{{ $cab->capacity }}</td>
-			<td>{{ $cab->description }}</td>
 			<td class="text-right text-nowrap">
 				<button data-toggle="modal" data-target="#{{ $cab->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
 			</td>
@@ -87,6 +95,14 @@
 					<div class="form-group">
 						<label>Название</label>
 						<input type="text" name="name" autocomplete="off" class="form-control" value="{{ $cab->name }}">
+					</div>
+					<div class="form-group">
+						<label>Корпус</label>
+						<select name="corpus_id" class="form-control">
+							@foreach($corps as $c)
+							<option value="{{$c->id}}" {{$c->id==$cab->corpus_id?'selected':''}}>{{$c->name}}</option>
+							@endforeach
+						</select>
 					</div>
 					<div class="form-group">
 						<label>Вместимость</label>

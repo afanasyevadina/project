@@ -40,15 +40,17 @@ class ChangeController extends Controller
 		$schedule = [];
 		foreach($groups as $g) {
 			$current = DateConvert::convert($date, $g->id);
-			$dataMain = Schedule::where('year', $current['year'])
-			->where('semestr', $current['semestr'])
-			->where('day', $current['day'])
-			->whereIn('week', [$current['week'], 0])
-			->where('group_id', $g->id)
-			->orderBy('num', 'asc')->get();
 			$main = [];
-			foreach ($dataMain as $key => $item) {
-				$main[$item->num][] = $item;
+			if($current['teor']) {
+				$dataMain = Schedule::where('year', $current['year'])
+				->where('semestr', $current['semestr'])
+				->where('day', $current['day'])
+				->whereIn('week', [$current['week'], 0])
+				->where('group_id', $g->id)
+				->orderBy('num', 'asc')->get();
+				foreach ($dataMain as $key => $item) {
+					$main[$item->num][] = $item;
+				}
 			}
 			for($n = 1; $n <= 7; $n++) {
 				$items = [];
@@ -80,20 +82,22 @@ class ChangeController extends Controller
 		$dataChange = Lesson::where('date', $date)
 		->where('group_id', $group)
 		->orderBy('num', 'asc')->get();
+		$schedule = [];
+		$main = [];
 		$changes = [];
 		foreach ($dataChange as $key => $item) {
 			$changes[$item->num][] = $item;
 		}
 		$current = DateConvert::convert($date, $group);
-		$dataMain = Schedule::where('year', $current['year'])
-		->where('semestr', $current['semestr'])
-		->where('day', $current['day'])
-		->where('group_id', $group)
-		->orderBy('num', 'asc')->get();
-		$schedule = [];
-		$main = [];
-		foreach ($dataMain as $key => $item) {
-			$main[$item->num][] = $item;
+		if($current['teor']) {
+			$dataMain = Schedule::where('year', $current['year'])
+			->where('semestr', $current['semestr'])
+			->where('day', $current['day'])
+			->where('group_id', $group)
+			->orderBy('num', 'asc')->get();
+			foreach ($dataMain as $key => $item) {
+				$main[$item->num][] = $item;
+			}
 		}
 		for($n = 1; $n <= 7; $n++) {
 			$items = [];
@@ -133,18 +137,20 @@ class ChangeController extends Controller
 		$schedule = [];
 		foreach($groups as $g) {
 			$current = DateConvert::convert($date, $g->id);
-			$dataMain = Schedule::where('year', $current['year'])
-			->where('semestr', $current['semestr'])
-			->where('day', $current['day'])
-			->whereIn('week', [$current['week'], 0])
-			->where('group_id', $g->id)
-			->whereHas('plan', function($query) use($teacher) {
-				$query->where('teacher_id', $teacher);
-			})
-			->orderBy('num', 'asc')->get();
 			$main = [];
-			foreach ($dataMain as $key => $item) {
-				$main[$item->num][] = $item;
+			if($current['teor']) {
+				$dataMain = Schedule::where('year', $current['year'])
+				->where('semestr', $current['semestr'])
+				->where('day', $current['day'])
+				->whereIn('week', [$current['week'], 0])
+				->where('group_id', $g->id)
+				->whereHas('plan', function($query) use($teacher) {
+					$query->where('teacher_id', $teacher);
+				})
+				->orderBy('num', 'asc')->get();
+				foreach ($dataMain as $key => $item) {
+					$main[$item->num][] = $item;
+				}
 			}
 			for($n = 1; $n <= 7; $n++) {
 				$items = [];

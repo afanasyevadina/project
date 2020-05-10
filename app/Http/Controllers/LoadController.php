@@ -30,7 +30,7 @@ class LoadController extends Controller
         $plans = [];
         foreach ($all as $key => $p) {
             $sem = $p->semestr % 2 ? 1 : 2;
-            $index = $p->group_id.$p->subgroup;
+            $index = $p->group_id.$p->subgroup.$p->subject_id;
             $plans[$index]['group'] = $p->group->codes[$p->kurs];
             $plans[$index]['subject'] = $p->subject;
             @$plans[$index]['control'] += $p->controls;
@@ -71,7 +71,7 @@ class LoadController extends Controller
         $plans = [];
         foreach ($all as $key => $p) {
             $sem = $p->semestr % 2 ? 1 : 2;
-            $index = $p->subject_id.$p->subgroup;
+            $index = $p->subject_id.$p->subgroup.$p->subject_id;
             $plans[$index]['group'] = $p->group->codes[$p->kurs];
             $plans[$index]['subject'] = $p->subject;
             @$plans[$index]['control'] += $p->controls;

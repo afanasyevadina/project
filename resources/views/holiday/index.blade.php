@@ -49,7 +49,7 @@
 			<td>{{ date('d.m.Y', strtotime($holiday->date)) }}</td>
 			<td>{{ $holiday->name }}</td>
 			<td class="text-right text-nowrap">
-				<button data-toggle="modal" data-target="#{{ $holiday->id }}" class="btn btn-sm btn-link">Удалить</button>
+				<button data-toggle="modal" data-target="#{{ $holiday->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
 			</td>
 		</tr>
 		@endforeach            
@@ -59,19 +59,29 @@
 <div class="modal fade" id="{{ $holiday->id }}">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">{{ $holiday->name }}</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				Удалить из списка праздничных дней?
-			</div>
-			<div class="modal-footer">
-				<a href="/holidays/{{ $holiday->id }}/delete" class="btn btn-outline-primary self-reload">Да</a>
-				<button class="btn btn-light" data-dismiss="modal">Нет</button>
-			</div>
+			<form action="/holidays/{{$holiday->id}}" method="post" class="self-reload">
+				@csrf
+				<div class="modal-header">
+					<h5 class="modal-title">{{ date('d.m.Y', strtotime($holiday->date)) }}</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Дата</label>
+						<input type="date" name="date" autocomplete="off" class="form-control" value="{{$holiday->date}}">
+					</div>
+					<div class="form-group">
+						<label>Название</label>
+						<input type="text" name="name" autocomplete="off" class="form-control" value="{{$holiday->name}}">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-success" value="Сохранить">
+					<a href="/holidays/{{$holiday->id}}/delete" class="btn btn-light self-reload">Удалить</a>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

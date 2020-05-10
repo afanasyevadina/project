@@ -21,6 +21,13 @@ class HolidayController extends Controller
         $holiday->save();
     }
 
+    public function update(Request $request, $id)
+    {
+        $holiday = Holiday::findOrFail($id);
+        $holiday->fill($request->all());
+        $holiday->save();
+    }
+
     public function destroy($id)
     {
         $holiday = Holiday::findOrFail($id);

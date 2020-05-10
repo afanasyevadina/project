@@ -6,6 +6,7 @@ use App\Group;
 use App\Pay;
 use App\Specialization;
 use App\Lang;
+use App\ExcelHelper;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,6 +19,9 @@ class StudentController extends Controller
         $kurs = \Request::get('kurs');
         $lang = \Request::get('lang');
         $pay = \Request::get('pay');
+        $group = \Request::get('group');
+        $base = \Request::get('base');
+        $search = \Request::get('search');
         $students = Student::when($spec, function($query, $spec) {
             $query->whereHas('group', function($q) use($spec) {
                 $q->where('specialization_id', $spec);
@@ -28,6 +32,11 @@ class StudentController extends Controller
                 $q->where('kurs', $kurs);
             });
         })
+        ->when($base, function($query, $base) {
+            $query->whereHas('group', function($q) use($base) {
+                $q->where('base', $base);
+            });
+        })
         ->when($lang, function($query, $lang) {
             $query->whereHas('group', function($q) use($lang) {
                 $q->where('lang_id', $lang);
@@ -36,11 +45,18 @@ class StudentController extends Controller
         ->when($pay, function($query, $pay) {
             $query->where('pay_id', $pay);
         })
+        ->when($group, function($query, $group) {
+            $query->where('group_id', $group);
+        })
+        ->when($search, function($query, $search) {
+            $query->whereRaw("concat(surname,' ',name,' ',patronymic) like '%$search%'");
+        })
         ->orderBy('surname', 'asc')
         ->orderBy('name', 'asc')
         ->orderBy('patronymic', 'asc')->paginate(100);
         return view('student.index', [
             'students' => $students,
+            'groups' => Group::orderBy('name')->get(),
             'specializations' => Specialization::all(),
             'langs' => Lang::all(),
             'pays' => Pay::all(),
@@ -69,7 +85,7 @@ class StudentController extends Controller
     {
         $student = Student::create($request->all());
         $student->save();
-        return redirect()->route('students/edit', ['id' => $student->id]);
+        return redirect()->action('StudentController@edit', ['id' => $student->id]);
     }
 
     public function update(Request $request, $id)
@@ -92,7 +108,7 @@ class StudentController extends Controller
         if(Student::where('group_id', $group)->count() < 25) {
             Student::where('group_id', $group)->update(['subgroup' => null]);
         }
-        return redirect()->route('students');
+        return redirect()->action('StudentController@index');
     }
 
     public function upload(Request $request)
@@ -103,16 +119,18 @@ class StudentController extends Controller
         $list = $sheet->toArray();
 
         foreach (array_filter($list) as $key => $row) {
-            $row = explode(' ', $row[0]);
-            $student = Student::updateOrCreate([
-                'surname' => $row[0], 
-                'name' => $row[1],
-                'patronymic' => @$row[2],
-            ]);
-            $student->save();
+            if(@$row[0] && @$row[1]) {
+                $student = Student::updateOrCreate([
+                    'surname' => ExcelHelper::normalize($row[0]),
+                    'name' => ExcelHelper::normalize($row[1]),
+                    'patronymic' => @ExcelHelper::normalize($row[2]),
+                    'born' => @date('Y-m-d', strtotime($row[3])),
+                ]);
+                $student->save();
+            }
         }
         unlink('storage/app/public/'.$fileName);
-        return redirect()->route('students');
+        return redirect()->back();
     }
 
     public function divide($group)

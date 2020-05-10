@@ -168,6 +168,13 @@ class Menu
                         'class' => '',
                         'roles' => ['admin', 'manager', 'dispatcher'],
                     ],
+                    [
+                        'label' => 'Нагрузка преподавателя',
+                        'path' => 'load',
+                        'name' => 'load',
+                        'class' => '',
+                        'roles' => ['admin', 'manager', 'teacher'],
+                    ],
                 ],
             ],
             [
@@ -194,13 +201,6 @@ class Menu
                         'name' => 'rup',
                         'class' => '',
                         'roles' => ['admin', 'manager'],
-                    ],
-                    [
-                        'label' => 'Нагрузка преподавателя',
-                        'path' => 'load',
-                        'name' => 'load',
-                        'class' => '',
-                        'roles' => ['admin', 'manager', 'teacher'],
                     ],
                     [
                         'label' => 'Рабочая учебная программа',

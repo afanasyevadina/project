@@ -118,6 +118,9 @@
 				<form action="/plans/{{$d->id}}" method="post" class="self-reload" data-alert="#saved">@csrf
 					<h5 class="text-center my-3">{{ $d->semestr }} семестр</h5>
 					<div class="row mx-4 my-2">
+						<div class="col-sm-2">
+							<input type="text" name="shifr" value="{{ $d->shifr }}" class="form-control form-control-sm" autocomplete="off" placeholder="Шифр">
+						</div>
 						<label class="col-sm-2">
 							<input type="hidden" name="is_exam" value="">
 							<input type="checkbox" name="is_exam" value="1" {{$d->is_exam ? 'checked' : ''}}>
@@ -199,7 +202,7 @@
 								</div>
 								<div class="modal-footer">
 									<a href="/plans/{{ $d->id }}/delete" class="btn btn-outline-secondary self-reload">Да</a>
-									<button type="button" class="btn btn-outline-light" data-dismiss="modal">Нет</button>
+									<button type="button" class="btn btn-light" data-dismiss="modal">Нет</button>
 								</div>
 							</div>
 						</div>

@@ -59,7 +59,7 @@ class ChangeController extends Controller
 			->with('teacher')
 			->where('year', $year)
 			->where('semestr', ($year - $grp->year_create) * 2 + $semestr)	
-			->whereNotIn('cikl_id', [6,7,9])
+			->whereNotIn('cikl_id', [7,9])
 			->orderBy('subject_id', 'asc')
 			->orderBy('subgroup', 'asc')
 			->get();
@@ -69,6 +69,7 @@ class ChangeController extends Controller
 				$lesson['teacher'] = $val->teacher;
 				$lesson['subject'] = $val->subject;
 				$lesson['given'] = $val->lessons()->whereNotNull('date')->count();
+				$lesson['taken'] = 0;
 				$lesson['hours'] = $val->total / 2;
 				return $lesson;
 			})->toArray();	
@@ -81,7 +82,7 @@ class ChangeController extends Controller
 					$val['lesson_id'] = $val->id;
 					return $val;
 				});
-				if(!count($schedule)) {
+				if(!count($schedule) && @$convert['teor']) {
 					$schedule = Schedule::with('cab')
 					->where('group_id', $group)
 					->where('year', $year)
@@ -132,7 +133,7 @@ class ChangeController extends Controller
 			return !Lesson::where('group_id', $val->group_id)->where('date', $date)->exists();
 		})
 		->pluck('cab_id')->toArray();
-		$list = Cab::whereNotIn('id', array_filter(array_merge($schedule, $changes)))->get();
+		$list = Cab::with('corpus')->whereNotIn('id', array_filter(array_merge($schedule, $changes)))->get();
 		return $list;
 	}
 

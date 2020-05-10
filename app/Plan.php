@@ -184,11 +184,14 @@ class Plan extends Model
 
     public function checkNext($date)
     {
+        $next = $this->lessons()->whereNull('date')->orWhere('date', $date)->orderBy('order', 'asc')->exists();
+        if(!$next) return false;
         if($this->subgroup == 2 && $this->subject->divide == 2 && !empty($this->main)) {
-            $nextMain = $this->main->lessons()
-            ->whereNull('date')->orWhere('date', $date)->orderBy('order', 'asc')->first();
-            $next = $this->lessons()->whereNull('date')->orWhere('date', $date)->orderBy('order', 'asc')->first();
-            return $next && $nextMain && $nextMain->practice > 0;
+            $nextMain = $this->main->lessons()->where('date', $date)->orderBy('order', 'asc')->first();
+            if(!$nextMain) {
+                $nextMain = $this->main->lessons()->whereNull('date')->orderBy('order', 'asc')->first();
+            }
+            return $nextMain && $nextMain->practice > 0;
         }
         return true;
     }

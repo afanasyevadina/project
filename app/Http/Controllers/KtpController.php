@@ -17,6 +17,7 @@ class KtpController extends Controller
     {
         $group = \Request::get('group');
         $kurs = \Request::get('kurs');
+        $subject = \Request::get('subject');
         $user = \Auth::user();
         $programs = Plan::select('group_id', 'subject_id', 'year', 'subgroup', 'cikl_id', 'teacher_id')
         ->when($group, function($query, $group) {
@@ -24,6 +25,9 @@ class KtpController extends Controller
         })
         ->when($kurs, function($query, $kurs) {
             $query->whereIn('semestr', [$kurs * 2, ($kurs * 2 - 1)]);
+        })
+        ->when($subject, function($query, $subject) {
+            $query->where('subject_id', $subject);
         })
         ->when($user->role == 'teacher', function($query) use($user) {
             $query->where('teacher_id', $user->person_id);

@@ -63,6 +63,11 @@ class PlanController extends Controller
         foreach (Subject::all() as $s) 
             $subjects[trim($s->name)] = $s->id;
         $group = Group::findOrFail($request->group);
+        $weeks = [];
+        foreach($group->graphics as $graphic) {
+            $weeks[$graphic->year-$group->year_create+1] = $graphic->teor1;
+            $weeks[$graphic->year-$group->year_create+2] = $graphic->teor2;
+        }
 
         $cikl = 1;
         $shifr = '';
@@ -133,6 +138,7 @@ class PlanController extends Controller
                     if($control--) $plan->controls = 1;
                     $plan->shifr = $shifr;
                     $plan->shifr_kz = $shifr;
+                    $plan->weeks = @$weeks[$plan->semestr];
                     $plan->save();
                 }
             }

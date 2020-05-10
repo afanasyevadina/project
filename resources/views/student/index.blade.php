@@ -16,9 +16,8 @@
 		</div>
 	</div>
 </div>
-<hr>
-<form class="row">
-	<div class="col-sm-4 form-group">
+<form class="border pt-3 mb-3 row bg-light">
+	<div class="col-sm-6 form-group">
 		<label class="label-sm">Специальность</label>
 		<select name="spec" class="form-control form-control-sm">
 			<option value="">Все специальности</option>
@@ -29,7 +28,7 @@
 			@endforeach
 		</select>
 	</div>
-	<div class="col-sm-2 form-group">
+	<div class="col-sm-3 form-group">
 		<label class="label-sm">Курс</label>
 		<select name="kurs" class="form-control form-control-sm">
 			<option value="">Все курсы</option>
@@ -38,7 +37,24 @@
 			@endfor
 		</select>
 	</div>
-	<div class="col-sm-2 form-group">
+	<div class="col-sm-3 form-group">
+		<label class="label-sm">База</label>
+		<select name="base" class="form-control form-control-sm">
+			<option value="">Все</option>
+			<option value="9" {{9 == @$_GET['base'] ? 'selected' : ''}}>9 классов</option>
+			<option value="11" {{11 == @$_GET['base'] ? 'selected' : ''}}>11 классов</option>
+		</select>
+	</div>
+	<div class="col-sm-4 form-group">
+		<label class="label-sm">Группа</label>
+		<select name="group" class="form-control form-control-sm">
+			<option value="">Все группы</option>
+			@foreach($groups as $group)
+			<option value="{{ $group->id }}" {{$group->id == @$_GET['group'] ? 'selected' : ''}}>{{ $group->name }}</option>
+			@endforeach
+		</select>
+	</div>
+	<div class="col-sm-4 form-group">
 		<label class="label-sm">Язык обучения</label>
 		<select name="lang" class="form-control form-control-sm">
 			<option value="">Все</option>
@@ -47,7 +63,7 @@
 			@endforeach
 		</select>
 	</div>
-	<div class="col-sm-2 form-group">
+	<div class="col-sm-4 form-group">
 		<label class="label-sm">Форма оплаты</label>
 		<select name="pay" class="form-control form-control-sm">
 			<option value="">Все</option>
@@ -55,6 +71,10 @@
 			<option value="{{ $pay->id }}" {{$pay->id == @$_GET['pay'] ? 'selected' : ''}}>{{ $pay->name }}</option>
 			@endforeach
 		</select>
+	</div>
+	<div class="col-sm-10 form-group">
+		<label class="label-sm">Поиск по ФИО</label>
+		<input type="text" name="search" value="{{@$_GET['search']}}" autocomplete="off" class="form-control form-control-sm">
 	</div>
 	<div class="col-sm-2 form-group">
 		<label class="label-sm">&nbsp;</label>

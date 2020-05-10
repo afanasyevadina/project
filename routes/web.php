@@ -93,6 +93,7 @@ Route::group(['middleware' => ['auth', 'can:dispatcher']], function () {
 	Route::get('/holidays{id}/delete', 'HolidayController@destroy');
 
 	Route::post('/holidays', 'HolidayController@store');
+	Route::post('/holidays/{id}', 'HolidayController@update');
 	Route::post('/exams', 'ExamController@store');
 	Route::post('/schedule', 'ScheduleController@store');
 	Route::post('/changes', 'ChangeController@store');

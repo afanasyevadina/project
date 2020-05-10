@@ -100,33 +100,43 @@ class RupController extends Controller
             }
         } else {
             foreach ($plans as $key => $plan) {
-                if($plan->subject->divide && $plan->subgroup != 2) {
-                    $attr = [
-                        'group_id' => $plan->group_id,
-                        'semestr' => $plan->semestr,
-                        'year' => $plan->year,
-                        'subject_id' => $plan->subject_id,
-                        'cikl_id' => $plan->cikl_id,
-                        'shifr' => $plan->shifr,
-                        'shifr_kz' => $plan->shifr_kz,
-                        'subgroup' => 2
-                    ];
-                    $newPlan = Plan::updateOrCreate($attr);
-                    $newPlan->is_exam = $plan->is_exam;
-                    $newPlan->is_zachet = $plan->is_zachet;
-                    $newPlan->is_project = $plan->is_project;
-                    $newPlan->practice = $plan->practice;
-                    $newPlan->lab = $plan->lab;
-                    $newPlan->project = $plan->project;
-                    $newPlan->weeks = $plan->weeks;
-                    if($plan->subject->divide == 1) {
-                        $attr['theory'] = $plan->theory;
-                        $attr['controls'] = $plan->controls;
+                if($plan->subject->divide) {
+                    if($plan->subgroup != 2) {
+                        $attr = [
+                            'group_id' => $plan->group_id,
+                            'semestr' => $plan->semestr,
+                            'year' => $plan->year,
+                            'subject_id' => $plan->subject_id,
+                            'cikl_id' => $plan->cikl_id,
+                            'shifr' => $plan->shifr,
+                            'shifr_kz' => $plan->shifr_kz,
+                            'subgroup' => 2
+                        ];
+                        $newPlan = Plan::updateOrCreate($attr);
+                        $newPlan->is_exam = $plan->is_exam;
+                        $newPlan->is_zachet = $plan->is_zachet;
+                        $newPlan->is_project = $plan->is_project;
+                        $newPlan->practice = $plan->practice;
+                        $newPlan->lab = $plan->lab;
+                        $newPlan->project = $plan->project;
+                        $newPlan->weeks = $plan->weeks;
+                        if($plan->subject->divide == 1) {
+                            $newPlan->theory = $plan->theory;
+                            $newPlan->controls = $plan->controls;
+                        }
+                        $newPlan->total = $newPlan->theory + $newPlan->practice + $newPlan->lab + $newPlan->project;
+                        $newPlan->save();
+                        $plan->subgroup = 1;
+                        $plan->save();
                     }
-                    $newPlan->total = $newPlan['theory'] + $newPlan['practice'] + $newPlan['lab'] + $newPlan['project'];
-                    $newPlan->save();
-                    $plan->subgroup = 1;
-                    $plan->save();
+                } else {
+                    if($plan->subgroup == 2) {
+                        $plan->lessons()->delete();
+                        $plan->delete();
+                    } else {
+                        $plan->subgroup = 0;
+                        $plan->save();
+                    }
                 }
             }
         }
