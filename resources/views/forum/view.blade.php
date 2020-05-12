@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $topic->name)
+@section('title', 'Форум | '.$topic->name)
 @section('content')
 @verbatim
 <div id="app" class="chat">
@@ -114,42 +114,46 @@
 					var formData = new FormData()
 					formData.append('text', this.message)
 					formData.append('topic_id', this.topic.id)
-					if(this.reply) formData.append('reply_id', this.reply.id)
-						if(this.file) formData.append('file', this.file)
-							var options = this.file ? {
-								headers: {'Content-Type': 'multipart/form-data'}
-							} : null
-							axios.post('/api/forum?api_token=' + this.user.api_token, formData, options)
-							.then(response => {
-								this.messages.push(response.data)
-								this.message = ''
-								this.file = ''
-								this.reply = null
-								this.$refs.room.scrollTo(0, this.$refs.room.scrollHeight * 2)
-							})
-						}
-					},
-					load: function() {
-						return new Promise((resolve, reject) => {
-							axios.get('/api/forum/' + this.topic.id + 
-								'?api_token=' + this.user.api_token +
-								'&skip=' + this.messages.length)
-							.then(response => {
-								this.messages = response.data.reverse().concat(this.messages)
-								this.hasMore = response.data.length >= 10
-								resolve()
-							})
-						})
-					},
-					setFile: function() {
-						this.file = this.$refs.file.files[0]
+					if(this.reply) {
+						formData.append('reply_id', this.reply.id)
 					}
-				},
-				created() {			
-					this.topic = <?=json_encode($topic)?>;
-					this.user = <?=json_encode(\Auth::user())?>;
-					this.load().then(() => this.$refs.room.scrollTo(0, this.$refs.room.scrollHeight))
+					if(this.file) {
+						formData.append('file', this.file)
+					}
+					var options = this.file ? {
+						headers: {'Content-Type': 'multipart/form-data'}
+					} : null
+					axios.post('/api/forum?api_token=' + this.user.api_token, formData, options)
+					.then(response => {
+						this.messages.push(response.data)
+						this.message = ''
+						this.file = ''
+						this.reply = null
+						this.$refs.room.scrollTo(0, this.$refs.room.scrollHeight * 2)
+					})
 				}
-			});
-		</script>
-		@endsection
+			},
+			load: function() {
+				return new Promise((resolve, reject) => {
+					axios.get('/api/forum/' + this.topic.id + 
+						'?api_token=' + this.user.api_token +
+						'&skip=' + this.messages.length)
+					.then(response => {
+						this.messages = response.data.reverse().concat(this.messages)
+						this.hasMore = response.data.length >= 10
+						resolve()
+					})
+				})
+			},
+			setFile: function() {
+				this.file = this.$refs.file.files[0]
+			}
+		},
+		created() {			
+			this.topic = <?=json_encode($topic)?>;
+			this.user = <?=json_encode(\Auth::user())?>;
+			this.load().then(() => this.$refs.room.scrollTo(0, this.$refs.room.scrollHeight))
+		}
+	});
+</script>
+@endsection

@@ -248,3 +248,21 @@ td select.form-control {
 .table-success td {
 	background-color: #e4ffe8;
 }
+
+
+@media print {
+	* {
+		visibility: hidden;
+	}
+	.print, .print * {
+		visibility: visible;
+	}
+	.print {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+}
+@page {
+	margin: 2cm;
+}

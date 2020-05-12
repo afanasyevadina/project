@@ -182,7 +182,7 @@ class Menu
                 'class' => '',
                 'children' => [
                     [
-                        'label' => 'План учебного процесса',
+                        'label' => 'Рабочий учебный план',
                         'path' => 'plans',
                         'name' => 'plans',
                         'class' => '',
@@ -196,7 +196,7 @@ class Menu
                         'roles' => ['admin', 'manager'],
                     ],
                     [
-                        'label' => 'Рабочий учебный план',
+                        'label' => 'Годовой план',
                         'path' => 'rup',
                         'name' => 'rup',
                         'class' => '',

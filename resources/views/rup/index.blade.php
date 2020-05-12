@@ -1,10 +1,10 @@
 @extends('layouts.app')
-@section('title', 'Рабочий учебный план')
+@section('title', 'Рабочий учебный план на год')
 @section('content')
 <div class="alert alert-success col-sm-6" id="saved" hidden style="position: fixed;z-index: 999;top: 60px;right: 15px;">
 	Сохранено
 </div>
-<h3>Рабочий учебный план</h3>
+<h3>Рабочий учебный план на год</h3>
 <hr>
 <form>
 	<div class="row">

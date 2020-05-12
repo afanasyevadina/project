@@ -118,9 +118,10 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
                 </div>
                 <div class="modal-body">
                     <ul class="list-group" data-dismiss="modal">
-                        <li class="list-group-item text-muted" @click="setTeacher({})">*не выбрано*</li>
-                        <li v-for="teacher in allowTeachers" class="list-group-item" @click="setTeacher(teacher)">
-                        {{teacher.fullName}}</li>
+                        <li class="list-group-item text-muted p-2" @click="setTeacher({})">*не выбрано*</li>
+                        <li v-for="teacher in allowTeachers" class="list-group-item p-2" @click="setTeacher(teacher)">
+                            <small>{{teacher.fullName}}</small>
+                        </li>
                     </ul>
                 </div>
                 <div class="modal-footer"></div>

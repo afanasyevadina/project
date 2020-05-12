@@ -17,7 +17,7 @@ $divide = ['-', 'Всегда', 'На практики'];
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label>Файл для импорта</label>
+						<label class="label-sm">Файл для импорта</label>
 						<input type="file" name="file" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
 					</div>
 				</div>
@@ -47,29 +47,29 @@ $divide = ['-', 'Всегда', 'На практики'];
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label>Название на рус.яз.</label>
-						<input type="text" name="name" autocomplete="off" class="form-control">
+						<label class="label-sm">Название на рус.яз.</label>
+						<input type="text" name="name" autocomplete="off" class="form-control form-control-sm">
 					</div>
 					<div class="form-group">
-						<label>Название на каз.яз.</label>
-						<input type="text" name="name_kz" autocomplete="off" class="form-control">
+						<label class="label-sm">Название на каз.яз.</label>
+						<input type="text" name="name_kz" autocomplete="off" class="form-control form-control-sm">
 					</div>
 					<div class="form-group">
-						<label>Сокращение на рус.яз.</label>
-						<input type="text" name="short_name" autocomplete="off" class="form-control">
+						<label class="label-sm">Сокращение на рус.яз.</label>
+						<input type="text" name="short_name" autocomplete="off" class="form-control form-control-sm">
 					</div>
 					<div class="form-group">
-						<label>Сокращение на каз.яз.</label>
-						<input type="text" name="short_name_kz" autocomplete="off" class="form-control">
+						<label class="label-sm">Сокращение на каз.яз.</label>
+						<input type="text" name="short_name_kz" autocomplete="off" class="form-control form-control-sm">
 					</div>
 					<div class="form-group">
-						<label>
+						<label class="label-sm d-block">
 							<input type="radio" name="divide" value="0" checked> 
 						Не формировать подгруппы</label>
-						<label>
+						<label class="label-sm d-block">
 							<input type="radio" name="divide" value="1"> 
 						Формировать подгруппы всегда</label>
-						<label>
+						<label class="label-sm d-block">
 							<input type="radio" name="divide" value="2"> 
 						Формировать подгруппы на практики</label>
 					</div>
@@ -125,29 +125,29 @@ $divide = ['-', 'Всегда', 'На практики'];
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label>Название на рус.яз.</label>
-						<input type="text" name="name" autocomplete="off" class="form-control" value="{{ $s->name }}">
+						<label class="label-sm">Название на рус.яз.</label>
+						<input type="text" name="name" autocomplete="off" class="form-control form-control-sm" value="{{ $s->name }}">
 					</div>
 					<div class="form-group">
-						<label>Название на каз.яз.</label>
-						<input type="text" name="name_kz" autocomplete="off" class="form-control" value="{{ $s->name_kz }}">
+						<label class="label-sm">Название на каз.яз.</label>
+						<input type="text" name="name_kz" autocomplete="off" class="form-control form-control-sm" value="{{ $s->name_kz }}">
 					</div>
 					<div class="form-group">
-						<label>Сокращение на рус.яз.</label>
-						<input type="text" name="short_name" autocomplete="off" class="form-control" value="{{ $s->short_name }}">
+						<label class="label-sm">Сокращение на рус.яз.</label>
+						<input type="text" name="short_name" autocomplete="off" class="form-control form-control-sm" value="{{ $s->short_name }}">
 					</div>
 					<div class="form-group">
-						<label>Сокращение на каз.яз.</label>
-						<input type="text" name="short_name_kz" autocomplete="off" class="form-control" value="{{ $s->short_name_kz }}">
+						<label class="label-sm">Сокращение на каз.яз.</label>
+						<input type="text" name="short_name_kz" autocomplete="off" class="form-control form-control-sm" value="{{ $s->short_name_kz }}">
 					</div>
 					<div class="form-group">
-						<label><input type="radio" name="divide" value="0" 
+						<label class="label-sm d-block"><input type="radio" name="divide" value="0" 
 							{{$s->divide == '0' ? 'checked' : ''}}> 
 							Не формировать подгруппы</label>
-						<label><input type="radio" name="divide" value="1" 
+						<label class="label-sm d-block"><input type="radio" name="divide" value="1" 
 							{{$s->divide == '1' ? 'checked' : ''}}> 
 							Формировать подгруппы всегда</label>
-						<label><input type="radio" name="divide" value="2" 
+						<label class="label-sm d-block"><input type="radio" name="divide" value="2" 
 							{{$s->divide == '2' ? 'checked' : ''}}> 
 							Формировать подгруппы на практики</label>
 					</div>

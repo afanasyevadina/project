@@ -113,7 +113,7 @@ class RupController extends Controller
                             'subgroup' => 2
                         ];
                         $newPlan = Plan::updateOrCreate($attr);
-                        $newPlan->is_exam = $plan->is_exam;
+                        $newPlan->is_exam = null;
                         $newPlan->is_zachet = $plan->is_zachet;
                         $newPlan->is_project = $plan->is_project;
                         $newPlan->practice = $plan->practice;

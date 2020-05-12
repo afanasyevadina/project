@@ -45,11 +45,11 @@ class AttestCommand extends Command
         $group = Group::find($this->argument('group'));
         foreach ($group->students as $student) {
             foreach($student->ratings as $rating) {
-                $rating->value = $rating->lesson->date ? random_int(3, 5) : null;
+                $rating->value = $rating->lesson->date ? random_int(4, 5) : null;
                 $rating->save();
             }
             foreach($student->results as $result) {
-                $res = random_int(3, 5);
+                $res = random_int(4, 5);
                 $result->att = $res;
                 $result->itog = $res;
                 if($result->plan->is_exam) $result->exam = $res;

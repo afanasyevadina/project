@@ -223,6 +223,10 @@ class ScheduleController extends Controller
 		$days = ['Дүйсенбі', 'Сейсенбі', 'Сәрсенбі', 'Бейсенбі', 'Жұма'];
 		$spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A4', $year.'-'.($year+1)." ОҚУ ЖЫЛЫНА ".$semestr."-СЕМЕСТРГЕ АРНАЛҒАН САБАҚ КЕСТЕСІ");
+        $sheet->setCellValue('A5', "РАСПИСАНИЕ  ЗАНЯТИЙ ".$semestr." СЕМЕСТРА ". $year.'-'.($year+1)." УЧЕБНОГО ГОДА ");
+        $sheet->getStyle('A4:A5')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A4:A5')->getFont()->setBold(true)->setName("Times new Roman");
         $row = 8;
         $sheet->setCellValue('B7', "Сабақ\nУрок ");
         for($d = 1; $d <= 5; $d++) {
@@ -257,19 +261,19 @@ class ScheduleController extends Controller
         				$num = $table[$id][$d][$n];
         				if(isset($num[0])) {
         					$sheet->setCellValue($c1.$row, implode("\n", array_unique(array_column($num[0],'subject'))));
-        					$sheet->setCellValue($c2.$row, implode("\n", array_unique(array_column($num[0],'cab'))));
+        					$sheet->setCellValue($c2.$row, implode(" \n", array_unique(array_column($num[0],'cab'))));
         					$sheet->setCellValue($c1.($row+1), implode("/", array_unique(array_column($num[0],'teacher'))));
         					$sheet->mergeCells($c2.$row.':'.$c2.($row+1));
         				} else {
         					if(isset($num[1])) {
 	        					$sheet->setCellValue($c1.$row, implode("\n", array_unique(array_column($num[1],'subject')))
 	        						." ".implode("/", array_unique(array_column($num[1],'teacher'))));
-	        					$sheet->setCellValue($c2.$row, implode("\n", array_unique(array_column($num[1],'cab'))));
+	        					$sheet->setCellValue($c2.$row, implode(" \n", array_unique(array_column($num[1],'cab'))));
 	        				}
         					if(isset($num[2])) {
 	        					$sheet->setCellValue($c1.($row+1), implode("\n", array_unique(array_column($num[2],'subject')))
 	        						." ".implode("/", array_unique(array_column($num[2],'teacher'))));
-	        					$sheet->setCellValue($c2.($row+1), implode("\n", array_unique(array_column($num[2],'cab'))));
+	        					$sheet->setCellValue($c2.($row+1), implode(" \n", array_unique(array_column($num[2],'cab'))));
 	        				}
         				}
         			}
@@ -294,13 +298,23 @@ class ScheduleController extends Controller
             'size'  => 12,
             'name'  => 'Times New Roman'
         ));
+        $sheet->mergeCells('A4:'.ExcelHelper::col($col-1).'4');
+        $sheet->mergeCells('A5:'.ExcelHelper::col($col-1).'5');
         $sheet->getStyle('A7:'.ExcelHelper::col($col-1).($row-1))->applyFromArray($styleArray);
         $sheet->getStyle('A8:A68')->getAlignment()->setTextRotation(90);
+        $sheet->mergeCells('B7:C7');
         $sheet->getStyle('B7:C7')->getAlignment()->setTextRotation(90);
+        $sheet->getStyle('B7:C7')->getAlignment()->setWrapText(true);
+        $sheet->getStyle('B7:C7')->getFont()->setSize(8);
+        $sheet->getRowDimension('7')->setRowHeight(30);
+        $sheet->getColumnDimension('B')->setWidth(2);
+        $sheet->getColumnDimension('C')->setWidth(2);
         $sheet->getStyle('A8:A68')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A8:A68')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
         $writer = new Xlsx($spreadsheet);
-        $writer->save('file.xlsx');
-        return response()->file('file.xlsx');
+        header('Content-Disposition: attachment; filename="'.$year.'-'.($year+1).', '.$semestr.' семестр.xlsx"');
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        $writer->save('php://output');
+        return;
 	}
 }

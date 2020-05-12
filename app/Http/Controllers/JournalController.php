@@ -88,7 +88,7 @@ class JournalController extends Controller
         ->distinct()->get();
         return view('journal.report', [
             'groups' => Group::orderBy('name')->get(),
-            'group' => Group::findOrFail($group),
+            'group' => Group::find($group),
             'subjects' => $subjects,
         ]);
     }

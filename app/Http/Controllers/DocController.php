@@ -138,7 +138,7 @@ class DocController extends Controller
                 $sheet->setCellValue($col.'21', $val + $item->exam);
                 $sheet->setCellValue($col.'26', '=SUM('.$col.'10:'.$col.'25)');
                 $val = $sheet->getCell($col.'27')->getValue();
-                $sheet->setCellValue($col.'27', $val + $item->total);
+                $sheet->setCellValue($col.'27', $val + $item->total+$item->exam+$item->consul);
                 $sheet->setCellValue($col.'28', '='.$col.'27-'.$col.'26');
                 $sheet->setCellValue($col.'30', '='.$col.'26+'.$col.'29');
             }

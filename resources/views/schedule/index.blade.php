@@ -22,7 +22,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
             <div class="form-group">
                 <label>Учебный год</label>
                 <select name="year" class="form-control form-control-sm">
-                    @for($i = date('Y') - 3; $i <= date('Y'); $i ++)
+                    @for($i = date('Y') - 4; $i <= date('Y'); $i ++)
                     <option value="{{ $i }}" {{ $i == $year ? 'selected' : ''}}>{{ $i }}-{{ $i + 1 }}</option>
                     @endfor
                 </select>
@@ -41,7 +41,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
             <div class="form-group">
                 <label>Курс</label>
                 <select name="kurs" class="form-control form-control-sm">
-                    <option value="">Курс</option>
+                    <option value="">Все</option>
                     @for($i = 1; $i <= 4; $i ++)
                     <option value="{{ $i }}" {{ $i == @$_GET['kurs'] ? 'selected' : ''}}>{{ $i }}</option>
                     @endfor
@@ -52,7 +52,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
             <div class="form-group">
                 <label>Отделение</label>
                 <select name="department" class="form-control form-control-sm">
-                    <option value="">Отделение</option>
+                    <option value="">Все</option>
                     @foreach($departments as $dep)
                     <option value="{{ $dep->id }}" {{ $dep->id == @$_GET['department'] ? 'selected' : ''}}>{{ $dep->name }}</option>
                     @endforeach
@@ -63,7 +63,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
             <div class="form-group">
                 <label>Язык обучения</label>
                 <select name="lang" class="form-control form-control-sm">
-                    <option value="">Язык обучения</option>
+                    <option value="">Все</option>
                     @foreach($langs as $lang)
                     <option value="{{ $lang->id }}" {{ $lang->id == @$_GET['lang'] ? 'selected' : ''}}>{{ $lang->name }}</option>
                     @endforeach
@@ -85,10 +85,10 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
             <table class="table table-bordered table-sm">
                 <thead>
                     <tr>
-                        <th class="th-num">№</th>
+                        <th class="th-num text-center">№</th>
                         <template v-for="group in day">
-                            <th class="th-name">{{ group.name }}</th>
-                            <th class="th-cab">Каб.</th>
+                            <th class="th-name text-center">{{ group.name }}</th>
+                            <th class="th-cab text-center">Каб.</th>
                         </template>
                     </tr>
                 </thead>

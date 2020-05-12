@@ -42,7 +42,7 @@ class GroupController extends Controller
             'groups' => $groups,
             'specializations' => Specialization::all(),
             'langs' => Lang::all(),
-            'teachers' => Teacher::all(),
+            'teachers' => Teacher::all()->sortBy('fullName'),
         ]);
     }
 

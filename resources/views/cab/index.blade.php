@@ -19,28 +19,28 @@
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label>Номер</label>
-						<input type="text" name="num" autocomplete="off" class="form-control">
+						<label class="label-sm">Номер</label>
+						<input type="text" name="num" autocomplete="off" class="form-control form-control-sm">
 					</div>
 					<div class="form-group">
-						<label>Название</label>
-						<input type="text" name="name" autocomplete="off" class="form-control">
+						<label class="label-sm">Название</label>
+						<input type="text" name="name" autocomplete="off" class="form-control form-control-sm">
 					</div>
 					<div class="form-group">
-						<label>Корпус</label>
-						<select name="corpus_id" class="form-control">
+						<label class="label-sm">Корпус</label>
+						<select name="corpus_id" class="form-control form-control-sm">
 							@foreach($corps as $c)
 							<option value="{{$c->id}}">{{$c->name}}</option>
 							@endforeach
 						</select>
 					</div>
 					<div class="form-group">
-						<label>Вместимость</label>
-						<input type="number" name="capacity" autocomplete="off" class="form-control">
+						<label class="label-sm">Вместимость</label>
+						<input type="number" name="capacity" autocomplete="off" class="form-control form-control-sm">
 					</div>
 					<div class="form-group">
-						<label>Описание</label>
-						<textarea name="description" autocomplete="off" class="form-control"></textarea>
+						<label class="label-sm">Описание</label>
+						<textarea name="description" autocomplete="off" class="form-control form-control-sm"></textarea>
 					</div>
 				</div>
 				<div class="modal-footer"><input type="submit" class="btn btn-success" value="Сохранить"></div>
@@ -82,35 +82,35 @@
 			<form action="/cabs/{{ $cab->id }}" method="post" class="self-reload">
 				@csrf
 				<div class="modal-header">
-					<h5 class="modal-title">{{ $cab->num }}</h5>
+					<h5 class="modal-title">{{ $cab->num }} ({{$cab->name}})</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label>Номер</label>
-						<input type="text" name="num" autocomplete="off" class="form-control" value="{{ $cab->num }}">
+						<label class="label-sm">Номер</label>
+						<input type="text" name="num" autocomplete="off" class="form-control form-control-sm" value="{{ $cab->num }}">
 					</div>
 					<div class="form-group">
-						<label>Название</label>
-						<input type="text" name="name" autocomplete="off" class="form-control" value="{{ $cab->name }}">
+						<label class="label-sm">Название</label>
+						<input type="text" name="name" autocomplete="off" class="form-control form-control-sm" value="{{ $cab->name }}">
 					</div>
 					<div class="form-group">
-						<label>Корпус</label>
-						<select name="corpus_id" class="form-control">
+						<label class="label-sm">Корпус</label>
+						<select name="corpus_id" class="form-control form-control-sm">
 							@foreach($corps as $c)
 							<option value="{{$c->id}}" {{$c->id==$cab->corpus_id?'selected':''}}>{{$c->name}}</option>
 							@endforeach
 						</select>
 					</div>
 					<div class="form-group">
-						<label>Вместимость</label>
-						<input type="number" name="capacity" autocomplete="off" class="form-control" value="{{ $cab->capacity }}">
+						<label class="label-sm">Вместимость</label>
+						<input type="number" name="capacity" autocomplete="off" class="form-control form-control-sm" value="{{ $cab->capacity }}">
 					</div>
 					<div class="form-group">
-						<label>Описание</label>
-						<textarea name="description" autocomplete="off" class="form-control">{{ $cab->description }}</textarea>
+						<label class="label-sm">Описание</label>
+						<textarea name="description" autocomplete="off" class="form-control form-control-sm">{{ $cab->description }}</textarea>
 					</div>
 				</div>
 				<div class="modal-footer">

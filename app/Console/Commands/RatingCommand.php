@@ -45,7 +45,7 @@ class RatingCommand extends Command
         foreach (Plan::where('group_id', $this->argument('group'))->get() as $key => $plan) {
             $this->info($plan->subject->name);
             $plan->generateResults();
-            $plan->generateRatings();
+            //$plan->generateRatings();
         }
     }
 }

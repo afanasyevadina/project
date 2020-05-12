@@ -46,12 +46,6 @@ class ResultController extends Controller
     public function edit($id)
     {
     	$plan = Plan::findOrFail($id);
-    	$query = Student::where('group_id', $plan->group_id);
-        if($plan->subgroup == 2 || $plan->subject->divide == 1) {
-            $query->where('subgroup', $plan->subgroup);
-        }        
-        $students = $query->orderBy('surname', 'asc')
-        ->orderBy('name', 'asc')->get();
     	$plan->generateResults();
     	$results = Result::where('plan_id', $id)->get();
     	return view('result.edit', [
@@ -83,7 +77,6 @@ class ResultController extends Controller
                 'plan_id' => $plan->id,
                 'student_id' => $id
             ]);
-            $result->save();
             $zachetka[$plan->semestr][] = $result;
         }
         ksort($zachetka);

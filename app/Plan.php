@@ -173,12 +173,24 @@ class Plan extends Model
     public function generateResults()
     {
         if(in_array($this->cikl_id, [7,8,9])) return;
+        $plan = $this;
+        if($this->subject->divide == 2 && $this->main) {
+            $plan = $this->main;
+            $plan->subgroup = 0;
+        }
         foreach ($this->group->students as $key => $student) {
-            $result = Result::updateOrCreate([
-                'plan_id' => $this->id,
-                'student_id' => $student->id
-            ]);
-            $result->save();
+            if($plan->subgroup == $student->subgroup || !$plan->subgroup) {
+                $result = Result::updateOrCreate([
+                    'plan_id' => $plan->id,
+                    'student_id' => $student->id
+                ]);
+                $result->save();
+            } else {
+                Result::where([
+                    'plan_id' => $plan->id,
+                    'student_id' => $student->id
+                ])->delete();
+            }
         }
     }
 

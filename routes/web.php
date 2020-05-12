@@ -112,8 +112,8 @@ Route::group(['middleware' => ['auth', 'can:teacher']], function () {
 	Route::get('/results/{id}/edit', 'ResultController@edit')->name('results');
 	Route::get('/rp/{groupId}/{subjectId}', 'RpController@view')->name('rp');
 	Route::get('/ktp/{groupId}/{subjectId}/{kurs}/', 'KtpController@view')->name('ktp');
-	Route::get('/journal/{id}', 'JournalController@view');
 	Route::get('/journal/report', 'JournalController@report')->name('journal/report');
+	Route::get('/journal/{id}', 'JournalController@view')->name('journal');
 	Route::get('/rp/{groupId}/{subjectId}/export', 'RpController@export');
 	Route::get('/rp/{groupId}/{subjectId}/reset', 'RpController@reset');
 	Route::get('/ktp/{groupId}/{subjectId}/{kurs}/export', 'KtpController@export');
@@ -123,7 +123,7 @@ Route::group(['middleware' => ['auth', 'can:teacher']], function () {
 	Route::post('/journal', 'JournalController@store');
 	Route::post('/results', 'ResultController@store');
 
-	Route::post('/journal/{id}/refresh', 'JournalController@refresh');
+	Route::get('/journal/{id}/refresh', 'JournalController@refresh');
 	Route::get('/load/{id}/export/{year}', 'LoadController@export');
 });
 

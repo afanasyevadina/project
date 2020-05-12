@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('titel', 'Текущие оценки')
+@section('title', 'Текущие оценки')
 @section('content')
 <h3>Текущие оценки</h3>
 <hr>
@@ -23,24 +23,26 @@
 				@endfor
 			</select>
 		</div>
-		<div class="col-sm-12"><input type="submit" class="btn btn-sm btn-outline-primary" value="Показать"></div>		
+		<div class="col-sm-2 form-group">
+			<label>&nbsp;</label>
+			<input type="submit" class="btn d-block btn-sm btn-info" value="Показать">
+		</div>		
 	</div>
 </form>
 @if($group)
-<hr>
 <table class="table table-sm table-bordered">
 	<thead>
 		<th>№</th>
 		<th>ФИО</th>
 		@foreach($subjects as $subject)
-		<th><small>{{ $subject->subject->name }}</small></th>
+		<th class="text-center"><small>{{ $subject->subject->name }}</small></th>
 		@endforeach
 	</thead>
 	<tbody>
 		@foreach($group->students as $key => $student)
 		<tr>
 			<td>{{ $key + 1 }}</td>
-			<td>{{ $student->shortName }}</td>
+			<td class="text-nowrap">{{ $student->shortName }}</td>
 			@foreach($subjects as $subject)
 			<td class="text-center">{{ $student->avgRating($subject->subject_id, $_GET['semestr']) }}</td>
 			@endforeach

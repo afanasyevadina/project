@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'План учебного процесса')
+@section('title', 'Рабочий учебный план')
 @section('content')
 <div class="alert alert-success col-sm-6" id="saved" hidden style="position: fixed;z-index: 999;top: 60px;right: 15px;">
 	Сохранено
@@ -8,7 +8,7 @@
 	Удалено
 </div>
 <div class="d-flex justify-content-between">
-	<h3>Учебный план</h3>
+	<h3>Рабочий учебный план</h3>
 	@if(@$_GET['group'])
 	<div class="dropdown">
 		<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -17,8 +17,8 @@
 		<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
 			<button class="dropdown-item" data-toggle="modal" data-target="#add">Добавить</button>
 			<button class="dropdown-item" data-toggle="modal" data-target="#upload">Загрузить</button>
-			<button class="dropdown-item" data-toggle="modal" data-target="#copy">Скопировать</button>
-			<a href="/rup?group={{ $_GET['group'] }}" class="dropdown-item">РУП</a>
+			<button class="dropdown-item" data-toggle="modal" data-target="#copy">Добавить копированием</button>
+			<a href="/rup?group={{ $_GET['group'] }}" class="dropdown-item">Годовые планы</a>
 			@if($plans)
 			<button class="dropdown-item" data-toggle="modal" data-target="#reset">Очистить</button>
 			@endif

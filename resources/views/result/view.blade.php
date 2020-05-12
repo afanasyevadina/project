@@ -43,7 +43,7 @@
 					<td>{{ $key + 1 }}</td>
 					<td>{{ $r->plan->subject->name }}</td>
 					<td class="text-center">{{ $student->avgRating($r->plan->subject_id, $sem) }}</td>
-					<td class="text-center">{{ $r->att }}</td>
+					<td class="text-center">{{ $r->plan->cikl_id == 6 ? '' : $r->att }}</td>
 					<td class="text-center">{{ $r->zachet }}</td>
 					<td class="text-center">{{ $r->project }}</td>
 					<td class="text-center">{{ $r->exam }}</td>
