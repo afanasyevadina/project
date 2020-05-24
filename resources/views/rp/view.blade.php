@@ -270,7 +270,6 @@ $num = 0;
 					project: plan.project
 				}
 				years[kurs].total += plan.total
-				this.yearPlans = years.filter(year => !!year.year)
 				plan.lessons.forEach(lesson => {
 					if(lesson.part_id) {
 						if(!(!!tempParts[lesson.part_id])) {
@@ -289,6 +288,7 @@ $num = 0;
 					}
 				})					
 			})
+			this.yearPlans = years.filter(year => !!year.year)
 			this.parts = tempParts.filter(part => !!part.id)
 		},
 		methods: {

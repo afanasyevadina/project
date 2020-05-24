@@ -97,6 +97,7 @@
 				<th>Фамилия</th>
 				<th>Имя</th>
 				<th>Отчество</th>
+				<th>Дата рождения</th>
 				<th>Группа</th>
 				<th class="text-right">
 					<input type="submit" class="btn btn-outline-success create" value="Создать учетки" hidden>
@@ -112,6 +113,7 @@
 				<td>{{ $s->surname }}</td>
 				<td>{{ $s->name }}</td>
 				<td>{{ $s->patronymic }}</td>
+				<td>{{ date('d.m.Y', strtotime($s->born)) }}</td>
 				<td>{{ $s->group->name }}</td>
 				<td class="text-right">
 					@can('manager')
