@@ -42,32 +42,34 @@
 		</div>
 	</div>
 </div>
-<table class="table table-hover table-bordered">
-	<thead>
-		<tr>
-			<th>№</th>
-			<th>Название на русском</th>
-			<th>Название на казахском</th>
-			<th>Сокращение на русском</th>
-			<th>Сокращение на казахском</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach($cikls as $key => $cikl)
-		<tr>
-			<td>{{ $key + 1 }}</td>
-			<td>{{ $cikl->name }}</td>
-			<td>{{ $cikl->name_kz }}</td>
-			<td>{{ $cikl->short_name }}</td>
-			<td>{{ $cikl->short_name_kz }}</td>
-			<td class="text-right text-nowrap">
-				<button data-toggle="modal" data-target="#{{ $cikl->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
-			</td>
-		</tr>
-		@endforeach            
-	</tbody>
-</table>
+<div class="table-responsive">
+	<table class="table table-hover table-bordered">
+		<thead>
+			<tr>
+				<th>№</th>
+				<th>Название на русском</th>
+				<th>Название на казахском</th>
+				<th>Сокращение на русском</th>
+				<th>Сокращение на казахском</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach($cikls as $key => $cikl)
+			<tr>
+				<td>{{ $key + 1 }}</td>
+				<td>{{ $cikl->name }}</td>
+				<td>{{ $cikl->name_kz }}</td>
+				<td>{{ $cikl->short_name }}</td>
+				<td>{{ $cikl->short_name_kz }}</td>
+				<td class="text-right text-nowrap">
+					<button data-toggle="modal" data-target="#{{ $cikl->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
+				</td>
+			</tr>
+			@endforeach            
+		</tbody>
+	</table>
+</div>
 @foreach($cikls as $cikl)
 <div class="modal fade" id="{{$cikl->id}}">
 	<div class="modal-dialog">

@@ -117,6 +117,7 @@
 		</div>
 	</div>
 </div>
+<div class="table-responsive">
 <table class="table table-hover table-bordered">
 	<thead>
 		<tr>
@@ -148,6 +149,7 @@
 		@endforeach            
 	</tbody>
 </table>
+</div>
 @foreach($groups as $group)
 <div class="modal fade" id="{{ $group->id }}">
 	<div class="modal-dialog">

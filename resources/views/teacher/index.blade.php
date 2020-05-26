@@ -21,39 +21,41 @@
 <form action="/admin/users/register" method="post">
 	@csrf
 	<input type="hidden" name="role" value="teacher">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th class="create" hidden>
-					<label class="font-weight-normal">
-						<input type="checkbox" id="all" data-select="[name='users[]']">
-					</label>
-				</th>
-				<th>№</th>
-				<th>Фамилия</th>
-				<th>Имя</th>
-				<th>Отчество</th>
-				<th class="text-right">
-					<input type="submit" class="btn btn-outline-success create" value="Создать учетки" hidden>
-					<button type="button" class="btn btn-outline-secondary create" hidden id="cancel">Отмена</button>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach($teachers as $key => $t)
-			<tr>
-				<td class="create" hidden><input type="checkbox" name="users[]" value="{{ $t->id }}"></td>				
-				<td>{{ $key + 1 }}</td>
-				<td>{{ $t->surname }}</td>
-				<td>{{ $t->name }}</td>
-				<td>{{ $t->patronymic }}</td>
-				<td class="text-right">
-					<a href="/teachers/{{$t->id}}/edit" class="btn btn-sm btn-link">Личная карта</a>
-				</td>
-			</tr>
-			@endforeach            
-		</tbody>
-	</table>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th class="create" hidden>
+						<label class="font-weight-normal">
+							<input type="checkbox" id="all" data-select="[name='users[]']">
+						</label>
+					</th>
+					<th>№</th>
+					<th>Фамилия</th>
+					<th>Имя</th>
+					<th>Отчество</th>
+					<th class="text-right">
+						<input type="submit" class="btn btn-outline-success create" value="Создать учетки" hidden>
+						<button type="button" class="btn btn-outline-secondary create" hidden id="cancel">Отмена</button>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($teachers as $key => $t)
+				<tr>
+					<td class="create" hidden><input type="checkbox" name="users[]" value="{{ $t->id }}"></td>				
+					<td>{{ $key + 1 }}</td>
+					<td>{{ $t->surname }}</td>
+					<td>{{ $t->name }}</td>
+					<td>{{ $t->patronymic }}</td>
+					<td class="text-right">
+						<a href="/teachers/{{$t->id}}/edit" class="btn btn-sm btn-link">Личная карта</a>
+					</td>
+				</tr>
+				@endforeach            
+			</tbody>
+		</table>
+	</div>
 </form>
 <div class="modal fade" id="upload">
 	<div class="modal-dialog">

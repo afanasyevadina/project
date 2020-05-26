@@ -40,31 +40,33 @@
 @if($programs)
 <hr>
 {{ $programs->appends(Request::except('page'))->links() }}
-<table class="table table-hover">
-	<thead>
-		<th>Группа</th>
-		<th>Предмет</th>
-		<th>Учебный год</th>
-		<th>Преподаватель</th>
-		<th></th>
-	</thead>
-	<tbody>
-		@foreach($programs as $p)
-		<tr>
-			<td>{{ @$p->group->codes[$p->kurs] }}</td>
-			<td>{{ $p->subject->name }}</td>
-			<td>{{ $p->year.'-'.($p->year + 1) }}</td>
-			<td>{{ $p->teacher->shortName }}</td>
-			<td class="text-right">
-				<a href="/ktp/{{$p->group_id}}/{{$p->subject_id}}/{{$p->kurs}}?subgroup={{$p->subgroup}}&cikl={{$p->cikl_id}}&teacher={{$p->teacher_id}}" 
-					class="btn btn-sm btn-outline-info">
-				Перейти
-				</a>
-			</td>
-		</tr>
-		@endforeach
-	</tbody>
-</table>
+<div class="table-responsive">
+	<table class="table table-hover">
+		<thead>
+			<th>Группа</th>
+			<th>Предмет</th>
+			<th>Учебный год</th>
+			<th>Преподаватель</th>
+			<th></th>
+		</thead>
+		<tbody>
+			@foreach($programs as $p)
+			<tr>
+				<td>{{ @$p->group->codes[$p->kurs] }}</td>
+				<td>{{ $p->subject->name }}</td>
+				<td>{{ $p->year.'-'.($p->year + 1) }}</td>
+				<td>{{ $p->teacher->shortName }}</td>
+				<td class="text-right">
+					<a href="/ktp/{{$p->group_id}}/{{$p->subject_id}}/{{$p->kurs}}?subgroup={{$p->subgroup}}&cikl={{$p->cikl_id}}&teacher={{$p->teacher_id}}" 
+						class="btn btn-sm btn-outline-info">
+						Перейти
+					</a>
+				</td>
+			</tr>
+			@endforeach
+		</tbody>
+	</table>
+</div>
 {{ $programs->appends(Request::except('page'))->links() }}
 @endif
 @endsection

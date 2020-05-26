@@ -51,30 +51,32 @@
 <div class="form-group">
 	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск...">
 </div>
-<table class="table table-hover">
-	<thead>
-		<tr>
-			<th>Номер</th>
-			<th>Название</th>
-			<th>Корпус</th>
-			<th>Вместимость</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach($cabs as $cab)
-		<tr>
-			<td>{{ $cab->num }}</td>
-			<td>{{ $cab->name }}</td>
-			<td>{{ $cab->corpus->name }}</td>
-			<td>{{ $cab->capacity }}</td>
-			<td class="text-right text-nowrap">
-				<button data-toggle="modal" data-target="#{{ $cab->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
-			</td>
-		</tr>
-		@endforeach            
-	</tbody>
-</table>
+<div class="table-responsive">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Номер</th>
+				<th>Название</th>
+				<th>Корпус</th>
+				<th>Вместимость</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach($cabs as $cab)
+			<tr>
+				<td>{{ $cab->num }}</td>
+				<td>{{ $cab->name }}</td>
+				<td>{{ $cab->corpus->name }}</td>
+				<td>{{ $cab->capacity }}</td>
+				<td class="text-right text-nowrap">
+					<button data-toggle="modal" data-target="#{{ $cab->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
+				</td>
+			</tr>
+			@endforeach            
+		</tbody>
+	</table>
+</div>
 @foreach($cabs as $cab)
 <div class="modal fade" id="{{ $cab->id }}">
 	<div class="modal-dialog">

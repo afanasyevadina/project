@@ -23,36 +23,38 @@
 			Средний балл: 
 			{{$avgResult}}
 		</div>
-		<table class="table table-bordered table-sm">
-			<thead>
-				<tr>
-					<th>№</th>
-					<th>Дисциплина</th>
-					<th class="text-center">Текущая</th>
-					<th class="text-center">ПА</th>
-					<th class="text-center">Зачёт</th>
-					<th class="text-center">КР</th>
-					<th class="text-center">Экзамен</th>
-					<th class="text-center">Итоговая</th>
-					<th>ФИО преподавателя</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach($page as $key => $r)
-				<tr>
-					<td>{{ $key + 1 }}</td>
-					<td>{{ $r->plan->subject->name }}</td>
-					<td class="text-center">{{ $student->avgRating($r->plan->subject_id, $sem) }}</td>
-					<td class="text-center">{{ $r->plan->cikl_id == 6 ? '' : $r->att }}</td>
-					<td class="text-center">{{ $r->zachet }}</td>
-					<td class="text-center">{{ $r->project }}</td>
-					<td class="text-center">{{ $r->exam }}</td>
-					<td class="text-center">{{ $r->itog }}</td>
-					<td>{{ $r->plan->teacher->fullName }}</td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
+		<div class="table-responsive">
+			<table class="table table-bordered table-sm">
+				<thead>
+					<tr>
+						<th>№</th>
+						<th>Дисциплина</th>
+						<th class="text-center">Текущая</th>
+						<th class="text-center">ПА</th>
+						<th class="text-center">Зачёт</th>
+						<th class="text-center">КР</th>
+						<th class="text-center">Экзамен</th>
+						<th class="text-center">Итоговая</th>
+						<th>ФИО преподавателя</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach($page as $key => $r)
+					<tr>
+						<td>{{ $key + 1 }}</td>
+						<td>{{ $r->plan->subject->name }}</td>
+						<td class="text-center">{{ $student->avgRating($r->plan->subject_id, $sem) }}</td>
+						<td class="text-center">{{ $r->plan->cikl_id == 6 ? '' : $r->att }}</td>
+						<td class="text-center">{{ $r->zachet }}</td>
+						<td class="text-center">{{ $r->project }}</td>
+						<td class="text-center">{{ $r->exam }}</td>
+						<td class="text-center">{{ $r->itog }}</td>
+						<td>{{ $r->plan->teacher->fullName }}</td>
+					</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</div>
 	</div>
 	@endforeach
 </div>

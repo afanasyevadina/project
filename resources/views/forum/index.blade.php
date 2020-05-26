@@ -47,17 +47,17 @@
 		</div>
 		<p>{{ $topic->description }}</p>
 		<hr>
-		<div class="row text-muted">
-			<small class="col-sm-4 d-flex align-items-center">
+		<div class="d-flex justify-content-between">
+			<small class="d-flex align-items-center">
 				<img src="/public/img/icons/user.svg" height="15" class="muted-img mr-1">
 				Создал {{ $topic->user->name }} {{ $topic->date }}
 			</small>
-			<small class="col-sm-4 d-flex align-items-center justify-content-center">
+			<small class="d-flex align-items-center">
 				<img src="/public/img/icons/message.svg" height="15" class="muted-img mr-1">
 				{{ $topic->messages()->count() }}
 			</small>
 			@if(count($topic->messages))
-			<small class="col-sm-4 d-flex align-items-center justify-content-end">
+			<small class="d-flex align-items-center">
 				<img src="/public/img/icons/time.svg" height="15" class="muted-img mr-1">
 				{{$topic->lastMessage->user->name}} 
 				{{ $topic->lastMessage->created_at->format('d.m.Y H:i') }}

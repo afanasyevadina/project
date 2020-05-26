@@ -35,48 +35,50 @@
 <form action="/admin/users/register" method="post">
 	@csrf
 	<input type="hidden" name="role" value="student">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th class="create" hidden>
-					<label class="font-weight-normal">
-						<input type="checkbox" id="all" data-select="[name='users[]']">
-					</label>
-				</th>
-				<th>№</th>
-				<th>Фамилия</th>
-				<th>Имя</th>
-				<th>Отчество</th>
-				@if(count($group->students) >= 25)
-				<th class="text-center">Подгруппа</th>
-				@endif
-				<th class="text-right">
-					<input type="submit" class="btn btn-outline-success create" value="Создать учетки" hidden>
-					<button type="button" class="btn btn-outline-secondary create" hidden id="cancel">Отмена</button>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach($students as $key => $s)
-			<tr>
-				<td class="create" hidden><input type="checkbox" name="users[]" value="{{ $s->id }}"></td>
-				<td>{{ $key + 1 }}</td>
-				<td>{{ $s->surname }}</td>
-				<td>{{ $s->name }}</td>
-				<td>{{ $s->patronymic }}</td>
-				@if(count($group->students) >= 25)
-				<td class="text-center">{{ $s->subgroup }}</td>
-				@endif
-				<td class="text-right">
-					@can('manager')
-					<a href="/students/{{$s->id}}/edit" class="btn btn-sm btn-link">Личная карта</a> | 
-					@endcan
-					<a href="/results/{{$s->id}}" class="btn btn-sm btn-link">Зачетка</a>
-				</td>
-			</tr>		
-			@endforeach            
-		</tbody>
-	</table>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th class="create" hidden>
+						<label class="font-weight-normal">
+							<input type="checkbox" id="all" data-select="[name='users[]']">
+						</label>
+					</th>
+					<th>№</th>
+					<th>Фамилия</th>
+					<th>Имя</th>
+					<th>Отчество</th>
+					@if(count($group->students) >= 25)
+					<th class="text-center">Подгруппа</th>
+					@endif
+					<th class="text-right">
+						<input type="submit" class="btn btn-outline-success create" value="Создать учетки" hidden>
+						<button type="button" class="btn btn-outline-secondary create" hidden id="cancel">Отмена</button>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($students as $key => $s)
+				<tr>
+					<td class="create" hidden><input type="checkbox" name="users[]" value="{{ $s->id }}"></td>
+					<td>{{ $key + 1 }}</td>
+					<td>{{ $s->surname }}</td>
+					<td>{{ $s->name }}</td>
+					<td>{{ $s->patronymic }}</td>
+					@if(count($group->students) >= 25)
+					<td class="text-center">{{ $s->subgroup }}</td>
+					@endif
+					<td class="text-right">
+						@can('manager')
+						<a href="/students/{{$s->id}}/edit" class="btn btn-sm btn-link">Личная карта</a> | 
+						@endcan
+						<a href="/results/{{$s->id}}" class="btn btn-sm btn-link">Зачетка</a>
+					</td>
+				</tr>		
+				@endforeach            
+			</tbody>
+		</table>
+	</div>
 </form>
 @endsection
 @section('scripts')

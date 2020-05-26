@@ -21,7 +21,7 @@ use App\Menu;
 </div>
 <div class="row mb-4">
     @can('manager')
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/plans" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/plan.svg" height="100" class="img-muted">
@@ -29,7 +29,7 @@ use App\Menu;
             </a>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/graphic" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/graphic.svg" height="100" class="img-muted">
@@ -37,7 +37,7 @@ use App\Menu;
             </a>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/rup" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/rup.svg" height="100" class="img-muted">
@@ -45,7 +45,7 @@ use App\Menu;
             </a>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/rp" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/rp.svg" height="100" class="img-muted">
@@ -53,7 +53,7 @@ use App\Menu;
             </a>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/ktp" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/ktp.svg" height="100" class="img-muted">
@@ -62,7 +62,7 @@ use App\Menu;
         </div>
     </div>
     @endcan
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/doc/form3" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/form.svg" height="100" class="img-muted">
@@ -70,7 +70,7 @@ use App\Menu;
             </a>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/schedule/edit" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/schedule.svg" height="100" class="img-muted">
@@ -78,7 +78,7 @@ use App\Menu;
             </a>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/exams/edit" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/exams.svg" height="100" class="img-muted">
@@ -87,7 +87,7 @@ use App\Menu;
         </div>
     </div>
     @can('manager')
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/journal" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/journal.svg" height="100" class="img-muted">
@@ -95,7 +95,7 @@ use App\Menu;
             </a>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/results" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/results.svg" height="100" class="img-muted">
@@ -104,7 +104,7 @@ use App\Menu;
         </div>
     </div>
     @endcan
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/doc/form2" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/form.svg" height="100" class="img-muted">
@@ -113,7 +113,7 @@ use App\Menu;
         </div>
     </div>
     @can('manager')
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/students" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/students.svg" height="100" class="img-muted">
@@ -121,7 +121,7 @@ use App\Menu;
             </a>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/teachers" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/teachers.svg" height="100" class="img-muted">
@@ -131,7 +131,7 @@ use App\Menu;
     </div>
     @endcan
     @can('admin')
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/admin/users" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/user.svg" height="100" class="img-muted">
@@ -140,7 +140,7 @@ use App\Menu;
         </div>
     </div>
     @endcan
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/forum" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/forum.svg" height="100" class="img-muted">
@@ -148,7 +148,7 @@ use App\Menu;
             </a>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4 mt-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 mt-3">
         <div class="card">
             <a href="/statistic/top" class="card-body text-center hover-none text-dark">
                 <img src="/public/img/icons/top.svg" height="100" class="img-muted">

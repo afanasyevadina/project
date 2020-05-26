@@ -35,26 +35,28 @@
 <div class="form-group">
 	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск...">
 </div>
-<table class="table table-hover">
-	<thead>
-		<tr>
-			<th>Дата</th>
-			<th>Название</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach($holidays as $holiday)
-		<tr>
-			<td>{{ date('d.m.Y', strtotime($holiday->date)) }}</td>
-			<td>{{ $holiday->name }}</td>
-			<td class="text-right text-nowrap">
-				<button data-toggle="modal" data-target="#{{ $holiday->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
-			</td>
-		</tr>
-		@endforeach            
-	</tbody>
-</table>
+<div class="table-responsive">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Дата</th>
+				<th>Название</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach($holidays as $holiday)
+			<tr>
+				<td>{{ date('d.m.Y', strtotime($holiday->date)) }}</td>
+				<td>{{ $holiday->name }}</td>
+				<td class="text-right text-nowrap">
+					<button data-toggle="modal" data-target="#{{ $holiday->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
+				</td>
+			</tr>
+			@endforeach            
+		</tbody>
+	</table>
+</div>
 @foreach($holidays as $holiday)
 <div class="modal fade" id="{{ $holiday->id }}">
 	<div class="modal-dialog">

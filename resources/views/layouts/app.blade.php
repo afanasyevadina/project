@@ -31,7 +31,7 @@ use App\Menu;
 		<a href="/login" class="navbar-text mr-2 ml-auto">Войти</a>
 		@endguest
 	</nav>
-	<div class="d-flex h-100vh">
+	<div class="d-flex h-100vh" id="wrapper">
 		@auth
 		<div class="sidebar" id="navbar">
 			<ul class="navbar-nav">

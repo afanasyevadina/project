@@ -82,34 +82,36 @@ $divide = ['-', 'Всегда', 'На практики'];
 <div class="form-group">
 	<input type="text" class="form-control" autocomplete="off" data-search="tbody tr" placeholder="Поиск...">
 </div>
-<table class="table table-bordered table-hover">
-	<thead>
-		<tr>
-			<th>№</th>
-			<th>Название на рус.яз.</th>
-			<th>Название на каз.яз.</th>
-			<th>Сокращение на рус.яз.</th>
-			<th>Сокращение на каз.яз.</th>
-			<th>Деление на подгруппы</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach($subjects as $key => $s)
-		<tr>
-			<td>{{ $key + 1 }}</td>
-			<td>{{ $s->name }}</td>
-			<td>{{ $s->name_kz }}</td>
-			<td>{{ $s->short_name }}</td>
-			<td>{{ $s->short_name_kz }}</td>
-			<td>{{ $divide[$s->divide] }}</td>
-			<td class="text-right">
-				<button data-toggle="modal" data-target="#{{ $s->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
-			</td>
-		</tr>
-		@endforeach            
-	</tbody>
-</table>
+<div class="table-responsive">
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>№</th>
+				<th>Название на рус.яз.</th>
+				<th>Название на каз.яз.</th>
+				<th>Сокращение на рус.яз.</th>
+				<th>Сокращение на каз.яз.</th>
+				<th>Деление на подгруппы</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach($subjects as $key => $s)
+			<tr>
+				<td>{{ $key + 1 }}</td>
+				<td>{{ $s->name }}</td>
+				<td>{{ $s->name_kz }}</td>
+				<td>{{ $s->short_name }}</td>
+				<td>{{ $s->short_name_kz }}</td>
+				<td>{{ $divide[$s->divide] }}</td>
+				<td class="text-right">
+					<button data-toggle="modal" data-target="#{{ $s->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
+				</td>
+			</tr>
+			@endforeach            
+		</tbody>
+	</table>
+</div>
 @foreach($subjects as $s)
 
 <div class="modal fade" id="{{ $s->id }}">
@@ -143,13 +145,13 @@ $divide = ['-', 'Всегда', 'На практики'];
 					<div class="form-group">
 						<label class="label-sm d-block"><input type="radio" name="divide" value="0" 
 							{{$s->divide == '0' ? 'checked' : ''}}> 
-							Не формировать подгруппы</label>
+						Не формировать подгруппы</label>
 						<label class="label-sm d-block"><input type="radio" name="divide" value="1" 
 							{{$s->divide == '1' ? 'checked' : ''}}> 
-							Формировать подгруппы всегда</label>
+						Формировать подгруппы всегда</label>
 						<label class="label-sm d-block"><input type="radio" name="divide" value="2" 
 							{{$s->divide == '2' ? 'checked' : ''}}> 
-							Формировать подгруппы на практики</label>
+						Формировать подгруппы на практики</label>
 					</div>
 				</div>
 				<div class="modal-footer">

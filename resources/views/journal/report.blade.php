@@ -30,25 +30,27 @@
 	</div>
 </form>
 @if($group)
-<table class="table table-sm table-bordered">
-	<thead>
-		<th>№</th>
-		<th>ФИО</th>
-		@foreach($subjects as $subject)
-		<th class="text-center"><small>{{ $subject->subject->name }}</small></th>
-		@endforeach
-	</thead>
-	<tbody>
-		@foreach($group->students as $key => $student)
-		<tr>
-			<td>{{ $key + 1 }}</td>
-			<td class="text-nowrap">{{ $student->shortName }}</td>
+<div class="table-responsive">
+	<table class="table table-sm table-bordered">
+		<thead>
+			<th>№</th>
+			<th>ФИО</th>
 			@foreach($subjects as $subject)
-			<td class="text-center">{{ $student->avgRating($subject->subject_id, $_GET['semestr']) }}</td>
+			<th class="text-center"><small>{{ $subject->subject->name }}</small></th>
 			@endforeach
-		</tr>
-		@endforeach
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			@foreach($group->students as $key => $student)
+			<tr>
+				<td>{{ $key + 1 }}</td>
+				<td class="text-nowrap">{{ $student->shortName }}</td>
+				@foreach($subjects as $subject)
+				<td class="text-center">{{ $student->avgRating($subject->subject_id, $_GET['semestr']) }}</td>
+				@endforeach
+			</tr>
+			@endforeach
+		</tbody>
+	</table>
+</div>
 @endif
 @endsection

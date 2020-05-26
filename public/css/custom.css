@@ -266,3 +266,28 @@ td select.form-control {
 @page {
 	margin: 2cm;
 }
+
+@media(max-width: 768px) {
+	#wrapper {
+		display: block !important;
+	}
+	#navbar {
+		width: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: auto;
+		transform: translateY(-100%);
+	}
+	.container-fluid {
+		width: 100%;
+	}	
+	#navbar.navbar-hidden {
+		transform: translateY(0%);
+	}
+}
+@media(max-width: 576px) {
+	.navbar-brand {
+		display: none;
+	}
+}

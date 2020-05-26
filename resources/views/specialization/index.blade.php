@@ -46,32 +46,34 @@
 		</div>
 	</div>
 </div>
-<table class="table table-hover table-bordered">
-	<thead>
-		<tr>
-			<th>№</th>
-			<th>Шифр</th>
-			<th>Название на русском</th>
-			<th>Название на казахском</th>
-			<th>Отделение</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach($specializations as $key => $spec)
-		<tr>
-			<td>{{ $key + 1 }}</td>
-			<td>{{ $spec->code }}</td>
-			<td>{{ $spec->name }}</td>
-			<td>{{ $spec->name_kz }}</td>
-			<td>{{ $spec->department->name }}</td>
-			<td class="text-right text-nowrap">
-				<button data-toggle="modal" data-target="#{{ $spec->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
-			</td>
-		</tr>
-		@endforeach            
-	</tbody>
-</table>
+<div class="table-responsive">
+	<table class="table table-hover table-bordered">
+		<thead>
+			<tr>
+				<th>№</th>
+				<th>Шифр</th>
+				<th>Название на русском</th>
+				<th>Название на казахском</th>
+				<th>Отделение</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach($specializations as $key => $spec)
+			<tr>
+				<td>{{ $key + 1 }}</td>
+				<td>{{ $spec->code }}</td>
+				<td>{{ $spec->name }}</td>
+				<td>{{ $spec->name_kz }}</td>
+				<td>{{ $spec->department->name }}</td>
+				<td class="text-right text-nowrap">
+					<button data-toggle="modal" data-target="#{{ $spec->id }}" class="btn btn-sm btn-outline-primary">Редактировать</button>
+				</td>
+			</tr>
+			@endforeach            
+		</tbody>
+	</table>
+</div>
 @foreach($specializations as $spec)
 <div class="modal fade" id="{{$spec->id}}">
 	<div class="modal-dialog">
