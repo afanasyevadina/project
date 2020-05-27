@@ -36,7 +36,7 @@ class ForumController extends Controller
     public function edit($id)
     {
         $topic = Topic::with('user')->findOrFail($id);
-        if($topic->user_id != \Auth::user()->id) abort(403);
+        if($topic->user_id != \Auth::user()->id && \Auth::user()->role != 'admin') abort(403);
         $roles = [
             'admin' => ['teacher', 'student'],
             'teacher' => ['teacher', 'student'],

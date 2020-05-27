@@ -41,7 +41,7 @@
 			<h4>
 				<a class="text-decoration-none" href="/forum/{{$topic->id}}">{{ $topic->name }}</a>
 			</h4>
-			@if($topic->user_id == \Auth::user()->id)
+			@if($topic->user_id == \Auth::user()->id || \Auth::user()->role == 'admin')
 			<a class="btn btn-sm btn-outline-primary" href="/forum/{{$topic->id}}/edit">Редактировать</a>
 			@endif
 		</div>

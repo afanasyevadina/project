@@ -23,7 +23,7 @@
 				</p>
 				<div class="d-flex align-items-end mb-3" :class="{'flex-row-reverse': message.user_id==user.id}">
 					<div class="card message" :id="message.id">
-						<div class="card-body p-2 rounded" :class="{'bg-secondary text-white': message.user_id==user.id}">
+						<div class="card-body p-2 rounded" style="overflow: hidden;" :class="{'bg-secondary text-white': message.user_id==user.id}">
 							<span class="d-block font-weight-bold" v-if="message.user_id!=user.id">
 								{{ message.user.name }}
 							</span>
@@ -110,7 +110,7 @@
 		},
 		methods: {
 			send: function() {
-				if(this.message || this.file) {
+				if(this.message.trim() || this.file) {
 					var formData = new FormData()
 					formData.append('text', this.message)
 					formData.append('topic_id', this.topic.id)
