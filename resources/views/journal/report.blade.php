@@ -7,7 +7,7 @@
 	<div class="row">
 		<div class="form-group col-sm-4">
 			<label>Группа</label>
-			<select name="group" class="form-control form-control-sm">
+			<select name="group" class="form-control form-control-sm" required>
 				<option value="">Группа</option>
 				@foreach($groups as $g)
 				<option value="{{ $g->id }}" {{ $g->id == @$_GET['group'] ? 'selected' : '' }}>{{ $g->name }}</option>
@@ -16,7 +16,7 @@
 		</div>		
 		<div class="form-group col-sm-4">
 			<label>Семестр</label>
-			<select name="semestr" class="form-control form-control-sm">
+			<select name="semestr" class="form-control form-control-sm" required>
 				<option value="">Семестр</option>
 				@for($k = 1; $k <= 8; $k++)
 				<option value="{{ $k }}" {{ $k == @$_GET['semestr'] ? 'selected' : '' }}>{{ $k }}</option>

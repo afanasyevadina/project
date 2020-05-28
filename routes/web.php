@@ -117,6 +117,7 @@ Route::group(['middleware' => ['auth', 'can:teacher']], function () {
 	Route::get('/rp/{groupId}/{subjectId}/export', 'RpController@export');
 	Route::get('/rp/{groupId}/{subjectId}/reset', 'RpController@reset');
 	Route::get('/ktp/{groupId}/{subjectId}/{kurs}/export', 'KtpController@export');
+	Route::get('/teachers/{id}', 'TeacherController@view')->name('teachers');
 
 	Route::post('/rp/{groupId}/{subjectId}', 'RpController@store');
 	Route::post('/rp/{groupId}/{subjectId}/copy', 'RpController@copy');
@@ -148,6 +149,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/changes/group', 'ChangeController@group')->name('changes');
 	Route::get('/changes/teacher', 'ChangeController@teacher')->name('changes');
 	Route::get('/results/{id}', 'ResultController@view')->name('zachetka');
+	Route::get('/students/{id}', 'StudentController@view')->name('students');
 
 	Route::post('/forum', 'ForumController@store');
 	Route::post('/forum/{id}', 'ForumController@update');

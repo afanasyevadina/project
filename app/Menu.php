@@ -246,6 +246,20 @@ class Menu
                 ],
             ],
             [
+                'label' => 'Личная карта',
+                'path' => 'students/'.\Auth::user()->person_id,
+                'name' => 'students',
+                'class' => '',
+                'roles' => ['student'],
+            ],
+            [
+                'label' => 'Личная карта',
+                'path' => 'teachers/'.\Auth::user()->person_id,
+                'name' => 'teachers',
+                'class' => '',
+                'roles' => ['teacher'],
+            ],
+            [
                 'label' => 'Моя зачетка',
                 'path' => 'results/'.\Auth::user()->person_id,
                 'name' => 'zachetka',
@@ -257,7 +271,7 @@ class Menu
                 'path' => 'forum',
                 'name' => 'forum',
                 'class' => '',
-                'roles' => ['*'],
+                'roles' => ['student', 'teacher', 'admin'],
             ],
             [
                 'label' => 'Топ - 100',
@@ -333,7 +347,7 @@ class Menu
     {
         $m = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
         $d = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье'];
-        return date('d').' '.$m[date('n') - 1].' '.date('Y').' г., '.date('H:i');
+        return date('d', time()+3600*6).' '.$m[date('n', time()+3600*6) - 1].' '.date('Y', time()+3600*6).', '.date('H:i', time()+3600*6);
     }
 
     public static function greeting($name, $role = 'student')

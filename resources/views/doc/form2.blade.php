@@ -7,16 +7,19 @@
 	<div class="row">
 		<div class="form-group col-sm-3">
 			<label>Группа</label>
-			<select name="group" class="form-control" required>
+			<select name="group" class="form-control" id="group" required>
 				<option value="">Выберите группу</option>
 				@foreach($groups as $group)
-				<option value="{{ $group->id }}">{{ $group->name }}</option>
+				<option value="{{ $group->id }}" data-year="{{$group->year_create}}" data-leave="{{$group->year_leave}}">
+					{{ $group->name }}
+				</option>
 				@endforeach
 			</select>
 		</div>
 		<div class="form-group col-sm-2">
 			<label>Учебный год</label>
-			<select name="year" class="form-control" required>
+			<select name="year" id="year" class="form-control" required>
+				<option value="">Выберите год</option>
 				@for($year = date('Y') - 4; $year <= date('Y'); $year++)
 				<option value="{{ $year }}">{{ $year.'-'.($year + 1) }}</option>
 				@endfor
@@ -49,4 +52,15 @@
 		</div>		
 	</div>
 </form>
+@endsection
+@section('scripts')
+<script type="text/javascript">
+	document.querySelector('#group').onchange = function() {
+		var year = this.selectedOptions[0].dataset.year
+		var leave = this.selectedOptions[0].dataset.leave
+		document.querySelector('#year').value = ''
+		document.querySelectorAll('#year option')
+		.forEach(option => option.hidden = option.value < year || option.value >= leave)
+	}
+</script>
 @endsection

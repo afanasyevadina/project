@@ -29,6 +29,9 @@
 							</span>
 							{{ message.text }}
 							<img v-if="message.hasImage" :src="message.file" class="d-block mt-2" width="500">
+							<audio v-else-if="message.hasAudio" controls>
+								<source :src="message.file" type="">
+							</audio>
 							<a v-else-if="message.file" :href="message.file" class="d-block mt-2">
 								<img src="/public/img/icons/document.svg" height="20" class="mr-1" 
 								:class="{'white-img': message.user_id==user.id}">
@@ -42,6 +45,9 @@
 								</a>
 								<small>{{ message.reply.text }}</small>
 								<img v-if="message.reply.hasImage" :src="message.reply.file" class="d-block mt-2" width="450">
+								<audio v-else-if="message.reply.hasAudio" controls>
+									<source :src="message.reply.file" type="">
+								</audio>
 								<a v-else-if="message.reply.file" :href="message.reply.file">
 									<img src="/public/img/icons/document.svg" height="18" class="mr-1" 
 									:class="{'white-img': message.user_id==user.id}">
@@ -79,6 +85,12 @@
 				</button>
 			</div>
 		</div>
+		<div class="alert alert-warning" v-if="fileError">
+			<small>Размер файла не должен превышать 20 МБ и он не должен быть исполняемым.</small>
+			<button type="button" class="close" @click="fileError=false">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
 		<div class="input-group">
 			<div class="input-group-prepend">
 				<label for="file" class="input-group-text" style="cursor: pointer;">
@@ -88,7 +100,7 @@
 			</div>
 			<input type="text" class="form-control" placeholder="Ваше сообщение" v-model="message" autocomplete="off" autofocus>
 			<div class="input-group-append">
-				<button type="submit" class="input-group-text bg-primary text-white">Отправить</button>
+				<button type="submit" class="input-group-text bg-primary text-white" :style="{opacity: sending ? '0.7' : '1'}" :disabled="sending">Отправить</button>
 			</div>
 		</div>
 	</form>
@@ -106,11 +118,13 @@
 			messages: [],
 			message: '',
 			file: '',
-			reply: null
+			fileError: null,
+			reply: null,
+			sending: false
 		},
 		methods: {
 			send: function() {
-				if(this.message.trim() || this.file) {
+				if((this.message.trim() || this.file) && !this.sending) {
 					var formData = new FormData()
 					formData.append('text', this.message)
 					formData.append('topic_id', this.topic.id)
@@ -123,13 +137,20 @@
 					var options = this.file ? {
 						headers: {'Content-Type': 'multipart/form-data'}
 					} : null
-					axios.post('/api/forum?api_token=' + this.user.api_token, formData, options)
-					.then(response => {
-						this.messages.push(response.data)
-						this.message = ''
-						this.file = ''
-						this.reply = null
-						this.$refs.room.scrollTo(0, this.$refs.room.scrollHeight * 2)
+					this.sending = true
+					var sending = new Promise((resolve, reject) => {
+						axios.post('/api/forum?api_token=' + this.user.api_token, formData, options)
+						.then(response => {
+							this.messages.push(response.data)
+							this.message = ''
+							this.file = ''
+							this.reply = null
+							resolve()
+						})
+					})
+					sending.then(() => {
+						this.$refs.room.scrollTo(0, this.$refs.room.scrollHeight)
+						this.sending = false
 					})
 				}
 			},
@@ -145,14 +166,34 @@
 					})
 				})
 			},
+			refresh: function() {
+				if(!this.sending) {
+					var lastMessage = this.messages.length ? this.messages[this.messages.length-1].id : 0
+					axios.get('/api/forum/' + this.topic.id + '/refresh/' + 
+						'?api_token=' + this.user.api_token +
+						'&since=' + lastMessage)
+					.then(response => {
+						this.messages = this.messages.concat(response.data.reverse().filter(m => m.id != lastMessage))
+					})
+				}
+			},
 			setFile: function() {
 				this.file = this.$refs.file.files[0]
+				if(this.file.size > 1024*1024*20 || this.file.name.endsWith('.exe') || this.file.name.endsWith('.bat')) {
+					this.file = ''
+					this.fileError = true
+				} else {
+					this.fileError = false
+				}
 			}
 		},
 		created() {			
 			this.topic = <?=json_encode($topic)?>;
 			this.user = <?=json_encode(\Auth::user())?>;
-			this.load().then(() => this.$refs.room.scrollTo(0, this.$refs.room.scrollHeight))
+			this.load().then(() => {
+				this.$refs.room.scrollTo(0, this.$refs.room.scrollHeight)
+				setInterval(() => this.refresh(), 3000)
+			})			
 		}
 	});
 </script>

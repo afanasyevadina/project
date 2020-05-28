@@ -8,7 +8,7 @@ class Message extends Model
 {
     protected $fillable = ['topic_id', 'user_id', 'text', 'reply_id'];
 
-    protected $appends = ['time', 'date', 'hasImage'];
+    protected $appends = ['time', 'date', 'hasImage', 'hasAudio'];
 
     public function getTimeAttribute()
     {
@@ -22,7 +22,12 @@ class Message extends Model
 
     public function getHasImageAttribute()
     {
-        return file_exists(trim($this->file, '/')) && exif_imagetype(trim($this->file, '/'));
+        return file_exists(trim($this->file, '/')) && @exif_imagetype(trim($this->file, '/'));
+    }
+
+    public function getHasAudioAttribute()
+    {
+        return file_exists(trim($this->file, '/')) && @in_array(pathinfo($this->file, PATHINFO_EXTENSION), ['mp3', 'wav', 'ogg']);
     }
 
     public function topic()

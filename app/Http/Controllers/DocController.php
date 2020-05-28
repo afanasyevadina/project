@@ -256,7 +256,7 @@ class DocController extends Controller
             $sheet->setTitle(DateConvert::month($month));
             $sheet->setCellValue('A1', 'Министерство образования и науки Республики Казахстан');
             $sheet->setCellValue('A2', 'ведомость учета учебного времени работы преподавателей на '.DateConvert::month($month).' месяц '.$calendYear.' год');
-            $sheet->setCellValue('A3', 'Специальность(профессия) '.$group->codes[ceil($semestr/2)]);
+            $sheet->setCellValue('A3', 'Специальность(профессия) '.@$group->codes[ceil($semestr/2)]);
             $sheet->setCellValue('A6', 'Преподаватель');
             $sheet->setCellValue('B6', 'Предмет');
             $sheet->setCellValue('C6', 'всего часов');
@@ -375,7 +375,7 @@ class DocController extends Controller
             $sheet->getStyle('A1:'.ExcelHelper::col($i).'3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle('A1:'.ExcelHelper::col($i).'3')->getFont()->setBold(true)->setSize(12)->setName("Times new Roman");
             $writer = new Xlsx($spreadsheet);
-            header('Content-Disposition: attachment; filename="'.$group->codes[ceil($semestr/2)].' '.DateConvert::month($month).'.xlsx"');
+            header('Content-Disposition: attachment; filename="'.@$group->codes[ceil($semestr/2)].' '.DateConvert::month($month).'.xlsx"');
             header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             $writer->save('php://output');
             return;

@@ -81,6 +81,16 @@ class StudentController extends Controller
         ]);
     }
 
+    public function view($id)
+    {
+        $student = Student::findOrFail($id);
+        return view('student.view', [
+            'student' => $student,
+            'groups' => Group::orderBy('name', 'asc')->get(),
+            'pays' => Pay::orderBy('name', 'asc')->get(),
+        ]);
+    }
+
     public function store(Request $request)
     {
         $student = Student::create($request->all());
@@ -94,7 +104,7 @@ class StudentController extends Controller
         $student->fill($request->all());
         if($request->file('photo')) {
             $fileName = Storage::disk('public')->putFileAs('students', $request->file('photo'), $id);
-            $student->photo = '/public/storage/'.$fileName;
+            $student->photo = '/storage/app/public/'.$fileName;
         }
         $student->save();
         return redirect()->back();
@@ -114,7 +124,7 @@ class StudentController extends Controller
     public function upload(Request $request)
     {
         $fileName = Storage::disk('public')->putFile('files', $request->file('file'));
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('public/storage/'.$fileName);
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('storage/app/public/'.$fileName);
         $sheet = $spreadsheet->getActiveSheet();
         $list = $sheet->toArray();
 

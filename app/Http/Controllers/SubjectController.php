@@ -37,7 +37,7 @@ class SubjectController extends Controller
     public function upload(Request $request)
     {
         $fileName = Storage::disk('public')->putFile('files', $request->file('file'));
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('public/storage/'.$fileName);
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('storage/app/public/'.$fileName);
         $sheet = $spreadsheet->getActiveSheet();
         $list = $sheet->toArray();
 

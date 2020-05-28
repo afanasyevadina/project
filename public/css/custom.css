@@ -248,6 +248,9 @@ td select.form-control {
 .table-success td {
 	background-color: #e4ffe8;
 }
+audio {
+	display: block;
+}
 
 
 @media print {

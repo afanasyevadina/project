@@ -41,7 +41,7 @@ class HomeController extends Controller
                 $query->where('year', date('Y'))->whereIn('semestr', [1,3,5,7]);
             })->get();
             $progress = $subjects->filter(function($val) {
-                return $val->results()->where('itog', '>', 2)->count() == $val->results()->count();
+                return $val->results()->where('itog', '>', 2)->count() == $val->results()->count() &&  $val->results()->count();
             })->count();
             return view('home.teacher', [
                 'teacher' => $teacher,

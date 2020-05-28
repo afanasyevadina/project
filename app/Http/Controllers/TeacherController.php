@@ -33,6 +33,14 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function view($id)
+    {
+        $teacher = Teacher::findOrFail($id);
+        return view('teacher.view', [
+            'teacher' => $teacher,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $teacher = Teacher::create($request->all());
@@ -46,7 +54,7 @@ class TeacherController extends Controller
         $teacher->fill($request->all());
         if($request->file('photo')) {
             $fileName = Storage::disk('public')->putFileAs('teachers', $request->file('photo'), $id);
-            $teacher->photo = '/public/storage/'.$fileName;
+            $teacher->photo = '/storage/app/public/'.$fileName;
         }
         $teacher->save();
         return redirect()->back();
@@ -62,7 +70,7 @@ class TeacherController extends Controller
     public function upload(Request $request)
     {
         $fileName = Storage::disk('public')->putFile('files', $request->file('file'));
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('public/storage/'.$fileName);
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('storage/app/public/'.$fileName);
         $sheet = $spreadsheet->getActiveSheet();
         $list = $sheet->toArray();
 

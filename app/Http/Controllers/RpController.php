@@ -50,8 +50,7 @@ class RpController extends Controller
         ->where('group_id', '<>', $groupId)
         ->where('subgroup', '<>', 2)
         ->where('cikl_id', \Request::get('cikl'))
-        ->has('lessons')
-        ->orderBy('semestr', 'asc')->distinct()->get();
+        ->has('lessons')->distinct()->get();
         return view('rp.view', [
             'group' => $group,
             'groups' => $groups,

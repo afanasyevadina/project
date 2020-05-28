@@ -34,11 +34,21 @@ class ForumController extends Controller
                 'forum/'.$message->topic_id, $request->file('file'), 
                 date('YmdHis').$request->file('file')->getClientOriginalName()
             );
-            $message->file = '/public/storage/'.$fileName;
+            $message->file = '/storage/app/public/'.$fileName;
         }
         $message->save();
         $reply = $message->reply;
         $user = $message->user;
         return $message;
+    }
+
+    public function refresh($id)
+    {
+        $since = \Request::get('since') ?? 0;
+        $messages = Message::with('user')->with('reply')
+        ->where('topic_id', $id)
+        ->where('id', '>', $since)
+        ->latest('created_at')->get();
+        return response()->json($messages);
     }
 }

@@ -25,7 +25,7 @@ $year = @$_GET['year'] ? $_GET['year'] : date('Y');
         </div>
         <div class="col-sm-4 form-group">
             <label>Группа</label>
-            <select name="group" class="form-control form-control-sm">
+            <select name="group" class="form-control form-control-sm" required>
                 <option value="">Группа</option>
                 @foreach($groups as $group)
                 <option value="{{ $group->id }}" {{ $group->id == @$_GET['group'] ? 'selected' : ''}}>{{ $group->name }}</option>

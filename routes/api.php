@@ -18,6 +18,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 	});
 	Route::post('forum', 'Api\ForumController@store');
 	Route::get('forum/{id}', 'Api\ForumController@view');
+	Route::get('forum/{id}/refresh', 'Api\ForumController@refresh');
 });
 Route::get('groups', 'Api\GroupController@index');
 Route::get('schedule', 'Api\ScheduleController@index');
