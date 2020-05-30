@@ -6,7 +6,7 @@
 	<div class="card" v-if="topic">
 		<div class="card-header d-flex justify-content-between">
 			<h5 class="mb-0">{{ topic.name }}</h5>
-			<small class="text-muted">Создана пользователем {{ topic.user.name }}<br>{{ topic.date }} в {{ topic.time }}</small>
+			<small class="text-muted">Создана пользователем {{ topic.user.username }}<br>{{ topic.date }} в {{ topic.time }}</small>
 		</div>
 		<div class="card-body bg-light py-2">
 			{{ topic.description }}
@@ -25,7 +25,7 @@
 					<div class="card message" :id="message.id">
 						<div class="card-body p-2 rounded" style="overflow: hidden;" :class="{'bg-secondary text-white': message.user_id==user.id}">
 							<span class="d-block font-weight-bold" v-if="message.user_id!=user.id">
-								{{ message.user.name }}
+								{{ message.user.username }}
 							</span>
 							{{ message.text }}
 							<img v-if="message.hasImage" :src="message.file" class="d-block mt-2" width="500">
@@ -40,7 +40,7 @@
 							<div v-if="message.reply" class="pl-2 border-left mt-2">
 								<a :href="'#'+message.reply.id" class="hover-none">
 									<small class="d-block font-weight-bold">
-										{{ message.reply.user_id == user.id ? 'Вы' : message.reply.user.name }}
+										{{ message.reply.user_id == user.id ? 'Вы' : message.reply.user.username }}
 									</small>
 								</a>
 								<small>{{ message.reply.text }}</small>
@@ -63,13 +63,13 @@
 				</div>
 			</div>
 		</template>
-		<template v-else><div class="loader"></div></template>
+		<template v-if="loading"><div class="loader"></div></template>
 		<div id="last"></div>
 	</div>
 	<form @submit.prevent="send">
 		<div class="card bg-light" v-if="reply">
 			<div class="card-body p-2">
-				<small class="font-weight-bold">{{ reply.user.name }}</small>
+				<small class="font-weight-bold">{{ reply.user.username }}</small>
 				<button type="button" class="close" @click="reply=null">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -120,7 +120,8 @@
 			file: '',
 			fileError: null,
 			reply: null,
-			sending: false
+			sending: false,
+			loading: true
 		},
 		methods: {
 			send: function() {
@@ -193,6 +194,7 @@
 			this.load().then(() => {
 				this.$refs.room.scrollTo(0, this.$refs.room.scrollHeight)
 				setInterval(() => this.refresh(), 3000)
+				this.loading = false
 			})			
 		}
 	});

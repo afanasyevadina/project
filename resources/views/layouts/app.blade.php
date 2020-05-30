@@ -19,13 +19,18 @@ use App\Menu;
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<a href="/" class="navbar-brand ml-2">Информационная система КИТ</a>
-		<span class="navbar-text mr-2 ml-auto d-flex align-items-center">
-			<img src="/public/img/icons/user.svg" height="15" class="white-img muted-img mr-1">
-			{{ \Auth::user()->name }} |
-		</span>
-		<form action="/logout" method="post">@csrf
-			<input type="submit" value="Выход" class="logout-button navbar-text">
-		</form>
+		<div class="nav-item dropdown ml-auto mr-2">
+			<a class="nav-link navbar-text d-flex align-items-center dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<img src="/public/img/icons/user.svg" height="15" class="white-img muted-img mr-1">
+				{{ \Auth::user()->name }}&nbsp;
+			</a>
+			<div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="navbarDropdown">
+				<form action="/logout" method="post">@csrf
+					<input type="submit" value="Выход" class="logout-button navbar-text dropdown-item">
+				</form>
+				<a href="/password/change" class="navbar-text dropdown-item">Сменить пароль</a>
+			</div>
+		</div>
 		@endauth
 		@guest
 		<a href="/login" class="navbar-text mr-2 ml-auto">Войти</a>

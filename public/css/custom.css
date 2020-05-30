@@ -251,6 +251,21 @@ td select.form-control {
 audio {
 	display: block;
 }
+.bg-dark .dropdown-item.active,
+.bg-dark .dropdown-item:active,
+.bg-dark .dropdown-item:focus,
+.bg-dark .dropdown-item:hover 
+{
+	color: #fff;
+	background-color: initial;
+}
+.dropdown:hover .dropdown-menu, .dropdown-menu.show {
+	display: block;
+	position: absolute; 
+	top: calc(100% - 5px); 
+	right: 0px;
+	left: auto;
+}
 
 
 @media print {

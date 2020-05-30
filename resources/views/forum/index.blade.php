@@ -59,7 +59,7 @@
 			@if(count($topic->messages))
 			<small class="d-flex align-items-center">
 				<img src="/public/img/icons/time.svg" height="15" class="muted-img mr-1">
-				{{$topic->lastMessage->user->name}} 
+				{{$topic->lastMessage->user->username}} 
 				{{ $topic->lastMessage->created_at->format('d.m.Y H:i') }}
 			</small>
 			@endif

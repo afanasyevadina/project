@@ -150,7 +150,9 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/changes/teacher', 'ChangeController@teacher')->name('changes');
 	Route::get('/results/{id}', 'ResultController@view')->name('zachetka');
 	Route::get('/students/{id}', 'StudentController@view')->name('students');
+	Route::get('/password/change', 'Auth\ChangePasswordController@edit')->name('password');
 
+	Route::post('/password/change', 'Auth\ChangePasswordController@update');
 	Route::post('/forum', 'ForumController@store');
 	Route::post('/forum/{id}', 'ForumController@update');
 });

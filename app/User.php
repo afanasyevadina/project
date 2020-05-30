@@ -37,9 +37,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['username'];
+
     public function person()
     {
         if($this->role == 'teacher') return $this->belongsTo('App\Teacher', 'person_id')->withDefault();
         if($this->role == 'student') return $this->belongsTo('App\Student', 'person_id')->withDefault();
+    }
+
+    public function getUserNameAttribute()
+    {
+        if($this->role == 'teacher') return $this->person->fullName;
+        if($this->role == 'student') return $this->person->name.' '.$this->person->surname;
+        return $this->name;
     }
 }
