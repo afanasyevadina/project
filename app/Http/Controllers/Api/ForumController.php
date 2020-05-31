@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 class ForumController extends Controller
 {
-    public function view($id)
+    public function show($id)
     {
         $skip = \Request::get('skip') ?? 0;
         $messages = Message::with('user')->with('reply')
@@ -50,5 +50,17 @@ class ForumController extends Controller
         ->where('id', '>', $since)
         ->latest('created_at')->get();
         return response()->json($messages);
+    }
+
+    public function destroy($id)
+    {
+        $message = Message::findOrFail($id);
+        if($message->user_id != $request->user()->id) {
+            abort(403);
+        }
+        if($message->file && file_exists($message->file)) {
+            unlink($message->file);
+        }
+        $message->delete();
     }
 }

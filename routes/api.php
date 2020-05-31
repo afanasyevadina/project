@@ -17,7 +17,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 	    return $request->user();
 	});
 	Route::post('forum', 'Api\ForumController@store');
-	Route::get('forum/{id}', 'Api\ForumController@view');
+	Route::get('forum/{id}', 'Api\ForumController@show');
+	Route::get('forum/{id}/delete', 'Api\ForumController@destroy');
 	Route::get('forum/{id}/refresh', 'Api\ForumController@refresh');
 });
 Route::get('groups', 'Api\GroupController@index');
