@@ -42,6 +42,7 @@ class JournalController extends Controller
     public function view($id)
     {
         $data = Plan::findOrFail($id);
+        if(\Auth::user()->cant('update', $data)) abort(403);
         if($data->group->students()->count() && !Rating::whereHas('lesson', function($query) use($id) {
             $query->where('plan_id', $id);
         })->count()) {
@@ -63,12 +64,15 @@ class JournalController extends Controller
     public function refresh($id)
     {
         $data = Plan::findOrFail($id);
+        if(\Auth::user()->cant('update', $data)) abort(403);
         $data->generateRatings();
         return redirect()->back();
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
+        $data = Plan::findOrFail($id);
+        if(\Auth::user()->cant('update', $data)) abort(403);
         foreach($request->all() as $item) {
             $rating = Rating::find($item['id']);
             $rating->value = is_numeric($item['value']) ? $item['value'] : null;

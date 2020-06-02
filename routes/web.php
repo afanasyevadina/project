@@ -121,8 +121,8 @@ Route::group(['middleware' => ['auth', 'can:teacher']], function () {
 
 	Route::post('/rp/{groupId}/{subjectId}', 'RpController@store');
 	Route::post('/rp/{groupId}/{subjectId}/copy', 'RpController@copy');
-	Route::post('/journal', 'JournalController@store');
-	Route::post('/results', 'ResultController@store');
+	Route::post('/journal/{id}', 'JournalController@store');
+	Route::post('/results/{id}', 'ResultController@store');
 
 	Route::get('/journal/{id}/refresh', 'JournalController@refresh');
 	Route::get('/load/{id}/export/{year}', 'LoadController@export');

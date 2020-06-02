@@ -46,6 +46,7 @@ class ResultController extends Controller
     public function edit($id)
     {
     	$plan = Plan::findOrFail($id);
+        if(\Auth::user()->cant('update', $plan)) abort(403);
     	$plan->generateResults();
     	$results = Result::where('plan_id', $id)->get();
     	return view('result.edit', [
@@ -54,8 +55,10 @@ class ResultController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
+        $plan = Plan::findOrFail($id);
+        if(\Auth::user()->cant('update', $plan)) abort(403);
         foreach ($request->results as $id => $res) {
             $result = Result::find($id);
             $result->fill($res);

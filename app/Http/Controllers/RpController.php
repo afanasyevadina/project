@@ -46,6 +46,11 @@ class RpController extends Controller
         ->where('subgroup', '<>', 2)
         ->where('cikl_id', \Request::get('cikl'))
         ->orderBy('semestr', 'asc')->get();
+        $can = false;
+        foreach($plans as $p) {
+            if(\Auth::user()->can('update', $p)) $can = true;
+        }
+        if(!$can) abort(403);
         $groups =  Plan::select('group_id', 'subject_id')->where('subject_id', $subjectId)
         ->where('group_id', '<>', $groupId)
         ->where('subgroup', '<>', 2)
@@ -67,6 +72,11 @@ class RpController extends Controller
         ->where('subject_id', $subjectId)
         ->where('cikl_id', \Request::get('cikl'))
         ->orderBy('semestr', 'asc')->get();
+        $can = false;
+        foreach($data as $p) {
+            if(\Auth::user()->can('update', $p)) $can = true;
+        }
+        if(!$can) abort(403);
         $main = $parallel = [];
         foreach($data as $key => $plan) {
             foreach($plan->lessons as $les) {
@@ -189,19 +199,20 @@ class RpController extends Controller
         $years = [];
         $total = $labPrac = 0;
         $parts = [];
+        $can = false;
         foreach($data as $p) {
+            if(\Auth::user()->can('update', $p)) $can = true;
             $total += $p->total;
             $labPrac += $p->lab;
             $labPrac += $p->practice;
             $labPrac += $p->project;
             $years[$p->year][$p->semestr % 2 ? 1 : 2] = $p;
             foreach($p->lessons as $l) {
-                if($l->part_id) {
-                    $parts[$l->part_id]['part'] = $l->part;
-                    $parts[$l->part_id]['lessons'][] = $l;
-                }
+                $parts[$l->part_id]['part'] = $l->part;
+                $parts[$l->part_id]['lessons'][] = $l;
             }
         }
+        if(!$can) abort(403);
         $roman = ['I', 'II', 'III', 'IV'];
         $phpWord = new \PhpOffice\PhpWord\PHPWord();
         $phpWord->setDefaultFontSize(13);
@@ -227,9 +238,9 @@ class RpController extends Controller
         $cellVCentered = array('valign' => 'center');
 
         $section->addText("Қазақстан Республикасының Білім және ғылым мининстрлігі", $bold, $center);
-        $section->addText("\"Павлодар бизнес-колледжі\" КМҚК", $bold, $center);
+        $section->addText("«Ақпараттық технологиялар колледжі» ШЖҚ КМК", $bold, $center);
         $section->addText("Министерство образования и науки Республики Казахстан", $bold, $center);
-        $section->addText("КГКП \"Павлодарский бизнес-колледж\"", $bold, $center);
+        $section->addText("КГП на ПХВ «Колледж информационных технологий»", $bold, $center);
         $section->addTextBreak(1);
 
         $section->addText("Бекітемін", null);

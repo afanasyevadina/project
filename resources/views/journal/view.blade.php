@@ -94,7 +94,7 @@
 				value: table[i].innerHTML
 			})
 		}
-		axios.post('/journal', data)
+		axios.post('/journal/<?=$plan->id?>', data)
 		.then(response => {
 			document.getElementById('saved').hidden = false
 			setTimeout(() => document.getElementById('saved').hidden = true, 3000)

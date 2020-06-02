@@ -56,13 +56,16 @@ class KtpController extends Controller
         ->orderBy('semestr', 'asc')->get();
         $plans = [];
         $parts = [];
+        $can = false;
         foreach($data as $p) {
+            if(\Auth::user()->can('update', $p)) $can = true;
             $plans[$p->semestr % 2 ? 1 :2] = $p;
             foreach($p->lessons as $l) {
                 $parts[$l->part_id]['part'] = $l->part;
                 $parts[$l->part_id]['lessons'][] = $l;
             }
         }
+        if(!$can) abort(403);
         return view('ktp.view', [
             'group' => $group,
             'subject' => $subject,
@@ -93,15 +96,16 @@ class KtpController extends Controller
         $data = $query->orderBy('semestr', 'asc')->get();
         $plans = [];
         $parts = [];
+        $can = false;
         foreach($data as $p) {
+            if(\Auth::user()->can('update', $p)) $can = true;
             $plans[$p->semestr % 2 ? 1 :2] = $p;
             foreach($p->lessons as $l) {
-                if($l->part_id) {
-                    $parts[$l->part_id]['part'] = $l->part;
-                    $parts[$l->part_id]['lessons'][] = $l;
-                }
+                $parts[$l->part_id]['part'] = $l->part;
+                $parts[$l->part_id]['lessons'][] = $l;
             }
         }
+        if(!$can) abort(403);
         $roman = ['I', 'II', 'III', 'IV'];
         $phpWord = new \PhpOffice\PhpWord\PHPWord();
         $phpWord->setDefaultFontSize(12);
@@ -131,9 +135,9 @@ class KtpController extends Controller
         $cellVCentered = array('valign' => 'center');
 
         $section->addText("Қазақстан Республикасының Білім және ғылым мининстрлігі", array_merge($bold, $italic), $center);
-        $section->addText("\"Павлодар бизнес-колледжі\" КМҚК", array_merge($bold, $italic), $center);
+        $section->addText("«Ақпараттық технологиялар колледжі» ШЖҚ КМК", array_merge($bold, $italic), $center);
         $section->addText("Министерство образования и науки Республики Казахстан", array_merge($bold, $italic), $center);
-        $section->addText("КГКП \"Павлодарский бизнес-колледж\"", array_merge($bold, $italic), $center);
+        $section->addText("КГП на ПХВ «Колледж информационных технологий»", array_merge($bold, $italic), $center);
         $section->addTextBreak(1);
 
         $section->addText("Бекітемін", null);

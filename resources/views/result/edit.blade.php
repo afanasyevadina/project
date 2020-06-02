@@ -6,7 +6,7 @@
 </div>
 <h3>{{ $plan->subject->name }}</h3>
 <hr>
-<form action="/results" method="post" class="self-reload" data-alert="#saved">@csrf
+<form action="/results/{{$plan->id}}" method="post" class="self-reload" data-alert="#saved">@csrf
 	<div class="d-flex justify-content-between">
 		<div>
 			<p>Преподаватель: {{ $plan->teacher->fullName }}</p>
