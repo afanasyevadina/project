@@ -49,6 +49,8 @@ class Topic extends Model
 
     public function getUnreadAttribute()
     {
-        return $this->messages()->where('for_owner', \Auth::user()->id)->orWhere('for_reply', \Auth::user()->id)->count();
+        return $this->messages()->where(function($query) {
+            $query->where('for_owner', \Auth::user()->id)->orWhere('for_reply', \Auth::user()->id);
+        })->count();
     }
 }

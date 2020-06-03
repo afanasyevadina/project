@@ -11,6 +11,13 @@ class Menu
     {
         $list = [
             [
+                'label' => 'Главная',
+                'path' => 'home',
+                'name' => 'home',
+                'class' => '',
+                'roles' => ['*'],
+            ],
+            [
                 'label' => 'Администрирование',
                 'class' => '',
                 'children' => [

@@ -19,7 +19,7 @@ use App\Menu;
     </div>
 </div>
 <ul class="list-group">
-    <li class="list-group-item d-flex justify-content-around align-items-center session-progress">
+    <li class="list-group-item d-flex justify-content-around align-items-center session-progress flex-wrap">
         <div>
             <h4 class="text-primary">Закрытие сессии</h4>
             <p class="text-info">Выставлены оценки по {{$progress}} предметам из {{$subjects->count()}}</p>
@@ -31,26 +31,28 @@ use App\Menu;
         </svg>
     </li>
 </ul>
-<table class="table">
-    <tr>
-        <th>Предмет</th>
-        <th>Группа</th>
-        <th>Выставлено оценок</th>
-        <th></th>
-    </tr>
-    @foreach($subjects as $subject)
-    <tr>
-        <td>{{$subject->subject->name}}</td>
-        <td>{{$subject->group->name}}</td>
-        <td>{{$subject->results()->where('itog', '>', 2)->count()}} / {{$subject->results()->count()}}</td>
-        <td>
-            @if($subject->results()->where('itog', '>', 2)->count() == $subject->results()->count())
-            <span class="ready"></span>
-            @endif
-        </td>
-    </tr>
-    @endforeach
-</table>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>Предмет</th>
+            <th>Группа</th>
+            <th>Выставлено оценок</th>
+            <th></th>
+        </tr>
+        @foreach($subjects as $subject)
+        <tr>
+            <td>{{$subject->subject->name}}</td>
+            <td>{{$subject->group->name}}</td>
+            <td>{{$subject->results()->where('itog', '>', 2)->count()}} / {{$subject->results()->count()}}</td>
+            <td>
+                @if($subject->results()->where('itog', '>', 2)->count() == $subject->results()->count())
+                <span class="ready"></span>
+                @endif
+            </td>
+        </tr>
+        @endforeach
+    </table>
+</div>
 @endsection
 @section('scripts')
 <script type="text/javascript">

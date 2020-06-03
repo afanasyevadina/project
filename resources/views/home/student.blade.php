@@ -20,7 +20,7 @@ use App\Menu;
     </div>
 </div>
 <ul class="list-group">
-    <li class="list-group-item d-flex justify-content-around align-items-center session-progress">
+    <li class="list-group-item d-flex justify-content-around align-items-center session-progress flex-wrap">
         <div>
             <h4 class="text-primary">Закрытие сессии</h4>
             <p class="text-info">Сдано предметов: {{$progress}} из {{$subjects->count()}}</p>
@@ -32,30 +32,32 @@ use App\Menu;
         </svg>
     </li>
 </ul>
-<table class="table">
-    <tr>
-        <th>Предмет</th>
-        <th>Преподаватель</th>
-        <th>Средний текущий</th>
-        <th>Аттестация</th>
-        <th>Итог</th>
-        <th></th>
-    </tr>
-    @foreach($subjects as $subject)
-    <tr class="{{$subject->itog == 5 ? 'table-success' : ''}}">
-        <td>{{$subject->plan->subject->name}}</td>
-        <td>{{$subject->plan->teacher->fullName}}</td>
-        <td>{{$student->avgRating($subject->plan->subject->id, $subject->plan->semestr)}}</td>
-        <td>{{$subject->att}}</td>
-        <td>{{$subject->itog}}</td>
-        <td>
-            @if($subject->itog)
-            <span class="ready"></span>
-            @endif
-        </td>
-    </tr>
-    @endforeach
-</table>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>Предмет</th>
+            <th>Преподаватель</th>
+            <th>Средний текущий</th>
+            <th>Аттестация</th>
+            <th>Итог</th>
+            <th></th>
+        </tr>
+        @foreach($subjects as $subject)
+        <tr class="{{$subject->itog == 5 ? 'table-success' : ''}}">
+            <td>{{$subject->plan->subject->name}}</td>
+            <td>{{$subject->plan->teacher->fullName}}</td>
+            <td>{{$student->avgRating($subject->plan->subject->id, $subject->plan->semestr)}}</td>
+            <td>{{$subject->att}}</td>
+            <td>{{$subject->itog}}</td>
+            <td>
+                @if($subject->itog)
+                <span class="ready"></span>
+                @endif
+            </td>
+        </tr>
+        @endforeach
+    </table>
+</div>
 @endsection
 @section('scripts')
 <script type="text/javascript">
