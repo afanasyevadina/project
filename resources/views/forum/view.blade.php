@@ -50,7 +50,7 @@
 									<audio v-else-if="message.reply.hasAudio" controls>
 										<source :src="message.reply.file" type="">
 										</audio>
-										<a v-else-if="message.reply.file" :href="message.reply.file">
+										<a v-else-if="message.reply.file" :href="message.reply.file" class="d-block mt-2">
 											<img src="/public/img/icons/document.svg" height="18" class="mr-1" 
 											:class="{'white-img': message.user_id==user.id}">
 											{{message.reply.file.split('/').pop()}}

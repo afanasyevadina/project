@@ -17,5 +17,8 @@ $uri = urldecode(
 if ($uri !== '/' && file_exists(__DIR__.'/public'.$uri)) {
     return false;
 }
+header('Access-Control-Allow-Origin:*');
+header('Access-Control-Allow-Methods:*');
+header('Access-Control-Allow-Headers:*');
 
 require_once __DIR__.'/public/index.php';

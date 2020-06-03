@@ -68,7 +68,7 @@ class ForumController extends Controller
     public function destroy($id)
     {
         $message = Message::findOrFail($id);
-        if($message->user_id != $request->user()->id) {
+        if($message->user_id != \Auth::user()->id) {
             abort(403);
         }
         if($message->file && file_exists($message->file)) {
