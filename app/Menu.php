@@ -2,6 +2,8 @@
 
 namespace App;
 use App\Group;
+use App\Message;
+use Illuminate\Support\Facades\Gate;
 
 class Menu
 {
@@ -318,6 +320,11 @@ class Menu
                 'roles' => ['student'],
             ];
         }
+        $unread = 0;        
+        if(Gate::allows('forum')) {
+            $userid = \Auth::user()->id;
+            $unread = Message::where('for_owner', $userid)->orWhere('for_reply', $userid)->count();
+        }
         foreach ($list as $key => $item) {
             if(isset($item['children'])) {
                 foreach ($item['children'] as $subItem) {
@@ -330,12 +337,18 @@ class Menu
                             $subItem['class'] =  'active bg-dark';
                             $menu[$key]['class'] =  'show';
                         }
+                        if($subItem['name'] == 'forum' && $unread) {
+                            $subItem['badge'] = $unread;
+                        }
                         $menu[$key]['children'][] = $subItem;
                     }
                 }
             } else {
                 if(in_array($role, $item['roles']) || in_array('*', $item['roles'])) {
                     $item['class'] =  $route == $item['name'] ? 'active bg-dark' : '';
+                    if($item['name'] == 'forum' && $unread) {
+                        $item['badge'] = $unread;
+                    }
                     $menu[$key] = $item;
                 }
             }

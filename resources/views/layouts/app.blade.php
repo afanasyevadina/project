@@ -47,12 +47,20 @@ use App\Menu;
 				</li>
 				@foreach($item['children'] as $subItem)
 				<li class="collapse pl-2 menu-{{ $key }} {{ $subItem['class'] }} {{ $item['class'] }}">
-					<a href="/{{ $subItem['path'] }}">{{ $subItem['label'] }}</a>
+					<a href="/{{ $subItem['path'] }}" class="d-flex justify-content-between">{{ $subItem['label'] }}
+						@if(isset($subItem['badge']))
+						<span class="badge badge-primary p-1">{{$subItem['badge']}}</span>
+						@endif
+					</a>
 				</li>
 				@endforeach
 				@else
 				<li class="{{ $item['class'] }}">
-					<a href="/{{ $item['path'] }}">{{ $item['label'] }}</a>
+					<a href="/{{ $item['path'] }}" class="d-flex justify-content-between">{{ $item['label'] }}
+						@if(isset($item['badge']))
+						<span class="badge badge-primary p-1">{{$item['badge']}}</span>
+						@endif
+					</a>
 				</li>
 				@endif
 				@endforeach

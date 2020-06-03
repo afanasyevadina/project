@@ -39,13 +39,17 @@
 	<li class="list-group-item">
 		<div class="d-flex justify-content-between align-items-start">
 			<h4>
-				<a class="text-decoration-none" href="/forum/{{$topic->id}}">{{ $topic->name }}</a>
+				<a class="text-decoration-none text-dark" href="/forum/{{$topic->id}}">{{ $topic->name }}
+					@if($topic->unread)
+					<span class="badge badge-primary">{{$topic->unread}}</span>
+					@endif
+				</a>
 			</h4>
 			@if($topic->user_id == \Auth::user()->id || \Auth::user()->role == 'admin')
 			<a class="btn btn-sm btn-outline-primary" href="/forum/{{$topic->id}}/edit">Редактировать</a>
 			@endif
 		</div>
-		<p>{{ $topic->description }}</p>
+		<p class="text-secondary">{{ $topic->description }}</p>
 		<hr>
 		<div class="d-flex justify-content-between">
 			<small class="d-flex align-items-center">

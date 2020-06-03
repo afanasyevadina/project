@@ -46,4 +46,9 @@ class Topic extends Model
         if($user->role == 'admin') return true;;
         return $this->permissions()->where('role', $user->role)->whereIn('user_id', [0, $user->id])->exists();
     }
+
+    public function getUnreadAttribute()
+    {
+        return $this->messages()->where('for_owner', \Auth::user()->id)->orWhere('for_reply', \Auth::user()->id)->count();
+    }
 }
