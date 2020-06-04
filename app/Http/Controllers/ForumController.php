@@ -90,6 +90,7 @@ class ForumController extends Controller
                         'user_id' => $userId
                     ]);
                 }
+                $users[] = $topic->user_id;
                 $topic->permissions()->where('role', $role)->whereNotIn('user_id', $users)->delete();
             }
         }
