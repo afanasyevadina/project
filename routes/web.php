@@ -17,7 +17,6 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth', 'can:admin']], function () {
 	Route::get('/admin/users', 'Admin\UserController@index')->name('admin/users');
 	Route::get('/admin/users/create', 'Admin\UserController@create')->name('admin/users/create');
-	Route::post('/admin/users/register', 'Admin\UserController@register');
 	Route::post('/admin/users', 'Admin\UserController@store');
 });
 
@@ -41,6 +40,7 @@ Route::group(['middleware' => ['auth', 'can:manager']], function () {
 	Route::post('/teachers/upload', 'TeacherController@upload');
 	Route::post('/plans/upload', 'PlanController@upload');
 	Route::post('/students/upload', 'StudentController@upload');
+	Route::post('/admin/users/register', 'Admin\UserController@register');
 
 	Route::post('/specializations', 'SpecializationController@store');
 	Route::post('/groups', 'GroupController@store');
