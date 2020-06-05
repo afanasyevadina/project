@@ -21,7 +21,7 @@
 					<div class="row">
 						<div class="form-group col-sm-12">
 							<label class="label-sm">Название</label>
-							<input type="text" name="name" autocomplete="off" class="form-control form-control-sm" required>
+							<input typejustify-content-endname="name" autocomplete="off" class="form-control form-control-sm" required>
 						</div>
 						<div class="form-group col-sm-12">
 							<label class="label-sm">Описание</label>
@@ -51,22 +51,28 @@
 		</div>
 		<p class="text-secondary">{{ $topic->description }}</p>
 		<hr>
-		<div class="d-flex justify-content-between">
-			<small class="d-flex align-items-center">
-				<img src="/public/img/icons/user.svg" height="15" class="muted-img mr-1">
-				Создал {{ $topic->user->name }} {{ $topic->date }}
-			</small>
-			<small class="d-flex align-items-center">
-				<img src="/public/img/icons/message.svg" height="15" class="muted-img mr-1">
-				{{ $topic->messages()->count() }}
-			</small>
-			@if(count($topic->messages))
-			<small class="d-flex align-items-center">
-				<img src="/public/img/icons/time.svg" height="15" class="muted-img mr-1">
-				{{$topic->lastMessage->user->username}} 
-				{{ $topic->lastMessage->created_at->format('d.m.Y H:i') }}
-			</small>
-			@endif
+		<div class="row">
+			<div class="col-md-4 col-lg-5">
+				<small class="d-flex align-items-center">
+					<img src="/public/img/icons/user.svg" height="15" class="muted-img mr-1">
+					Создал {{ $topic->user->username }} {{ $topic->date }}
+				</small>
+			</div>
+			<div class="col-md-5 col-lg-3 col-xl-4">
+				<small class="d-flex align-items-center">
+					<img src="/public/img/icons/message.svg" height="15" class="muted-img mr-1">
+					{{ $topic->messages()->count() }}
+				</small>
+			</div>
+			<div class="col-md-5 col-lg-4 col-xl-2">
+				@if(count($topic->messages))
+				<small class="d-flex align-items-center">
+					<img src="/public/img/icons/time.svg" height="15" class="muted-img mr-1">
+					{{$topic->lastMessage->user->username}} 
+					{{ $topic->lastMessage->created_at->format('d.m.Y H:i') }}
+				</small>
+				@endif
+			</div>
 		</div>
 	</li>
 	@empty
