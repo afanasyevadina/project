@@ -34,11 +34,13 @@ class ChangeController extends Controller
 		if($lang !== null) $sqlGroups->where('lang_id', $lang);
 		$groups = $sqlGroups
 		->orderBy('specialization_id', 'asc')
+		->orderBy('kurs', 'asc')
 		->orderBy('lang_id', 'asc')
 		->orderBy('name', 'asc')
 		->get();
 		$schedule = [];
 		foreach($groups as $g) {
+			$obj = [];
 			$current = DateConvert::convert($date, $g->id);
 			$main = [];
 			if($current['teor']) {
@@ -65,10 +67,11 @@ class ChangeController extends Controller
 					$les['teacher'] = $item->teacher->shortName;
 					$les['subject'] = $item->plan->subject->name;
 					$les['cab'] = $item->cab->num;
-					$schedule[$item->group_id]['name'] = $item->group->name;			
-					$schedule[$item->group_id]['lessons'][$item->num][] = $les;
+					$obj['name'] = $item->group->name;			
+					$obj['lessons'][$item->num][] = $les;
 				}
 			}
+			if($obj) $schedule[] = $obj;
 		}
 		return $schedule;
 	}
